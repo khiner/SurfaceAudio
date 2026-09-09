@@ -46,3 +46,18 @@ foreach(test IN LISTS tests)
     set_tests_properties(${name} PROPERTIES TIMEOUT 60 RESOURCE_LOCK MetalDevice)
 endforeach()
 
+surface_audio_executable(SurfaceAudioBenchmark src/Benchmark.cpp)
+
+surface_audio_executable(agarwalReproduce src/agarwal/Reproduce.cxx)
+surface_audio_executable(sdtReproduce src/sdt/Reproduce.cxx)
+surface_audio_executable(conanReproduce tools/conan_reproduce.cxx)
+
+add_test(NAME ConanReproductionTest COMMAND ${CMAKE_COMMAND}
+    -DRENDERER=$<TARGET_FILE:conanReproduce> -DOUTPUT=${CMAKE_CURRENT_BINARY_DIR}/conan-nonfinite
+    -P ${CMAKE_CURRENT_SOURCE_DIR}/tests/ConanReproductionTest.cmake)
+set_tests_properties(ConanReproductionTest PROPERTIES TIMEOUT 60 RESOURCE_LOCK MetalDevice)
+
+surface_audio_executable(agarwalSpatialReproduce tools/agarwal_spatial_reproduce.cxx)
+surface_audio_executable(agarwalResponseFit tools/agarwal_response_fit.cxx)
+surface_audio_executable(agarwalContactFit tools/agarwal_contact_fit.cxx)
+surface_audio_executable(agarwalEndpointFit tools/agarwal_endpoint_fit.cxx)
