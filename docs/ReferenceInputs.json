@@ -1,0 +1,815 @@
+{
+  "description": "Original external inputs used by published-result reproductions. Generated binaries and decoded files are excluded. Source URLs and toolchain details are preserved by each fetch manifest and method document.",
+  "files": [
+    {
+      "method": "agarwal",
+      "path": "references/agarwal/ablations/glass-ball.wav",
+      "sha256": "2cafb3d615c0892de6c63451bad8b5faeea76406e867a8ec229ea024f6538102"
+    },
+    {
+      "method": "agarwal",
+      "path": "references/agarwal/ablations/glass-constant_ir.wav",
+      "sha256": "d7b5e692e9a7f605c95e8f9cd71bedbb7a0a8a6e41620f7174d3e8fac8e37b49"
+    },
+    {
+      "method": "agarwal",
+      "path": "references/agarwal/ablations/glass-surface.wav",
+      "sha256": "a4fda3af781a85a2ab853cb17acd89c3f0663682841b3e9b2760bbd6eb753893"
+    },
+    {
+      "method": "agarwal",
+      "path": "references/agarwal/ablations/glass-unconstrained.wav",
+      "sha256": "d15de403296eba9eff9a80ac456a6e997b541876830f67efd7a5b0d9ab7ee130"
+    },
+    {
+      "method": "agarwal",
+      "path": "references/agarwal/ablations/wood-ball.wav",
+      "sha256": "974c279ac85cb4c9a3fffa7b495b12ba65ec2d4c34c5ff9ca7435b9bd98e5300"
+    },
+    {
+      "method": "agarwal",
+      "path": "references/agarwal/ablations/wood-constant_ir.wav",
+      "sha256": "65e14db808af309762ce6c1fb177d1620ad97e5c33d73a2b933df8d0e84978f6"
+    },
+    {
+      "method": "agarwal",
+      "path": "references/agarwal/ablations/wood-surface.wav",
+      "sha256": "8239f56ecea31c350cb4140a8c9d27e9d24e3b44adc48ef01c26e46e3ad5aa77"
+    },
+    {
+      "method": "agarwal",
+      "path": "references/agarwal/ablations/wood-unconstrained.wav",
+      "sha256": "5ea5f3cb18947463c34ea9548fab462e84b7b47f7d313981c136a3f4b5d680b2"
+    },
+    {
+      "method": "agarwal",
+      "path": "references/agarwal/author_modes.py",
+      "sha256": "e957dad8e03bac135fdad9499cf6f2714533640c2f251a57d6006aed8b5fa937"
+    },
+    {
+      "method": "agarwal",
+      "path": "references/agarwal/author_py_impact.py",
+      "sha256": "e8799bf168808590dfb24e9c1a007ea4510748bc6b4be7cf281b924b87cb2213"
+    },
+    {
+      "method": "agarwal",
+      "path": "references/agarwal/bass_wood.npy",
+      "sha256": "a329845f5eb2c57fd4954abf047a98f9c50c869bd579b628448961d4bd02c12f"
+    },
+    {
+      "method": "agarwal",
+      "path": "references/agarwal/ceramic.npy",
+      "sha256": "3b73791dee15cc782dcde9f13bed4eea67fcd65449d33d67782acef3f5d6ec11"
+    },
+    {
+      "method": "agarwal",
+      "path": "references/agarwal/ceramic_2_mm.json",
+      "sha256": "2e3f707ffa3899423d4d591c2bfab0b734ba026a2600b5270a7cf2678722f2fa"
+    },
+    {
+      "method": "agarwal",
+      "path": "references/agarwal/poplar_wood.npy",
+      "sha256": "291f81d0e4c682a6a6fc4c1f3dd7fe34b82e5e75347b93fc721b60929eaf9c2d"
+    },
+    {
+      "method": "agarwal",
+      "path": "references/agarwal/roll-author.wav",
+      "sha256": "13fd485b8c89a277cda49477ff93e690eaa92d8d80be4f121ecf57bf35f011f8"
+    },
+    {
+      "method": "agarwal",
+      "path": "references/agarwal/roll-glass-author.wav",
+      "sha256": "42256663418b8a88d004e100c8105be1587b1c6efef54fb7f75923d73573fba4"
+    },
+    {
+      "method": "agarwal",
+      "path": "references/agarwal/scrape-author.wav",
+      "sha256": "be9f2ace8d8d6ea82c96706cb1b43eff90183e67a2c97342925a724cf2ae5bb8"
+    },
+    {
+      "method": "agarwal",
+      "path": "references/agarwal/wood_hard_2_mm.json",
+      "sha256": "f7f3f053e67de4d217eeafc8f69ab5be61074fe18d480454ee2c2909e2498800"
+    },
+    {
+      "method": "agarwal",
+      "path": "references/agarwal/wood_medium_2_mm.json",
+      "sha256": "cd758613182c67d2963ba1d168ca0c285c4a693d6faa1d48ba31dfaacfda438d"
+    },
+    {
+      "method": "conan",
+      "path": "references/conan/ForceConv1.mp3",
+      "sha256": "200702adaace2241ec6d633043533796220e90051d20511fb58285ff7c95a809"
+    },
+    {
+      "method": "conan",
+      "path": "references/conan/ForceConv2.mp3",
+      "sha256": "24c7a01ffd29bc3b388003d78db2a8395f61a7e679ceedbd8a91b3abd16752bc"
+    },
+    {
+      "method": "conan",
+      "path": "references/conan/ForceModelePhy.mp3",
+      "sha256": "0fbee596b7a541921694c6c8cb8537878b6af367e5198491269d6fa6accea684"
+    },
+    {
+      "method": "conan",
+      "path": "references/conan/ForceOrig.mp3",
+      "sha256": "d95aac5bc319310e09cab1ad9966a9b6e73d2c937f6a98c8d3dfa293da0a0f6e"
+    },
+    {
+      "method": "conan",
+      "path": "references/conan/ForceOrig2.mp3",
+      "sha256": "07fdab82d5b0957a495dceec7fd80642acbd63159293419afccbb57f3bc660ca"
+    },
+    {
+      "method": "conan",
+      "path": "references/conan/ForceSynth.mp3",
+      "sha256": "8f144b8f7c15b1f93b98bc697be0ebdb7ba330abdc8627fb7f9fdbadbc9db038"
+    },
+    {
+      "method": "conan",
+      "path": "references/conan/ForceSynth2.mp3",
+      "sha256": "40298ef75cc26f2114b04850e5c282d254ccef6415b7e3cbba49970991f87155"
+    },
+    {
+      "method": "conan",
+      "path": "references/conan/ir1.mp3",
+      "sha256": "e982ecf59a9a467f1cb5396a410f4054a031618d93038d8d5683abfac76fab1a"
+    },
+    {
+      "method": "conan",
+      "path": "references/conan/ir2.mp3",
+      "sha256": "8109267ae7d992de2bf6b006727622f1b4c04f34c5c841d670205414314c96c6"
+    },
+    {
+      "method": "sdt",
+      "path": "references/sdt/RollSDT.mp3",
+      "sha256": "eabf2ce3321004771a9100adee80110a2ed8326d8b106f8c128c6ed267f5c247"
+    },
+    {
+      "method": "sdt",
+      "path": "references/sdt/friction~-help.pd",
+      "sha256": "540b282250ee967daa4a1f49a95d8372dccfc842af40af3392043c4150e50ab6"
+    },
+    {
+      "method": "sdt",
+      "path": "references/sdt/impact~-help.pd",
+      "sha256": "97e2fdb43f1229125da1cfe721c20278720d5291a8b7e6860904d93af126c47d"
+    },
+    {
+      "method": "sdt",
+      "path": "references/sdt/pd_LICENSE.txt",
+      "sha256": "a552fb28d0392201422eea6811ef8a744da754adfa732da1779167ce01b19489"
+    },
+    {
+      "method": "sdt",
+      "path": "references/sdt/pd_d_filter.c",
+      "sha256": "b9a095f0dae4628432a0711fbefb71677ceb6a6a02002996096d1f53733bcc93"
+    },
+    {
+      "method": "sdt",
+      "path": "references/sdt/pd_d_osc.c",
+      "sha256": "4908b184e57eee441b520c6db5b0ca64d5eabf945a0b6b31ec61f845b83361af"
+    },
+    {
+      "method": "sdt",
+      "path": "references/sdt/rolling~-help.pd",
+      "sha256": "de51947c9d26939bd121a0028d00ce36193049e58b868b44db4de8ba9169070a"
+    },
+    {
+      "method": "sdt",
+      "path": "references/sdt/scraping~-help.pd",
+      "sha256": "2649af137d223d10b9f09566c066d17c245d5bbefeb9875de376b866c7dcf944"
+    },
+    {
+      "method": "sdt",
+      "path": "references/sdt/sdt.friction~.maxhelp",
+      "sha256": "d1a0d91955784eba689f826c1f977640eca2f8d306220aeeab244cd87547dbb2"
+    },
+    {
+      "method": "sdt",
+      "path": "references/sdt/sdt.impact~.maxhelp",
+      "sha256": "9456c8293be56e9fa7e814d5e425ed9f90640b9c7a632cfdeee7dcc86416e482"
+    },
+    {
+      "method": "sdt",
+      "path": "references/sdt/sdt.rolling~.maxhelp",
+      "sha256": "c6bc0b84051414590b2b46c3d09fac25f75a4b38acbbfe778628be688b4c489c"
+    },
+    {
+      "method": "sdt",
+      "path": "references/sdt/sdt.scraping~.maxhelp",
+      "sha256": "f60e2b63052e98d65500bcd0bed8c8c12fc5124535fbbae8a64774a12b62a709"
+    },
+    {
+      "method": "conan",
+      "path": "references/conan/original-site/content/img/VeloAnalyse.zip",
+      "sha256": "95ba720ad40b8a1a8cc634512b3db45949fb8aaa9e3854f5946285387313686b"
+    },
+    {
+      "method": "conan",
+      "path": "references/conan/original-site/content/snd/VeloAnalyseSnd.zip",
+      "sha256": "abc4ecd5806c465b5b327c9ac314578d2dd8f331aceb5a911729d059f34162b9"
+    },
+    {
+      "method": "agarwal-response",
+      "path": "references/agarwal/icml2023/training/Wood_1.wav",
+      "sha256": "97ff92f22dece3794aad32894bea7e220dcf64f5e14cce870934eaf56255ff8b",
+      "source_url": "https://mcdermottlab.mit.edu/ICML2023/training/Wood_1.wav"
+    },
+    {
+      "method": "agarwal-response",
+      "path": "references/agarwal/icml2023/training/Wood_2.wav",
+      "sha256": "4028aa6db228b0c8709ecabbb9762a1a21c1cb0654f289700dcf21c9c75a7f35",
+      "source_url": "https://mcdermottlab.mit.edu/ICML2023/training/Wood_2.wav"
+    },
+    {
+      "method": "agarwal-response",
+      "path": "references/agarwal/icml2023/training/Wood_3.wav",
+      "sha256": "b3b9c018d635f040b70f9134b62ec10bc2b406c435da164c1f6d2bb384472b6b",
+      "source_url": "https://mcdermottlab.mit.edu/ICML2023/training/Wood_3.wav"
+    },
+    {
+      "method": "agarwal-response",
+      "path": "references/agarwal/icml2023/training/Wood_4.wav",
+      "sha256": "f1b2e5c82e942a64ea33640ea325ac0407612f3621e90d596d83a602619cb77c",
+      "source_url": "https://mcdermottlab.mit.edu/ICML2023/training/Wood_4.wav"
+    },
+    {
+      "method": "agarwal-response",
+      "path": "references/agarwal/icml2023/training/Wood_5.wav",
+      "sha256": "d903c442a2f8bf29a9c9310fe8e3063f5d2a6ca2e19a0cad0a4e1a70f1560786",
+      "source_url": "https://mcdermottlab.mit.edu/ICML2023/training/Wood_5.wav"
+    },
+    {
+      "method": "agarwal-response",
+      "path": "references/agarwal/icml2023/training/Plastic_1.wav",
+      "sha256": "49da42f76b597588f3d84fc7997e895bb704856c539df714bacb6fbaf0da8596",
+      "source_url": "https://mcdermottlab.mit.edu/ICML2023/training/Plastic_1.wav"
+    },
+    {
+      "method": "agarwal-response",
+      "path": "references/agarwal/icml2023/training/Plastic_2.wav",
+      "sha256": "5261074315ea6afb2ff16e949332eec45e32894e35cb7596fe28e65b06d92e7c",
+      "source_url": "https://mcdermottlab.mit.edu/ICML2023/training/Plastic_2.wav"
+    },
+    {
+      "method": "agarwal-response",
+      "path": "references/agarwal/icml2023/training/Plastic_3.wav",
+      "sha256": "35ed1a5c475bbc737bf395cc42b688533e092f3356702b4aabad4124bf57a2e2",
+      "source_url": "https://mcdermottlab.mit.edu/ICML2023/training/Plastic_3.wav"
+    },
+    {
+      "method": "agarwal-response",
+      "path": "references/agarwal/icml2023/training/Plastic_4.wav",
+      "sha256": "3dfb5d5a217c4e299134633b0cdf52d0c7d558dc23d8f5e38350e944970657aa",
+      "source_url": "https://mcdermottlab.mit.edu/ICML2023/training/Plastic_4.wav"
+    },
+    {
+      "method": "agarwal-response",
+      "path": "references/agarwal/icml2023/training/Plastic_5.wav",
+      "sha256": "6f0819acf6a9c902460804ea140690252e02c0a9a90e7ac07226abcc5053b505",
+      "source_url": "https://mcdermottlab.mit.edu/ICML2023/training/Plastic_5.wav"
+    },
+    {
+      "method": "agarwal-response",
+      "path": "references/agarwal/icml2023/training/Metal_1.wav",
+      "sha256": "49d2949a1151e8dcc1a57472aa2e57473af07c0c70862e2aea99e7b19a824495",
+      "source_url": "https://mcdermottlab.mit.edu/ICML2023/training/Metal_1.wav"
+    },
+    {
+      "method": "agarwal-response",
+      "path": "references/agarwal/icml2023/training/Metal_2.wav",
+      "sha256": "fd32dfc2853fc51c4a0669fc0ae0d332d548d2056ef32d6b1e73765bcb24c015",
+      "source_url": "https://mcdermottlab.mit.edu/ICML2023/training/Metal_2.wav"
+    },
+    {
+      "method": "agarwal-response",
+      "path": "references/agarwal/icml2023/training/Metal_3.wav",
+      "sha256": "98fbdbf1c1c7642c6038776243d8017cb26a6b3fd702a68a136a0096ee1dc890",
+      "source_url": "https://mcdermottlab.mit.edu/ICML2023/training/Metal_3.wav"
+    },
+    {
+      "method": "agarwal-response",
+      "path": "references/agarwal/icml2023/training/Metal_4.wav",
+      "sha256": "b8d460cb28612efc854e2790e8cb4f2a5cbf86ce087a26a464395a7059c34435",
+      "source_url": "https://mcdermottlab.mit.edu/ICML2023/training/Metal_4.wav"
+    },
+    {
+      "method": "agarwal-response",
+      "path": "references/agarwal/icml2023/training/Metal_5.wav",
+      "sha256": "d702e2f429832a1bfbfede0144bd224c0a92328b60a4a95a8d1f6de786a5254e",
+      "source_url": "https://mcdermottlab.mit.edu/ICML2023/training/Metal_5.wav"
+    },
+    {
+      "method": "agarwal-response",
+      "path": "references/agarwal/icml2023/training/Glass_1.wav",
+      "sha256": "472b1fcb033b2a4bbb67ca0734f9d78b6c953c9589fccafbbd2bb233a16ddd6f",
+      "source_url": "https://mcdermottlab.mit.edu/ICML2023/training/Glass_1.wav"
+    },
+    {
+      "method": "agarwal-response",
+      "path": "references/agarwal/icml2023/training/Glass_2.wav",
+      "sha256": "33a6937c79e7a81738955d02a9f0337a253955b49d699b70109ee72fe932e669",
+      "source_url": "https://mcdermottlab.mit.edu/ICML2023/training/Glass_2.wav"
+    },
+    {
+      "method": "agarwal-response",
+      "path": "references/agarwal/icml2023/training/Glass_3.wav",
+      "sha256": "ae08d156055d1d817b7ad7c0301dc41941c407ab388a5f0e88ab8c40cbc224af",
+      "source_url": "https://mcdermottlab.mit.edu/ICML2023/training/Glass_3.wav"
+    },
+    {
+      "method": "agarwal-response",
+      "path": "references/agarwal/icml2023/training/Glass_4.wav",
+      "sha256": "444f735b60aa9958f0a213d6398f82eeb277b9c4bc14ebead19b362824758beb",
+      "source_url": "https://mcdermottlab.mit.edu/ICML2023/training/Glass_4.wav"
+    },
+    {
+      "method": "agarwal-response",
+      "path": "references/agarwal/icml2023/training/Glass_5.wav",
+      "sha256": "863cb4788f5b7e63fe562a2248623326b7facb7c0b13eda7bc7073db58ac4e98",
+      "source_url": "https://mcdermottlab.mit.edu/ICML2023/training/Glass_5.wav"
+    },
+    {
+      "method": "agarwal-response",
+      "path": "references/agarwal/icml2023/resynth/wood/1.wav",
+      "sha256": "dcf9930a7d07c5c6831638545ffd15ac82031b066bba77792ed9322b8402cfc5",
+      "source_url": "https://mcdermottlab.mit.edu/ICML2023/resynth/wood/1.wav"
+    },
+    {
+      "method": "agarwal-response",
+      "path": "references/agarwal/icml2023/resynth/wood/2.wav",
+      "sha256": "3133ec781e09266b84c19f55bebbc6dab32e71bd5bf44cb7f40efa38bc239be2",
+      "source_url": "https://mcdermottlab.mit.edu/ICML2023/resynth/wood/2.wav"
+    },
+    {
+      "method": "agarwal-response",
+      "path": "references/agarwal/icml2023/resynth/wood/3.wav",
+      "sha256": "8e8c2bbf5b2e82c02c23992ab03725c992edff3dbd34b947af7581ae73a09ced",
+      "source_url": "https://mcdermottlab.mit.edu/ICML2023/resynth/wood/3.wav"
+    },
+    {
+      "method": "agarwal-response",
+      "path": "references/agarwal/icml2023/resynth/wood/4.wav",
+      "sha256": "39fbaa2ce94b7645cfe84b640d2d68687f826cc18ccb80402861ebe148c76e9b",
+      "source_url": "https://mcdermottlab.mit.edu/ICML2023/resynth/wood/4.wav"
+    },
+    {
+      "method": "agarwal-response",
+      "path": "references/agarwal/icml2023/resynth/wood/5.wav",
+      "sha256": "0e5c02d21d60bdcbb3d9a01205e41653a6aee906363bfe94e40ad09c41038828",
+      "source_url": "https://mcdermottlab.mit.edu/ICML2023/resynth/wood/5.wav"
+    },
+    {
+      "method": "agarwal-response",
+      "path": "references/agarwal/icml2023/resynth/wood/6.wav",
+      "sha256": "a2e27a2b43768cb04b72a8832643c40fc029677f626fe7951dc02a5261157a83",
+      "source_url": "https://mcdermottlab.mit.edu/ICML2023/resynth/wood/6.wav"
+    },
+    {
+      "method": "agarwal-response",
+      "path": "references/agarwal/icml2023/resynth/wood/7.wav",
+      "sha256": "9aa6ad2d64b9a6e65e150f4e3c3a5749292d47218bc80ab5790686fc58a71ce3",
+      "source_url": "https://mcdermottlab.mit.edu/ICML2023/resynth/wood/7.wav"
+    },
+    {
+      "method": "agarwal-response",
+      "path": "references/agarwal/icml2023/resynth/wood/8.wav",
+      "sha256": "e7709e28112dec0bb9f80a3082631d2d3f587df319b6c0e72862a756607c83dc",
+      "source_url": "https://mcdermottlab.mit.edu/ICML2023/resynth/wood/8.wav"
+    },
+    {
+      "method": "agarwal-response",
+      "path": "references/agarwal/icml2023/resynth/wood/9.wav",
+      "sha256": "e2e0d06755ee9c074db7014dbd9194f6460b0800666f516f2041b9a942cb1c44",
+      "source_url": "https://mcdermottlab.mit.edu/ICML2023/resynth/wood/9.wav"
+    },
+    {
+      "method": "agarwal-response",
+      "path": "references/agarwal/icml2023/resynth/wood/10.wav",
+      "sha256": "17d98b7a8d529d4f2718e971005481b6325199c5b440e7da0011fdba02d5b99a",
+      "source_url": "https://mcdermottlab.mit.edu/ICML2023/resynth/wood/10.wav"
+    },
+    {
+      "method": "agarwal-response",
+      "path": "references/agarwal/icml2023/resynth/wood/11.wav",
+      "sha256": "ff0aedea6b3f361b9c55e6903952ef08b6e3ff66d7829e322445c9b863fe534f",
+      "source_url": "https://mcdermottlab.mit.edu/ICML2023/resynth/wood/11.wav"
+    },
+    {
+      "method": "agarwal-response",
+      "path": "references/agarwal/icml2023/resynth/wood/12.wav",
+      "sha256": "5aaff74a314fc8773d3d5748b91f7188b7434db7bfaa5a118fd55e1814af6942",
+      "source_url": "https://mcdermottlab.mit.edu/ICML2023/resynth/wood/12.wav"
+    },
+    {
+      "method": "agarwal-response",
+      "path": "references/agarwal/icml2023/resynth/wood/13.wav",
+      "sha256": "54f5914233f627fb338384a256a3be15fe3f0d7a5041993dd5f5b68c8074d185",
+      "source_url": "https://mcdermottlab.mit.edu/ICML2023/resynth/wood/13.wav"
+    },
+    {
+      "method": "agarwal-response",
+      "path": "references/agarwal/icml2023/resynth/wood/14.wav",
+      "sha256": "8c14ec4e2aab25800e94ac5fbbdd31a0a5a83be9815d6581905da52315990d21",
+      "source_url": "https://mcdermottlab.mit.edu/ICML2023/resynth/wood/14.wav"
+    },
+    {
+      "method": "agarwal-response",
+      "path": "references/agarwal/icml2023/resynth/wood/15.wav",
+      "sha256": "2f37a5d24c1a0f5b90223b1f24a6e6efdcf3ac4bb30496f831106f0a05e166b2",
+      "source_url": "https://mcdermottlab.mit.edu/ICML2023/resynth/wood/15.wav"
+    },
+    {
+      "method": "agarwal-response",
+      "path": "references/agarwal/icml2023/resynth/wood/16.wav",
+      "sha256": "49e803bbe0ff66d4670068d624fa29da657e748be74ec755467b2e3c57c9190f",
+      "source_url": "https://mcdermottlab.mit.edu/ICML2023/resynth/wood/16.wav"
+    },
+    {
+      "method": "agarwal-response",
+      "path": "references/agarwal/icml2023/resynth/wood/17.wav",
+      "sha256": "d1518964a96b9d8de5bc4ecace17c14a9efae3d741dabaf081cc0711dce2f6de",
+      "source_url": "https://mcdermottlab.mit.edu/ICML2023/resynth/wood/17.wav"
+    },
+    {
+      "method": "agarwal-response",
+      "path": "references/agarwal/icml2023/resynth/wood/18.wav",
+      "sha256": "4c3d51f70c45905ec75c8d51f6f73db46299615ed1813bff32451df7047d12cf",
+      "source_url": "https://mcdermottlab.mit.edu/ICML2023/resynth/wood/18.wav"
+    },
+    {
+      "method": "agarwal-response",
+      "path": "references/agarwal/icml2023/resynth/wood/19.wav",
+      "sha256": "13b4982cd502ab080f5fa058a44b6d595cebc50b8d45f31e69b1789ed37144cf",
+      "source_url": "https://mcdermottlab.mit.edu/ICML2023/resynth/wood/19.wav"
+    },
+    {
+      "method": "agarwal-response",
+      "path": "references/agarwal/icml2023/resynth/wood/20.wav",
+      "sha256": "ee49eab45b6e2d6649f314866b4416840d25b970ef78ae7f04fe2c0928c80ce1",
+      "source_url": "https://mcdermottlab.mit.edu/ICML2023/resynth/wood/20.wav"
+    },
+    {
+      "method": "agarwal-response",
+      "path": "references/agarwal/icml2023/resynth/plastic/1.wav",
+      "sha256": "18d2a0d2ea0289c5b23175d414b7ca376c0314f6693dfc53ec4b44faf8938ea0",
+      "source_url": "https://mcdermottlab.mit.edu/ICML2023/resynth/plastic/1.wav"
+    },
+    {
+      "method": "agarwal-response",
+      "path": "references/agarwal/icml2023/resynth/plastic/2.wav",
+      "sha256": "2e2cdfe162267df65d43a7fe00c9508aead0d123bfdcc1b6e1882a4b986149c2",
+      "source_url": "https://mcdermottlab.mit.edu/ICML2023/resynth/plastic/2.wav"
+    },
+    {
+      "method": "agarwal-response",
+      "path": "references/agarwal/icml2023/resynth/plastic/3.wav",
+      "sha256": "65766901f570e4705154a7801c352c2e3a6c75786f17e1459892c2d3a41c5945",
+      "source_url": "https://mcdermottlab.mit.edu/ICML2023/resynth/plastic/3.wav"
+    },
+    {
+      "method": "agarwal-response",
+      "path": "references/agarwal/icml2023/resynth/plastic/4.wav",
+      "sha256": "975885f33f343a2c21c5d85ff1823340f97583d4f3fd606bbae772a873716e2d",
+      "source_url": "https://mcdermottlab.mit.edu/ICML2023/resynth/plastic/4.wav"
+    },
+    {
+      "method": "agarwal-response",
+      "path": "references/agarwal/icml2023/resynth/plastic/5.wav",
+      "sha256": "6a9f3e51d07061fce3e2a79d1e9fcd0113df6432de862cf68d4267a140ffde28",
+      "source_url": "https://mcdermottlab.mit.edu/ICML2023/resynth/plastic/5.wav"
+    },
+    {
+      "method": "agarwal-response",
+      "path": "references/agarwal/icml2023/resynth/plastic/6.wav",
+      "sha256": "016e0a8b60df6d7c7054be28f3824f6946199316dbd505f5cdd85eab5e4a204b",
+      "source_url": "https://mcdermottlab.mit.edu/ICML2023/resynth/plastic/6.wav"
+    },
+    {
+      "method": "agarwal-response",
+      "path": "references/agarwal/icml2023/resynth/plastic/7.wav",
+      "sha256": "c174fbebb4925320d7db4a38812d1e7c7d7d4358434dfaea33d893f8c656fd95",
+      "source_url": "https://mcdermottlab.mit.edu/ICML2023/resynth/plastic/7.wav"
+    },
+    {
+      "method": "agarwal-response",
+      "path": "references/agarwal/icml2023/resynth/plastic/8.wav",
+      "sha256": "1d8bbfd8202650a911768c4294a80ed3599551660b58640384aec4739d1d1e00",
+      "source_url": "https://mcdermottlab.mit.edu/ICML2023/resynth/plastic/8.wav"
+    },
+    {
+      "method": "agarwal-response",
+      "path": "references/agarwal/icml2023/resynth/plastic/9.wav",
+      "sha256": "add2ccf992029874154b0dbd65570a78824fe2678691edac8c4a2eee9c3a4562",
+      "source_url": "https://mcdermottlab.mit.edu/ICML2023/resynth/plastic/9.wav"
+    },
+    {
+      "method": "agarwal-response",
+      "path": "references/agarwal/icml2023/resynth/plastic/10.wav",
+      "sha256": "27365c270ee54e7ca37862d131ac4be2a605f804de2268c8e83f6c7e86f3cf47",
+      "source_url": "https://mcdermottlab.mit.edu/ICML2023/resynth/plastic/10.wav"
+    },
+    {
+      "method": "agarwal-response",
+      "path": "references/agarwal/icml2023/resynth/plastic/11.wav",
+      "sha256": "2ee8130bd0bbc9b578c0122edfcf70173c9bf4f50461239a3ef643be8497fda8",
+      "source_url": "https://mcdermottlab.mit.edu/ICML2023/resynth/plastic/11.wav"
+    },
+    {
+      "method": "agarwal-response",
+      "path": "references/agarwal/icml2023/resynth/plastic/12.wav",
+      "sha256": "300bae87e282f70bde1d2fae3b940a686d86e71d659487dabf4bd078e87e5468",
+      "source_url": "https://mcdermottlab.mit.edu/ICML2023/resynth/plastic/12.wav"
+    },
+    {
+      "method": "agarwal-response",
+      "path": "references/agarwal/icml2023/resynth/plastic/13.wav",
+      "sha256": "d4abfaa4a36d75a5e7bc13eaa4673e58076526432defe31735d6fb9a23121ea9",
+      "source_url": "https://mcdermottlab.mit.edu/ICML2023/resynth/plastic/13.wav"
+    },
+    {
+      "method": "agarwal-response",
+      "path": "references/agarwal/icml2023/resynth/plastic/14.wav",
+      "sha256": "bba88ca635dc22abaeadb5e120f2e0a1b5a55fb916e7aacdb40568c7f34f5f77",
+      "source_url": "https://mcdermottlab.mit.edu/ICML2023/resynth/plastic/14.wav"
+    },
+    {
+      "method": "agarwal-response",
+      "path": "references/agarwal/icml2023/resynth/plastic/15.wav",
+      "sha256": "c8cc7c14a23d8ddbb2c887556ab954203d985c150cc3f034d47c7b29735dbc1b",
+      "source_url": "https://mcdermottlab.mit.edu/ICML2023/resynth/plastic/15.wav"
+    },
+    {
+      "method": "agarwal-response",
+      "path": "references/agarwal/icml2023/resynth/plastic/16.wav",
+      "sha256": "79d85fc45a57983c65a2239a355aa8755336c067b30c7b31a42ae24451b9cb80",
+      "source_url": "https://mcdermottlab.mit.edu/ICML2023/resynth/plastic/16.wav"
+    },
+    {
+      "method": "agarwal-response",
+      "path": "references/agarwal/icml2023/resynth/plastic/17.wav",
+      "sha256": "9689ec0808fc5d1d45cd0cd37be59f6241b9c7b0a7fbf8865e523be496a8c40e",
+      "source_url": "https://mcdermottlab.mit.edu/ICML2023/resynth/plastic/17.wav"
+    },
+    {
+      "method": "agarwal-response",
+      "path": "references/agarwal/icml2023/resynth/plastic/18.wav",
+      "sha256": "d25c7572c63a3e39aa30529d38506cc9f22748aa097538cd55c15dae299ebae0",
+      "source_url": "https://mcdermottlab.mit.edu/ICML2023/resynth/plastic/18.wav"
+    },
+    {
+      "method": "agarwal-response",
+      "path": "references/agarwal/icml2023/resynth/plastic/19.wav",
+      "sha256": "4c83718e8374ca0838f498a8e98c9a64d88f3c4e1fbda3ff5d483d3a6cc230a3",
+      "source_url": "https://mcdermottlab.mit.edu/ICML2023/resynth/plastic/19.wav"
+    },
+    {
+      "method": "agarwal-response",
+      "path": "references/agarwal/icml2023/resynth/plastic/20.wav",
+      "sha256": "20b05340dd2ff7230a84194c2e62d7c89d587d0fbc55217d10bc97eaffdb72ca",
+      "source_url": "https://mcdermottlab.mit.edu/ICML2023/resynth/plastic/20.wav"
+    },
+    {
+      "method": "agarwal-response",
+      "path": "references/agarwal/icml2023/resynth/metal/1.wav",
+      "sha256": "79fb938adbf391aec74ccd7a03a9ecd5d7d76b37e129509fd9fead17c81e43e2",
+      "source_url": "https://mcdermottlab.mit.edu/ICML2023/resynth/metal/1.wav"
+    },
+    {
+      "method": "agarwal-response",
+      "path": "references/agarwal/icml2023/resynth/metal/2.wav",
+      "sha256": "71ba94a76dcbec2734d91d3d545c7a0f1aa7700be093c3ecc197172f20930d63",
+      "source_url": "https://mcdermottlab.mit.edu/ICML2023/resynth/metal/2.wav"
+    },
+    {
+      "method": "agarwal-response",
+      "path": "references/agarwal/icml2023/resynth/metal/3.wav",
+      "sha256": "d9a1db4b852611161a13c42b036110d56c2efd383c62f73b928eaa8c5aa305f2",
+      "source_url": "https://mcdermottlab.mit.edu/ICML2023/resynth/metal/3.wav"
+    },
+    {
+      "method": "agarwal-response",
+      "path": "references/agarwal/icml2023/resynth/metal/4.wav",
+      "sha256": "435ab93fff105bd6a5584b3aa7d4d65ec292c3a9f5671660886ef2caafe5f871",
+      "source_url": "https://mcdermottlab.mit.edu/ICML2023/resynth/metal/4.wav"
+    },
+    {
+      "method": "agarwal-response",
+      "path": "references/agarwal/icml2023/resynth/metal/5.wav",
+      "sha256": "87e533d99717c6a56f932df244ff7247e22d027a49b4b08f995b78c190e8a2cc",
+      "source_url": "https://mcdermottlab.mit.edu/ICML2023/resynth/metal/5.wav"
+    },
+    {
+      "method": "agarwal-response",
+      "path": "references/agarwal/icml2023/resynth/metal/6.wav",
+      "sha256": "09c9bab670e2df05e525c00cd4d6ce59dda31679e531ee332f17ff3f4981a116",
+      "source_url": "https://mcdermottlab.mit.edu/ICML2023/resynth/metal/6.wav"
+    },
+    {
+      "method": "agarwal-response",
+      "path": "references/agarwal/icml2023/resynth/metal/7.wav",
+      "sha256": "b642bf8ace1260e590016794d88ac6ffafdb0f39cf54f331810ccb77020a6a01",
+      "source_url": "https://mcdermottlab.mit.edu/ICML2023/resynth/metal/7.wav"
+    },
+    {
+      "method": "agarwal-response",
+      "path": "references/agarwal/icml2023/resynth/metal/8.wav",
+      "sha256": "f76eb797c00d319741fe9a4a4f0cc292b87d8ae4e10f49586f0f431c8c5ec62d",
+      "source_url": "https://mcdermottlab.mit.edu/ICML2023/resynth/metal/8.wav"
+    },
+    {
+      "method": "agarwal-response",
+      "path": "references/agarwal/icml2023/resynth/metal/9.wav",
+      "sha256": "fe8a39f0a5fc1df20d3ec206e289b305a81d4980ea98cec55f6b9ff2d46139d8",
+      "source_url": "https://mcdermottlab.mit.edu/ICML2023/resynth/metal/9.wav"
+    },
+    {
+      "method": "agarwal-response",
+      "path": "references/agarwal/icml2023/resynth/metal/10.wav",
+      "sha256": "48468472608cb12f95c9761bb5db1be51c340a011a1d0d37c5cae88d779a5bbf",
+      "source_url": "https://mcdermottlab.mit.edu/ICML2023/resynth/metal/10.wav"
+    },
+    {
+      "method": "agarwal-response",
+      "path": "references/agarwal/icml2023/resynth/metal/11.wav",
+      "sha256": "47f3f951f4efc91f6d411835a7c838d289b9fc9e706cc917ba7cf8f7d219d9c5",
+      "source_url": "https://mcdermottlab.mit.edu/ICML2023/resynth/metal/11.wav"
+    },
+    {
+      "method": "agarwal-response",
+      "path": "references/agarwal/icml2023/resynth/metal/12.wav",
+      "sha256": "d92ee4547876c59056862374685ec8645f12b5476aaf9c568c928962c5eec286",
+      "source_url": "https://mcdermottlab.mit.edu/ICML2023/resynth/metal/12.wav"
+    },
+    {
+      "method": "agarwal-response",
+      "path": "references/agarwal/icml2023/resynth/metal/13.wav",
+      "sha256": "ec5737be3f4ce17448f5edd9378ef436c617f0d4961efd8aa3e63dc8fda260d7",
+      "source_url": "https://mcdermottlab.mit.edu/ICML2023/resynth/metal/13.wav"
+    },
+    {
+      "method": "agarwal-response",
+      "path": "references/agarwal/icml2023/resynth/metal/14.wav",
+      "sha256": "663c05ba61eabc955330473ec725a7c58026b0bef48f27c88df3572ac2fa504a",
+      "source_url": "https://mcdermottlab.mit.edu/ICML2023/resynth/metal/14.wav"
+    },
+    {
+      "method": "agarwal-response",
+      "path": "references/agarwal/icml2023/resynth/metal/15.wav",
+      "sha256": "86bf92c5a04e49d2b1605cfbde9e4db276178e9144892f75153443e133559b4c",
+      "source_url": "https://mcdermottlab.mit.edu/ICML2023/resynth/metal/15.wav"
+    },
+    {
+      "method": "agarwal-response",
+      "path": "references/agarwal/icml2023/resynth/metal/16.wav",
+      "sha256": "fc0cfadeb71ecb1d00bd4814c6c2500614ad26e7e33043bd33a1d2d7a5da443c",
+      "source_url": "https://mcdermottlab.mit.edu/ICML2023/resynth/metal/16.wav"
+    },
+    {
+      "method": "agarwal-response",
+      "path": "references/agarwal/icml2023/resynth/metal/17.wav",
+      "sha256": "067cff4184d84f5e6eb69388bef6912fa9f10e128947134085d7b887a4ebae0e",
+      "source_url": "https://mcdermottlab.mit.edu/ICML2023/resynth/metal/17.wav"
+    },
+    {
+      "method": "agarwal-response",
+      "path": "references/agarwal/icml2023/resynth/metal/18.wav",
+      "sha256": "8e58597863eedf22840ef3475f638f91aee62830bb93b7e5827b7abec42adcde",
+      "source_url": "https://mcdermottlab.mit.edu/ICML2023/resynth/metal/18.wav"
+    },
+    {
+      "method": "agarwal-response",
+      "path": "references/agarwal/icml2023/resynth/metal/19.wav",
+      "sha256": "745f141ba381464554504e53e9960167df7e71fdf6ac4309cf3b3a00a3d5b902",
+      "source_url": "https://mcdermottlab.mit.edu/ICML2023/resynth/metal/19.wav"
+    },
+    {
+      "method": "agarwal-response",
+      "path": "references/agarwal/icml2023/resynth/metal/20.wav",
+      "sha256": "72092cd411371f6d96aae03269dc043505d70271ddcd5a71f3d377d2b6d5bdf4",
+      "source_url": "https://mcdermottlab.mit.edu/ICML2023/resynth/metal/20.wav"
+    },
+    {
+      "method": "agarwal-response",
+      "path": "references/agarwal/icml2023/resynth/glass/1.wav",
+      "sha256": "c51c12d7d6e1efdf5608f4a5e0e7ff1b001738d612c851f5ad581f602434a68c",
+      "source_url": "https://mcdermottlab.mit.edu/ICML2023/resynth/glass/1.wav"
+    },
+    {
+      "method": "agarwal-response",
+      "path": "references/agarwal/icml2023/resynth/glass/2.wav",
+      "sha256": "4b3590cba6ffb6128ecd5f153bc912690eb67ff28ad1801518835678eaebcb4c",
+      "source_url": "https://mcdermottlab.mit.edu/ICML2023/resynth/glass/2.wav"
+    },
+    {
+      "method": "agarwal-response",
+      "path": "references/agarwal/icml2023/resynth/glass/3.wav",
+      "sha256": "801dec69d7057ec0460a9ef9ea140c4e1ba516cd719ff1b823f0cfb7256ca34e",
+      "source_url": "https://mcdermottlab.mit.edu/ICML2023/resynth/glass/3.wav"
+    },
+    {
+      "method": "agarwal-response",
+      "path": "references/agarwal/icml2023/resynth/glass/4.wav",
+      "sha256": "595266c862f4bf1204e2d1e459860e04d7cf47ad24342653ecd369af6f5142b7",
+      "source_url": "https://mcdermottlab.mit.edu/ICML2023/resynth/glass/4.wav"
+    },
+    {
+      "method": "agarwal-response",
+      "path": "references/agarwal/icml2023/resynth/glass/5.wav",
+      "sha256": "64f353396b34feae8bce1b56b2469dbf628fc116e1c59e76f6d4fc8e15f48af8",
+      "source_url": "https://mcdermottlab.mit.edu/ICML2023/resynth/glass/5.wav"
+    },
+    {
+      "method": "agarwal-response",
+      "path": "references/agarwal/icml2023/resynth/glass/6.wav",
+      "sha256": "ae7bcf9e081238b22bc3bf6a69a501505e78005b0ada7ccb3a3b2632dd13c4e7",
+      "source_url": "https://mcdermottlab.mit.edu/ICML2023/resynth/glass/6.wav"
+    },
+    {
+      "method": "agarwal-response",
+      "path": "references/agarwal/icml2023/resynth/glass/7.wav",
+      "sha256": "cd04e2c5a3dc7b99c5829b42751a23c7dfc3e90df43325788ff014e01ee08f78",
+      "source_url": "https://mcdermottlab.mit.edu/ICML2023/resynth/glass/7.wav"
+    },
+    {
+      "method": "agarwal-response",
+      "path": "references/agarwal/icml2023/resynth/glass/8.wav",
+      "sha256": "3c2e083d8c869ea5c4f1e8160dc0105736439c15e84ecd8db0416c3d5be5edf9",
+      "source_url": "https://mcdermottlab.mit.edu/ICML2023/resynth/glass/8.wav"
+    },
+    {
+      "method": "agarwal-response",
+      "path": "references/agarwal/icml2023/resynth/glass/9.wav",
+      "sha256": "ad8617cd263fffd31d7ce704422ca54f5f6021182accf3fe028e754551a885ec",
+      "source_url": "https://mcdermottlab.mit.edu/ICML2023/resynth/glass/9.wav"
+    },
+    {
+      "method": "agarwal-response",
+      "path": "references/agarwal/icml2023/resynth/glass/10.wav",
+      "sha256": "dcaf0347b453cdb372e21199e76e0fdb5c40f8f784f209bb038dc4f024991b32",
+      "source_url": "https://mcdermottlab.mit.edu/ICML2023/resynth/glass/10.wav"
+    },
+    {
+      "method": "agarwal-response",
+      "path": "references/agarwal/icml2023/resynth/glass/11.wav",
+      "sha256": "6198b69bd9f68c6e58f56860ecac88a8a079731d9c100076b4621776fa6774a9",
+      "source_url": "https://mcdermottlab.mit.edu/ICML2023/resynth/glass/11.wav"
+    },
+    {
+      "method": "agarwal-response",
+      "path": "references/agarwal/icml2023/resynth/glass/12.wav",
+      "sha256": "9bfb8f3fddb17c5e3e134907c3cfc1026ae3dafe0db79efecbf5eab6ea279609",
+      "source_url": "https://mcdermottlab.mit.edu/ICML2023/resynth/glass/12.wav"
+    },
+    {
+      "method": "agarwal-response",
+      "path": "references/agarwal/icml2023/resynth/glass/13.wav",
+      "sha256": "dde236dc3f6162e9f3789157b273af7c2448dce7486a3136bab03dcab23bce68",
+      "source_url": "https://mcdermottlab.mit.edu/ICML2023/resynth/glass/13.wav"
+    },
+    {
+      "method": "agarwal-response",
+      "path": "references/agarwal/icml2023/resynth/glass/14.wav",
+      "sha256": "1764be25577c78c0cb103a5153d1b023124fd18472e4bc86cb3a3e2891838e08",
+      "source_url": "https://mcdermottlab.mit.edu/ICML2023/resynth/glass/14.wav"
+    },
+    {
+      "method": "agarwal-response",
+      "path": "references/agarwal/icml2023/resynth/glass/15.wav",
+      "sha256": "22923f92a617041be87772669a81161bfe7fbd569eb50e39eb63bb36cf0c7001",
+      "source_url": "https://mcdermottlab.mit.edu/ICML2023/resynth/glass/15.wav"
+    },
+    {
+      "method": "agarwal-response",
+      "path": "references/agarwal/icml2023/resynth/glass/16.wav",
+      "sha256": "4c342d31dd696893e2039383034adfd71c58ce4b471728de25af185f1770feec",
+      "source_url": "https://mcdermottlab.mit.edu/ICML2023/resynth/glass/16.wav"
+    },
+    {
+      "method": "agarwal-response",
+      "path": "references/agarwal/icml2023/resynth/glass/17.wav",
+      "sha256": "9881d7a76e8148bb8f4606614bfcad7feef8fcef34c2aab4c906041534f855cc",
+      "source_url": "https://mcdermottlab.mit.edu/ICML2023/resynth/glass/17.wav"
+    },
+    {
+      "method": "agarwal-response",
+      "path": "references/agarwal/icml2023/resynth/glass/18.wav",
+      "sha256": "f0dc39bc98f8c6f90d198f955b0e41559b9521c2af69be7bb40818d30f5d6092",
+      "source_url": "https://mcdermottlab.mit.edu/ICML2023/resynth/glass/18.wav"
+    },
+    {
+      "method": "agarwal-response",
+      "path": "references/agarwal/icml2023/resynth/glass/19.wav",
+      "sha256": "12b240901083781ef057f2b4d33b78085bcb67fe655d59577d50b4445879a1f1",
+      "source_url": "https://mcdermottlab.mit.edu/ICML2023/resynth/glass/19.wav"
+    },
+    {
+      "method": "agarwal-response",
+      "path": "references/agarwal/icml2023/resynth/glass/20.wav",
+      "sha256": "783641e962c7f3ad75085dd18f993855e80eb5c987b75bb2fa565afbbb2bdb33",
+      "source_url": "https://mcdermottlab.mit.edu/ICML2023/resynth/glass/20.wav"
+    }
+  ]
+}
