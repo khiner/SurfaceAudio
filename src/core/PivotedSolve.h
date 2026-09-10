@@ -1,21 +1,27 @@
 // SPDX-License-Identifier: GPL-3.0-only
 #pragma once
 #ifdef __METAL_VERSION__
-#define MAT_THREAD thread
+#include <metal_stdlib>
+#define SOLVE_THREAD thread
 #else
 #include <cmath>
-#define MAT_THREAD
+#define SOLVE_THREAD
 #endif
-namespace surface_audio::matusiak {
-template<typename T> bool Solve(MAT_THREAD T *a, MAT_THREAD T *b, unsigned n, T minimum_pivot) {
-#ifndef __METAL_VERSION__
+namespace surface_audio {
+template<typename T> bool Solve(SOLVE_THREAD T *a, SOLVE_THREAD T *b, unsigned n, T minimum_pivot) {
+#ifdef __METAL_VERSION__
+    using metal::abs;
+    using metal::isfinite;
+#else
     using std::abs;
+    using std::isfinite;
 #endif
     for (unsigned j = 0; j < n; ++j) {
         unsigned pivot = j;
         for (unsigned i = j + 1; i < n; ++i)
             if (abs(a[i * n + j]) > abs(a[pivot * n + j])) pivot = i;
-        if (abs(a[pivot * n + j]) < minimum_pivot) return false;
+        const T magnitude = abs(a[pivot * n + j]);
+        if (!isfinite(magnitude) || magnitude == 0 || magnitude < minimum_pivot) return false;
         for (unsigned k = j; k < n; ++k) {
             const T value = a[j * n + k];
             a[j * n + k] = a[pivot * n + k];
@@ -37,4 +43,4 @@ template<typename T> bool Solve(MAT_THREAD T *a, MAT_THREAD T *b, unsigned n, T 
     return true;
 }
 }
-#undef MAT_THREAD
+#undef SOLVE_THREAD

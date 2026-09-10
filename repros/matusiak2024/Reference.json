@@ -1,0 +1,186 @@
+{
+  "paper": "https://doi.org/10.1121/10.0028228",
+  "paper_sha256": "0dfc2b7dadb3835e9bedb738ffc0311787a83f2f5b3dc82adc36aba0059105ea",
+  "license": "CC-BY-4.0",
+  "authors": "Ewa Matusiak and Vasileios Chatziioannou",
+  "sample_rate": 44100,
+  "columns": [
+    "measured_bridge_n",
+    "author_s_bridge_n",
+    "author_epsilon_bridge_n"
+  ],
+  "extraction": "PDF vector polyline coordinates, axis calibration, linear resampling, no waveform alignment or gain fit",
+  "coordinate_rounding_pt": 0.001,
+  "cases": [
+    {
+      "name": "circle",
+      "force_n": 2.3433,
+      "acceleration_m_s2": 0.8722,
+      "frames": 17387,
+      "sha256": "18c0955e55ed9a06bc64c6ccee294c8d2c57b0b2ee8711d2e836dd8a9ef587ef",
+      "axes": [
+        [
+          7,
+          35,
+          76.132,
+          102.501,
+          92.322,
+          75.086,
+          5
+        ],
+        [
+          7,
+          71,
+          76.132,
+          102.501,
+          152.906,
+          135.67,
+          5
+        ],
+        [
+          7,
+          170,
+          76.132,
+          102.501,
+          601.403,
+          584.167,
+          5
+        ]
+      ],
+      "source_vertices": [
+        19696,
+        19558,
+        19574
+      ]
+    },
+    {
+      "name": "red",
+      "force_n": 0.7992,
+      "acceleration_m_s2": 0.3473,
+      "frames": 14922,
+      "sha256": "28e256357d2fe473b6338b5effb3526379871c4bad328a062e81dbc9c2af002d",
+      "axes": [
+        [
+          10,
+          32,
+          78.532,
+          98.115,
+          93.477,
+          82.702,
+          1
+        ],
+        [
+          10,
+          66,
+          78.532,
+          98.115,
+          140.993,
+          130.218,
+          1
+        ],
+        [
+          10,
+          100,
+          78.532,
+          98.115,
+          188.509,
+          177.734,
+          1
+        ]
+      ],
+      "source_vertices": [
+        16869,
+        16821,
+        16837
+      ]
+    },
+    {
+      "name": "green",
+      "force_n": 2.0791,
+      "acceleration_m_s2": 1.0481,
+      "frames": 14922,
+      "sha256": "60d82c3e4c09e272bc0750ac72b4a7829a965b996244d7ccd2f1b837e4f937c2",
+      "axes": [
+        [
+          10,
+          133,
+          243.134,
+          262.88,
+          89.364,
+          80.052,
+          2
+        ],
+        [
+          10,
+          166,
+          243.134,
+          262.88,
+          137.275,
+          127.963,
+          2
+        ],
+        [
+          10,
+          200,
+          243.134,
+          262.88,
+          185.186,
+          175.874,
+          2
+        ]
+      ],
+      "source_vertices": [
+        16874,
+        16806,
+        16763
+      ]
+    },
+    {
+      "name": "blue",
+      "force_n": 3.9125,
+      "acceleration_m_s2": 2.0651,
+      "frames": 10630,
+      "sha256": "9c56ecf93f3d3d0ce3f056d661dfaeacc87219dbd3d32e3c3db048ab3ef59def",
+      "axes": [
+        [
+          10,
+          226,
+          408.844,
+          436.561,
+          88.517,
+          73.702,
+          5
+        ],
+        [
+          10,
+          252,
+          408.844,
+          436.561,
+          136.428,
+          121.613,
+          5
+        ],
+        [
+          10,
+          279,
+          408.844,
+          436.561,
+          184.339,
+          169.525,
+          5
+        ]
+      ],
+      "source_vertices": [
+        12022,
+        11978,
+        11967
+      ]
+    }
+  ],
+  "independent_repeated_measured_path_check": {
+    "page": 7,
+    "path_index": 134,
+    "maximum_difference_n": 0.000422815406862842,
+    "relative_l2": 0.00010659720949493272
+  }
+}

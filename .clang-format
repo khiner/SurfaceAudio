@@ -20,6 +20,7 @@ BreakStringLiterals: true
 ColumnLimit: 0
 EmptyLineAfterAccessModifier: Never
 EmptyLineBeforeAccessModifier: Always
+FixNamespaceComments: false
 IndentCaseLabels: true
 IndentWidth: 4
 KeepEmptyLinesAtTheStartOfBlocks: false

@@ -6,6 +6,7 @@
 #include "core/GpuMix.h"
 #include "core/GpuModal.h"
 #include "core/Modal.h"
+#include "core/PivotedSolve.h"
 #include "core/Random.h"
 
 #include <algorithm>
@@ -13,6 +14,7 @@
 #include <cmath>
 #include <fstream>
 #include <iostream>
+#include <limits>
 #include <numbers>
 #include <stdexcept>
 #include <vector>
@@ -21,6 +23,17 @@ using namespace surface_audio;
 namespace {
 void Require(bool condition, const char *message) {
     if (!condition) throw std::runtime_error(message);
+}
+
+void PivotedSolveTest() {
+    std::array<double, 4> matrix{0, 2, 3, 4};
+    std::array<double, 2> right{-2, 2};
+    Require(Solve(matrix.data(), right.data(), 2, 0.) && right[0] == 2 && right[1] == -1, "Pivoted solve recovers known solution");
+    std::array<float, 4> singular{1, 2, 2, 4};
+    std::array<float, 2> dependent{3, 6};
+    Require(!Solve(singular.data(), dependent.data(), 2, 0.f), "Zero minimum pivot still rejects a singular system");
+    float invalid = std::numeric_limits<float>::quiet_NaN(), value = 1;
+    Require(!Solve(&invalid, &value, 1, 0.f), "Pivoted solve rejects nonfinite pivots");
 }
 
 void RandomTest(Gpu &gpu) {
@@ -388,6 +401,7 @@ int main() {
         auto gpu = CreateGpu();
         std::cout << "Core on " << DeviceName(gpu) << '\n';
         RandomTest(gpu);
+        PivotedSolveTest();
         BatchConstantsTest(gpu);
         FirTest(gpu);
         FixedFirTest(gpu);

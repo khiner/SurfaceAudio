@@ -22,6 +22,8 @@ It reflects engineering judgment from papers and implementations, with comparabl
 
 The [Matusiak](docs/Matusiak.md), [Poirot](docs/Poirot.md), and [Conan CMJ](docs/Continuous.md) implementations have reproduction workflows.
 Their pages distinguish author-code comparisons from calibrated media comparisons and record remaining differences.
+[Matusiak 2024](docs/Matusiak2024.md) also has an implementation.
+Matusiak uses explicit archived numerical conventions and records the remaining author-trace differences.
 The lower-ranked analysis methods support validation of the synthesis methods.
 Lagrange and HaTT remain useful early priorities for reference measurements.
 

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-only
 #include "core/FiniteDifference.h"
+#include "core/PivotedSolve.h"
 #include "matusiak/DistributedGpuTypes.h"
-#include "matusiak/Solve.h"
 using namespace surface_audio::matusiak;
 float MatD2(device const float *u, uint i, uint n) { return surface_audio::SecondDifference(i ? u[i - 1] : 0, u[i], i + 1 < n ? u[i + 1] : 0); }
 float MatD4(device const float *u, uint i, uint n) { return (i ? MatD2(u, i - 1, n) : 0) - 2 * MatD2(u, i, n) + (i + 1 < n ? MatD2(u, i + 1, n) : 0); }
@@ -68,7 +68,7 @@ kernel void MatusiakDistributed(constant DistributedConstants &c [[buffer(0)]], 
                 converged = true;
                 break;
             }
-            Solve(jacobian, delta, m, 0.f);
+            if (!surface_audio::Solve(jacobian, delta, m, 0.f)) break;
             const float scale = iteration > 50 ? 1 / 1.1f : 1;
             for (uint i = 0; i < m; ++i) {
                 mid[i] -= scale * (bristle_residual[i] - rate_v[i] * delta[i]) * inverse_z[i];

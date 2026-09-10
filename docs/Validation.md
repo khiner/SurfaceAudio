@@ -1,6 +1,6 @@
 # Timings and numerical limits
 
-Verified September 9, 2026 on Apple M5 Max, macOS 26.5.2, Homebrew Clang 23.1.0 and Metal 4.
+Verified September 10, 2026 on Apple M5 Max, macOS 26.5.2, Homebrew Clang 23.1.0 and Metal 4.
 Release uses C++23, `-O3 -mcpu=native` and Metal `-fno-fast-math`.
 Measurements cover offline workloads, with audio-device deadlines unverified.
 
@@ -20,7 +20,7 @@ cmake --build build-sanitize -j8
 UBSAN_OPTIONS=halt_on_error=1 ctest --test-dir build-sanitize --output-on-failure
 ```
 
-All 16 tests passed in Release and with host AddressSanitizer/UndefinedBehaviorSanitizer.
+All 17 tests passed in Release and with host AddressSanitizer/UndefinedBehaviorSanitizer.
 They cover independent equations, gradients, statistical moments, source traces, finite tails, CPU/GPU agreement and streaming state.
 Tests require a Metal device and shaders, with sanitizer coverage limited to host code.
 Run paper reproductions with `python3 tools/Reproduce.py --offline`.
@@ -34,14 +34,14 @@ CPU timing includes synthesis, ARM SIMD filtering and mixing.
 GPU timing includes synthesis, fused modal filtering/mixing, queue submission, completion waiting and mono readback.
 Both exclude allocation, compilation and file I/O.
 
-Ranges span three fresh-process runs, each with its own p50/p99 calculation.
+These measurements span three fresh-process runs, each with its own p50/p99 calculation.
 
 | Voices | CPU p50 ms | CPU p99 ms | GPU p50 ms | GPU p99 ms |
 |---|---:|---:|---:|---:|
-| 1 | 0.00208–0.00225 | 0.00267–0.00333 | 0.14783–0.19554 | 0.64283–3.00937 |
-| 64 | 0.10437–0.11167 | 0.11563–0.14333 | 0.23700–0.30421 | 0.61942–5.59837 |
-| 256 | 0.41950–0.47892 | 0.43062–0.93275 | 0.32796–0.49750 | 0.64642–5.68904 |
-| 1024 | 1.65779–1.83600 | 1.75246–2.34696 | 0.61621–0.88246 | 1.22962–7.57558 |
+| 1 | 0.00192–0.00279 | 0.00242–0.00804 | 0.19529–0.42875 | 0.32562–1.03046 |
+| 64 | 0.09846–0.15208 | 0.11117–0.20625 | 0.24033–0.68512 | 0.63004–2.55225 |
+| 256 | 0.39158–0.56737 | 0.48154–0.66546 | 0.31946–0.57004 | 0.62504–1.21000 |
+| 1024 | 1.56238–1.56871 | 1.64688–1.66467 | 0.68154–0.75054 | 1.12446–1.25000 |
 
 GPU median time is lower at 1024 voices, results vary at 256 voices, and smaller batches favor CPU execution.
 Spatial Agarwal reconstruction, optimizer throughput and complete SDT sustained-contact dynamics are outside this benchmark's scope.
@@ -78,6 +78,9 @@ A fitted contact-interface example differs from ideal FP64 by 0.00523%.
 [Matusiak](Matusiak.md) records author-code comparisons, energy checks and CPU/Metal timings.
 [Poirot](Poirot.md) records equation corrections, calibrated stimuli, held-out errors and CPU/Metal timings.
 [Conan CMJ](Continuous.md) records inferred controls/responses, held-out texture comparisons and CPU/Metal timings.
+[Matusiak 2024](Matusiak2024.md) records recovered paper traces, numerical conventions and remaining waveform differences.
+Its archived-convention GPU check covers the full circle transient; the printed convention retains a 60 ms check and full-record precision failure.
+These method timings were measured on September 10.
 Texture metrics cover narrowband concentration, modulation, envelope fluctuation and amplitude statistics.
 
 ## Scope
