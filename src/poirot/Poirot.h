@@ -12,8 +12,7 @@ struct StringParameters {
 struct SignalParameters {
     float SampleRate{44100}, Activation{.5f}, Lambda{1.f / 800}, Height{.005f}, Position{.5f};
     float SplitThreshold{340}, SplitSlope{.0006f}, PowerScale{1}, ReturnGain{1};
-    // Shape weighting recovers Fig.7's f1/3 limit; Eq.16 instead normalizes theta.
-    // Author stimuli reset phase; the paper does not specify this.
+    // Both options reproduce behavior measured in author audio, as documented in docs/Poirot.md.
     bool ShapeWeightedSplit{}, ResetPhaseAtActivation{};
 };
 struct Mode {
@@ -27,7 +26,6 @@ struct SignalState {
 };
 std::vector<Mode> StringModes(const StringParameters &);
 SignalState MakeSignal(const SignalParameters &, std::span<const Mode>);
-// Power-conserving recipient weighting (Eq.10's printed donor index is inconsistent with Eq.14).
 float TransferPower(const SignalParameters &, std::span<const float> power, std::span<const float> threshold, std::span<const float> weight, std::span<float> transfer);
 void RenderSignal(SignalState &, std::span<float> output);
 struct GpuSignal {
@@ -49,4 +47,4 @@ StringState MakeString(const StringParameters &);
 double ContactPotential(double penetration, double stiffness, double exponent);
 double ContactGradient(double a, double b, double stiffness, double exponent);
 void RenderString(StringState &, std::span<float> output, std::span<float> contact = {});
-} // namespace surface_audio::poirot
+}

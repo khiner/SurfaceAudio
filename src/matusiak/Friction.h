@@ -20,7 +20,6 @@ template<typename T> struct FrictionParameters {
 template<typename T> struct FrictionValue {
     T Rate{}, RateVelocity{}, RateBristle{}, Damping{}, DampingVelocity{}, Steady{}, Adhesion{}, Force{}, Dissipation{};
 };
-// Matusiak et al. (2025), Eqs. 6-9, 14, 24. The published examples use p=2.
 template<typename T> FrictionValue<T> Evaluate(FrictionParameters<T> p, T normal_force, T z, T v) {
     const T fc = p.Dynamic * normal_force, fs = p.Static * normal_force;
     const T sign_v = v < 0 ? T(-1) : T(1), sign_z = z < 0 ? T(-1) : T(1);
@@ -49,4 +48,4 @@ template<typename T> FrictionValue<T> Evaluate(FrictionParameters<T> p, T normal
     const T force = p.Stiffness * z + damping * rate;
     return {rate, rv, rz, damping, dd, zss, alpha, force, v * force - p.Stiffness * z * rate};
 }
-} // namespace surface_audio::matusiak
+}

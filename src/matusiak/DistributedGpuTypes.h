@@ -11,4 +11,4 @@ struct DistributedConstants {
     float HairMass{}, HairStiffness{}, HairDamping{}, Damping0{}, Damping1{}, TorsionDamping{}, XS{}, XT{}, XH{};
     unsigned Nodes{}, TorsionNodes{}, Contacts{}, Frames{}, Voices{}, StateStride{};
 };
-} // namespace surface_audio::matusiak
+}

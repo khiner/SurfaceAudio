@@ -12,7 +12,6 @@ struct LumpedBatch {
     std::vector<float> MaximumEnergyError, MaximumResidual;
     std::vector<uint32_t> FailedSteps;
 };
-// Fig. 3 bowed masses; one trajectory per GPU thread.
 LumpedBatch RenderLumpedGpu(Gpu &, std::span<const LumpedParameters<float>>, uint32_t frames);
 struct StringBatch {
     std::vector<float> BridgeForce, MaximumResidual;
@@ -22,4 +21,4 @@ struct StringBatch {
 };
 // Voices share physical string parameters.
 StringBatch RenderStringsGpu(Gpu &, Parameters, std::span<const BowDrive>, uint32_t frames);
-} // namespace surface_audio::matusiak
+}

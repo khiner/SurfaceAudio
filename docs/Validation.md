@@ -2,7 +2,7 @@
 
 Verified September 9, 2026 on Apple M5 Max, macOS 26.5.2, Homebrew Clang 23.1.0 and Metal 4.
 Release uses C++23, `-O3 -mcpu=native` and Metal `-fno-fast-math`.
-These are offline measurements of stated workloads, not audio-device deadline guarantees.
+Measurements cover offline workloads, with audio-device deadlines unverified.
 
 ## Run
 
@@ -22,10 +22,9 @@ UBSAN_OPTIONS=halt_on_error=1 ctest --test-dir build-sanitize --output-on-failur
 
 All 16 tests passed in Release and with host AddressSanitizer/UndefinedBehaviorSanitizer.
 They cover independent equations, gradients, statistical moments, source traces, finite tails, CPU/GPU agreement and streaming state.
-The Conan executable test exercises published parameters and rejects nonfinite output.
-Tests require the actual Metal device and shaders.
-Sanitizers instrument host code, not GPU kernels.
-Paper reproductions use `python3 tools/Reproduce.py --offline`; response fitting and replay commands are in [AgarwalResponseReproduction.md](AgarwalResponseReproduction.md).
+Tests require a Metal device and shaders, with sanitizer coverage limited to host code.
+Run paper reproductions with `python3 tools/Reproduce.py --offline`.
+See [object-response reproduction](AgarwalResponseReproduction.md) for fitting and replay commands.
 
 ## CPU/GPU benchmark
 
@@ -35,7 +34,7 @@ CPU timing includes synthesis, ARM SIMD filtering and mixing.
 GPU timing includes synthesis, fused modal filtering/mixing, queue submission, completion waiting and mono readback.
 Both exclude allocation, compilation and file I/O.
 
-Ranges below span three fresh-process runs; each run retains its own p50/p99 calculation.
+Ranges span three fresh-process runs, each with its own p50/p99 calculation.
 
 | Voices | CPU p50 ms | CPU p99 ms | GPU p50 ms | GPU p99 ms |
 |---|---:|---:|---:|---:|
@@ -44,8 +43,8 @@ Ranges below span three fresh-process runs; each run retains its own p50/p99 cal
 | 256 | 0.41950–0.47892 | 0.43062–0.93275 | 0.32796–0.49750 | 0.64642–5.68904 |
 | 1024 | 1.65779–1.83600 | 1.75246–2.34696 | 0.61621–0.88246 | 1.22962–7.57558 |
 
-The GPU median is consistently lower at 1,024 voices; the 256-voice comparison varies between runs and small batches favor CPU execution.
-These measurements do not benchmark 50-mode spatial Agarwal reconstruction, offline optimizer throughput, or SDT's complete sustained-contact dynamics.
+GPU median time is lower at 1024 voices, results vary at 256 voices, and smaller batches favor CPU execution.
+Spatial Agarwal reconstruction, optimizer throughput and complete SDT sustained-contact dynamics are outside this benchmark's scope.
 A 128-frame block spans 2.667 ms at 48 kHz.
 System load, compilation caches and scheduling affect observed tails.
 
@@ -71,21 +70,21 @@ The test source contains the exact fixtures and acceptance limits.
 | Shared random streams | Exact CPU/GPU PCG integers |
 
 Independent gradient checks cover response synthesis, contact fitting, endpoint interpolation and both spectral objectives.
-The pooled spectral objective is an optional inference extension, not an author-specified loss.
+The pooled spectral objective is an optional loss introduced here for inference.
 A fitted contact-interface example differs from ideal FP64 by 0.00523%.
 
 ## Additional paper reproductions
 
-[Matusiak](Matusiak.md) records full-waveform comparisons with executed author MATLAB code, discrete energy checks, Metal precision and scoped batch timings.
-[Poirot](Poirot.md) records recovered collision stimuli, the printed-equation discrepancies, pre-contact calibration, held-out collision errors and CPU/Metal timings.
-[Conan CMJ](Continuous.md) records prototype/transition tests, video-derived controls, inferred object responses and held-out texture comparisons.
-The common texture descriptors include narrowband concentration, modulation, envelope fluctuation and amplitude statistics; matching them does not prove perceptual equivalence.
+[Matusiak](Matusiak.md) records author-code comparisons, energy checks and CPU/Metal timings.
+[Poirot](Poirot.md) records equation corrections, calibrated stimuli, held-out errors and CPU/Metal timings.
+[Conan CMJ](Continuous.md) records inferred controls/responses, held-out texture comparisons and CPU/Metal timings.
+Texture metrics cover narrowband concentration, modulation, envelope fluctuation and amplitude statistics.
 
 ## Scope
 
-Accurate evaluation of supplied parameters does not identify missing physical inputs or establish perceptual equivalence.
+Physical-input identification and perceptual equivalence require separate validation.
 [Agarwal](Agarwal.md) documents unresolved geometry, units, response data and texture differences.
 [SDT](Sdt.md) documents deliberate energy-limiter refinement, source chatter and sustained-impact timing sensitivity.
 [Conan](Conan.md) documents statistical approximations, positive-support bounds and missing author seeds.
 [Object responses](AgarwalResponseReproduction.md) documents filter, optimizer, alignment and distribution assumptions.
-WAV amplitudes use digital or pickup gains and are not calibrated sound pressure levels.
+WAV amplitudes use digital or pickup gains, with sound-pressure calibration unavailable.

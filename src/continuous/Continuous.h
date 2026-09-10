@@ -54,7 +54,7 @@ inline float Step(CONTINUOUS_THREAD const Parameters &p, CONTINUOUS_THREAD State
             ++s.DurationClamps;
         }
         const float half_duration = .5f * duration * p.SampleRate;
-        // Fixed lookahead preserves symmetric pulse centers and the one-sample noise anchor.
+        // Fixed lookahead preserves symmetric pulse centers and one-sample rubbing pulses.
         const float center = ceil(.5f * p.MaximumDuration * p.SampleRate) + s.UntilEventSamples;
         const int first = int(ceil(center - half_duration)), last = int(floor(center + half_duration));
         for (int lag = first < 0 ? 0 : first; lag <= last; ++lag)
@@ -97,7 +97,7 @@ struct GpuSource {
 GpuSource CreateGpuSource(Gpu &, std::span<const Parameters>, std::span<const State>, uint32_t frames);
 void EncodeSource(Gpu &, const GpuSource &);
 #endif
-} // namespace surface_audio::continuous
+}
 
 #undef CONTINUOUS_THREAD
 #undef CONTINUOUS_CONSTANT

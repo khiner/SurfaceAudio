@@ -1,37 +1,76 @@
 # Surface Contact Audio Method Ranking
 
-Ranked for general surface-contact audio, balancing physical grounding, audible results, runtime feasibility, and implementation completeness.
-This is an engineering judgment from the papers and available implementations, not a ranking from comparable benchmarks.
+Methods are ordered by physical plausibility, audible results, performance, and completeness for general surface-contact audio.
+It reflects engineering judgment from papers and implementations, with comparable benchmarks unavailable.
 
-| Rank | Method | Why it lands here |
-| --- | --- | --- |
-| **1** | **Agarwal 2021 — constrained scraping and rolling** | Best overall fit: directly addresses our target sounds, connects excitation to surface geometry and motion, and demonstrates realism and motion perception through listening experiments. Its main limitation is simplified contact mechanics and reliance on suitable surface/response data. [Paper and demos](https://mcdermottlab.mit.edu/scraping_rolling.html) |
-| **2** | **SDT — nonlinear impact, friction, rolling, scraping** | Strongest practical starting point: broad coverage, reusable resonators and contact models, and an available C implementation with examples. Physical simplifications deliberately favor controllability and efficiency. Sánchez–Reiss adds implementation evidence, but relatively little new physics. [Repository](https://github.com/SkAT-VG/SDT) |
-| **3** | **Conan TASLP 2014 — controlled rolling** | Excellent balance of low computational complexity, intuitive controls, and perceptual validation. Correlated micro-impact structure makes it substantially more purposeful than filtered noise. Physical predictiveness is limited by its statistical approximation. [Paper](/Users/khiner/physical_audio_papers/continuous_interaction_signal_models/conan2014_rolling.pdf) |
-| **4** | **Matusiak 2025 — passive elasto-plastic friction** | Most promising long-term friction foundation: explicit energy accounting, contact memory, and an extension to distributed compliant contact. The major drawback is computational: the authors report possible Jacobian singularities and very large iteration counts. General surface use also requires adaptation beyond bowing. [Paper](https://www.frontiersin.org/journals/signal-processing/articles/10.3389/frsip.2025.1525044/full) |
-| **5** | **Poirot 2023 — collision signal model** | Promising for audible buzz, rattle, and contact-induced timbral changes, with a lightweight signal model grounded in physical simulations and listening tests. Demonstrated scope is string–obstacle interaction; arbitrary-object generalization remains work. [Paper](/Users/khiner/physical_audio_papers/collision_signal_models/poirot2023_collisions.pdf) |
-| **6** | **Conan CMJ 2014 — continuous-interaction synthesis** | Broad, inexpensive, expressive coverage of rubbing, scratching, and rolling, including transitions between them. Particularly useful for interactive control. Its perceptual controls have a looser relationship to measurable contact physics. [Paper](/Users/khiner/physical_audio_papers/continuous_interaction_signal_models/conan2014_continuous_interactions.pdf) |
-| **7** | **Matusiak 2024 — finite-width compliant bow** | Strong experimental grounding: measured robot-bowing transients and inverse parameter estimation. However, accurate waveform reconstruction depends on fitting, and the paper reports discrepancies across the wider playability space. Specialized and more involved computationally. [Paper](/Users/khiner/physical_audio_papers/elastoplastic_friction/matusiak2024_bowed_string_transients.pdf) |
-| **8** | **Falaize–Roze 2024 — port-Hamiltonian interactions** | Valuable architecture for coupling resonators and nonlinear interactions while tracking energy. More of a numerical foundation than a complete surface-noise solution. The 2025 Matusiak paper identifies a parameter-dependent passivity issue in the earlier friction formulation that needs resolving. [Later analysis](https://www.frontiersin.org/journals/signal-processing/articles/10.3389/frsip.2025.1525044/full) |
-| **9** | **Traer 2019 — statistical rigid-body contact** | Useful, economical material-conditioned resonance and impact synthesis. Important shared infrastructure for the MIT lineage, but its scraping model is substantially improved by Agarwal 2021. [Paper](/Users/khiner/physical_audio_papers/contact_sound_generative/traer2019_rigid_body_contact.pdf) |
-| **10** | **Willemsen 2019 — elasto-plastic stiff string** | Concrete real-time implementation evidence makes it a useful reference. Narrower physical coverage than the later bowing work, with instrument-body integration and perceptual comparison left as future work. [Paper](/Users/khiner/physical_audio_papers/elastoplastic_friction/willemsen2019_stiff_strings.pdf) |
-| **11** | **HaTT 2014 — measured texture rendering** | Excellent empirical material coverage and inexpensive force/speed-conditioned vibration generation. Its output is haptic vibration; converting it into credible airborne sound requires additional modeling. Best viewed as a measured excitation baseline. [Paper](/Users/khiner/physical_audio_papers/haptic_texture_toolkit/culbertson2014_hatt_paper.pdf) |
-| **12** | **Lagrange 2010 — sustained-contact analysis/synthesis** | Highly useful for extracting resonance and excitation from recordings and evaluating our models. Less complete as a predictive renderer driven by geometry and motion. [Paper](/Users/khiner/physical_audio_papers/contact_sound_analysis/lagrange2010_sustained_contact.pdf) |
-| **13** | **Lee 2010 — segmented rolling analysis/synthesis** | Useful recording-based reconstruction with position-dependent filtering. Dependence on detecting individual contacts and fitting their segments makes it a narrower analysis baseline. [Paper](/Users/khiner/physical_audio_papers/contact_sound_analysis/lee2010_rolling_source_filter.pdf) |
-| **14** | **Nakatsuka 2017 — adhesion/microrectangle friction** | Interesting deformation-aware direction, but the microscopic construction introduces substantial assumptions and implementation work. Its demonstrated validation and performance evidence are less convincing for prioritization than the alternatives above. [Paper](/Users/khiner/physical_audio_papers/friction_sound_physical/nakatsuka2017_adhesion.pdf) |
+| Rank | Method | Scope and limits |
+|---|---|---|
+| 1 | [Agarwal 2021][agarwal] | Geometry-driven scraping/rolling with listening studies, limited by simplified mechanics and missing inputs |
+| 2 | [SDT][sdt] | Broad contact models and reusable resonators with C source, using simplified physics for efficiency |
+| 3 | [Conan TASLP 2014][rolling] | Efficient correlated micro-impact rolling with perceptual validation and statistical approximations |
+| 4 | [Matusiak 2025][matusiak25] | Passive compliant friction with energy accounting, costly nonlinear solves, and bow-specific assumptions |
+| 5 | [Poirot 2023][poirot] | Efficient, perceptually evaluated buzz/rattle synthesis demonstrated for string–obstacle contact |
+| 6 | [Conan CMJ 2014][continuous] | Inexpensive rubbing/scratching/rolling transitions with perceptual controls and limited physical calibration |
+| 7 | [Matusiak 2024][matusiak24] | Robot-bowing transient validation with fitted parameters and remaining playability discrepancies |
+| 8 | Falaize–Roze 2024 | Energy-based coupling with a parameter-dependent [passivity issue][matusiak25] identified by Matusiak 2025 |
+| 9 | [Traer 2019][traer] | Economical material-conditioned responses and impacts, with scraping extended by Agarwal 2021 |
+| 10 | [Willemsen 2019][willemsen] | Real-time stiff-string friction with body integration and perceptual evaluation left open |
+| 11 | [HaTT 2014][hatt] | Measured force/speed-conditioned texture vibration requiring an additional airborne-sound model |
+| 12 | [Lagrange 2010][lagrange] | Recorded excitation/resonance analysis with limited predictive geometry-driven rendering |
+| 13 | [Lee 2010][lee] | Position-dependent rolling reconstruction requiring individual-contact detection and fitting |
+| 14 | [Nakatsuka 2017][nakatsuka] | Deformation-aware friction with substantial microscopic assumptions and limited validation/performance evidence |
 
-Current implementations also cover [Matusiak 2025](docs/Matusiak.md), [Poirot 2023](docs/Poirot.md), and [Conan CMJ 2014](docs/Continuous.md).
-Their method pages distinguish executed author-code oracles from calibrated media comparisons and document remaining mismatches.
-
-The analysis methods’ lower positions reflect their limited role as standalone generators.
-Lagrange and HaTT should still enter implementation early because they provide evidence against which to judge the higher-ranked synthesis methods.
+The [Matusiak](docs/Matusiak.md), [Poirot](docs/Poirot.md), and [Conan CMJ](docs/Continuous.md) implementations have reproduction workflows.
+Their pages distinguish author-code comparisons from calibrated media comparisons and record remaining differences.
+The lower-ranked analysis methods support validation of the synthesis methods.
+Lagrange and HaTT remain useful early priorities for reference measurements.
 
 ## Investigation and implementation queue
 
-| Priority | Paper / method | Investigation and implementation scope |
-| --- | --- | --- |
-| **High — continuous-contact force fidelity** | **Agarwal et al., 2022 physical-consistency poster and 2025 MIT thesis Chapters 4–5.** [Recovered poster](/Users/khiner/physical_audio_papers/contact_sound_generative/agarwal2022_perceiving_physical_consistency_poster.pdf) · [Thesis](https://hdl.handle.net/1721.1/158825) · [Implementation and unresolved inputs](docs/Agarwal.md) | Investigate the added finite micro-impact convolution and the thesis's fixed-response ramp examples. Keep the poster's summed stiffness distinct from the thesis's series-equivalent stiffness. The extension is **queued, not implemented**; it does not resolve the 2021 curvature units or trajectory integration anchors. Current [retained reconstructions](docs/Agarwal.md) compare only with matching Agarwal author examples and explicitly identify omitted force terms. |
-| **High — response fitting and synthesis** | **Agarwal, Traer & McDermott (2023), Sample-efficient learning of auditory object representations using differentiable impulse response synthesis.** ICML Differentiable Almost Everything workshop. [Local PDF](/Users/khiner/physical_audio_papers/contact_sound_generative/agarwal2023_differentiable_impulse_response_synthesis.pdf) · [Paper](https://differentiable.xyz/papers-2023/paper_44.pdf) · [Author data and examples](https://mcdermottlab.mit.edu/ICML2023/sound_website.html) | Implement the ten-mode, ten-noise-band differentiable response model, multiresolution spectral fitting, and material-distribution sampling. Reproduce the published training-data and generated-response comparisons before coupling these responses to contact forces. **Implemented in C++23/Metal; 20 author-input fits and material-cohort comparisons evaluated.** [Workflow and validation](docs/AgarwalResponseReproduction.md). Downloaded 20 training WAVs and 80 generated examples across wood, plastic, metal, and glass to `references/agarwal/icml2023/`, with a SHA-256 manifest. Author code and fitted distributions have not been located. Relationship to the exact 2021 inputs and 2026 object database remains unverified. |
-| **High — shared object responses** | **Agarwal, Traer, Schwartz & McDermott (2026), Intuitive knowledge of object acoustics enables perceptual separation of physical variables from impact sounds.** bioRxiv preprint, January 28, 2026. [Local PDF](/Users/khiner/physical_audio_papers/contact_sound_generative/agarwal2026_intuitive_object_acoustics.pdf) · [DOI](https://doi.org/10.64898/2026.01.28.702236) | Investigate the relationship to Traer 2019 and recover the measured object impulse responses and fitted material/size distributions. Implement the paper's sampled modal-plus-noise response model and impact-force coupling using the shared core, then reproduce its published examples and ablations. Potentially useful response infrastructure for all three current methods. **Queued; not implemented.** This is a preprint, and access to the underlying data/model parameters remains unverified. |
+### Agarwal 2022 poster and 2025 thesis: continuous-contact forces
 
-[Recovered response data and remaining inputs](docs/AgarwalResponseReproduction.md) records the 2023 downloads, the 2025 thesis, and the distinction between the 2023 and 2026 statistical models.
+Investigate finite micro-impact convolution and fixed-response ramps in thesis Chapters 4–5.
+The [poster][poster] uses summed stiffness, while the [thesis][thesis] uses series-equivalent stiffness.
+This extension remains queued, with 2021 curvature units and trajectory integration constants unresolved.
+[Retained reconstructions](docs/Agarwal.md) identify omitted force terms and compare with matching author examples.
+
+### Agarwal, Traer and McDermott 2023: response fitting
+
+[“Sample-efficient learning of auditory object representations using differentiable impulse response synthesis”][icml] appeared at ICML's DAE workshop.
+The ten-mode, ten-noise-band response model, multiresolution fitting, and material sampling are implemented in C++23/Metal.
+Twenty author-input fits and material-cohort comparisons have been evaluated.
+[Author inputs][icml-data] include 20 training WAVs and 80 generated examples across wood, plastic, metal, and glass.
+Downloads and hashes are retained under `references/agarwal/icml2023/`.
+Author code, fitted distributions, and the connection to the exact 2021 inputs and 2026 database remain unavailable or unverified.
+[The workflow](docs/AgarwalResponseReproduction.md) records comparisons and remaining inputs.
+
+### Agarwal, Traer, Schwartz and McDermott 2026: object acoustics
+
+[“Intuitive knowledge of object acoustics enables perceptual separation of physical variables from impact sounds”][impact] is a bioRxiv preprint.
+It was posted January 28, 2026, and remains queued for implementation.
+Recover measured responses and fitted material/size distributions, and establish the relationship to Traer 2019.
+Implement sampled modal-plus-noise responses and impact-force coupling, then reproduce examples and ablations.
+Access to underlying data and parameters remains unverified.
+The [response documentation](docs/AgarwalResponseReproduction.md) distinguishes the 2023 and 2026 models.
+Local PDFs are available for [2023][icml-local] and [2026][impact-local].
+
+[agarwal]: https://mcdermottlab.mit.edu/scraping_rolling.html
+[sdt]: https://github.com/SkAT-VG/SDT
+[rolling]: /Users/khiner/physical_audio_papers/continuous_interaction_signal_models/conan2014_rolling.pdf
+[matusiak25]: https://www.frontiersin.org/journals/signal-processing/articles/10.3389/frsip.2025.1525044/full
+[poirot]: /Users/khiner/physical_audio_papers/collision_signal_models/poirot2023_collisions.pdf
+[continuous]: /Users/khiner/physical_audio_papers/continuous_interaction_signal_models/conan2014_continuous_interactions.pdf
+[matusiak24]: /Users/khiner/physical_audio_papers/elastoplastic_friction/matusiak2024_bowed_string_transients.pdf
+[traer]: /Users/khiner/physical_audio_papers/contact_sound_generative/traer2019_rigid_body_contact.pdf
+[willemsen]: /Users/khiner/physical_audio_papers/elastoplastic_friction/willemsen2019_stiff_strings.pdf
+[hatt]: /Users/khiner/physical_audio_papers/haptic_texture_toolkit/culbertson2014_hatt_paper.pdf
+[lagrange]: /Users/khiner/physical_audio_papers/contact_sound_analysis/lagrange2010_sustained_contact.pdf
+[lee]: /Users/khiner/physical_audio_papers/contact_sound_analysis/lee2010_rolling_source_filter.pdf
+[nakatsuka]: /Users/khiner/physical_audio_papers/friction_sound_physical/nakatsuka2017_adhesion.pdf
+[poster]: /Users/khiner/physical_audio_papers/contact_sound_generative/agarwal2022_perceiving_physical_consistency_poster.pdf
+[thesis]: https://hdl.handle.net/1721.1/158825
+[icml]: https://differentiable.xyz/papers-2023/paper_44.pdf
+[icml-data]: https://mcdermottlab.mit.edu/ICML2023/sound_website.html
+[impact]: https://doi.org/10.64898/2026.01.28.702236
+[icml-local]: /Users/khiner/physical_audio_papers/contact_sound_generative/agarwal2023_differentiable_impulse_response_synthesis.pdf
+[impact-local]: /Users/khiner/physical_audio_papers/contact_sound_generative/agarwal2026_intuitive_object_acoustics.pdf

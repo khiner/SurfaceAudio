@@ -72,7 +72,7 @@ void Benchmark(const std::filesystem::path &output, uint32_t voices, uint32_t fr
     std::cout << "Distributed GPU: " << voices << " voices, " << gpu_seconds << " s; CPU reference " << cpu_seconds << " s, relative L2 " << std::sqrt(error / std::max(norm, 1e-100)) << ", failed " << failures << '\n';
     if (failures) throw std::runtime_error("GPU trajectory contains unconverged steps");
 }
-} // namespace
+}
 int main(int argc, char **argv) {
     try {
         const std::filesystem::path output = argc > 1 ? argv[1] : "outputs/reproduction/matusiak";

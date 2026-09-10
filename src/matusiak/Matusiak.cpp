@@ -30,7 +30,7 @@ size_t Interpolate(std::vector<double> &matrix, size_t row, size_t n, double x) 
     for (int j = 0; j < 4; ++j) matrix[row * n + node - 1 + j] = weights[j];
     return node - 1;
 }
-} // namespace
+}
 StringState MakeString(Parameters p) {
     const double values[]{p.SampleRate, p.Length, p.Radius, p.Fundamental, p.Tension, p.Young, p.Damping0, p.Damping1, p.TorsionStiffness, p.PolarInertia, p.TorsionDamping, p.BowWidth, p.BowPosition, p.HairMass, p.HairStiffness, p.HairDamping, p.Friction.Stiffness, p.Friction.Damping, p.Friction.StribeckVelocity, p.Friction.Dynamic, p.Friction.Static, p.Friction.BreakawayRatio};
     for (double value : values)
@@ -161,4 +161,4 @@ Sample Step(StringState &s, double bow_velocity, double normal_force) {
     sample.FrictionForce = s.Force[m / 2];
     return sample;
 }
-} // namespace surface_audio::matusiak
+}

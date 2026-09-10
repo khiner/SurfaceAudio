@@ -381,7 +381,7 @@ void FiniteModesTest(Gpu &gpu) {
     const auto zero = ConvolveFiniteModesGpu(gpu, force, morph, long_modes, rate, 1);
     Require(std::ranges::all_of(zero, [](float value) { return value == 0; }), "One-tap sine response is exactly zero");
 }
-} // namespace
+}
 
 int main() {
     try {

@@ -60,6 +60,7 @@ float TransferPower(const SignalParameters &p, std::span<const float> power, std
         transfer[i] = p.Lambda * std::max(power[i] - threshold[i], 0.f);
         total += transfer[i];
     }
+    // Recipient weighting corrects the printed Equation 10 donor index to preserve power and nodal invariance.
     for (size_t i = 0; i < power.size(); ++i) transfer[i] = p.ReturnGain * weight[i] * total - transfer[i];
     return total;
 }
@@ -184,4 +185,4 @@ void RenderString(StringState &s, std::span<float> output, std::span<float> cont
         s.Current.swap(s.Next);
     }
 }
-} // namespace surface_audio::poirot
+}

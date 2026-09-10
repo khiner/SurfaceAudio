@@ -1,5 +1,4 @@
 // SPDX-License-Identifier: GPL-3.0-only
-// Matusiak et al. (2025), doi:10.3389/frsip.2025.1525044. See docs/Matusiak.md.
 #pragma once
 #include "matusiak/Friction.h"
 #include <cstdint>
@@ -34,4 +33,4 @@ struct StringState {
 StringState MakeString(Parameters = {});
 Energy StoredEnergy(const StringState &);
 Sample Step(StringState &, double bow_velocity, double normal_force);
-} // namespace surface_audio::matusiak
+}

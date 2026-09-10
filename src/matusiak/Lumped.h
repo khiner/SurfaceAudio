@@ -20,7 +20,6 @@ template<typename T> struct LumpedSample {
     T Displacement{}, Energy{}, EnergyError{}, BristleDissipation{}, Residual{};
     unsigned Iterations{};
 };
-// Eqs. 25-35: central mass update, averaged bow spring, interleaved bristles.
 template<typename T> LumpedSample<T> StepLumped(LumpedParameters<T> p, MAT_THREAD LumpedState<T> &s, T bow_velocity, T tolerance) {
     const T k = 1 / p.SampleRate, xs = 1 / (2 * p.Mass / k + p.Damping), xh = 1 / (2 * p.HairMass / k + k * p.HairStiffness / 2 + p.HairDamping);
     const T su = xs * (-p.Stiffness * s.U + 2 * p.Mass / (k * k) * (s.U - s.PreviousU));
@@ -55,5 +54,5 @@ template<typename T> LumpedSample<T> StepLumped(LumpedParameters<T> p, MAT_THREA
     result.Displacement = u;
     return result;
 }
-} // namespace surface_audio::matusiak
+}
 #undef MAT_THREAD

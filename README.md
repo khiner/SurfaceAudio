@@ -15,7 +15,7 @@ C++23 contact-sound synthesis for Apple Silicon and Metal 4.
 The library uses free functions, explicit state structs and contiguous arrays.
 Independent contacts, texture samples, modal work and convolution run on the GPU.
 CPU references use double precision where required and ARM SIMD for filtering.
-This is a library and offline renderer; it has no audio-device callback.
+The library supports offline rendering, with audio-device integration left to callers.
 
 ## Build
 
@@ -37,11 +37,10 @@ open outputs/reproduction/listening/index.html
 
 The workflow requires Python, NumPy, SciPy, Matplotlib, FFmpeg and network access for the initial author-input downloads.
 Use `--offline` with cached inputs or `--method agarwal`, `sdt`, `conan`, `matusiak`, `poirot` or `continuous` for one method.
-It retains output WAVs, a listening page and compact run/case information, and removes large disposable force/basis arrays after use.
-Per-method pages identify author inputs, inferred settings and remaining differences.
-Matusiak compares actual author code outputs, while Poirot and Conan CMJ use recovered author media with explicitly inferred parameters.
-The listening pages include texture measures alongside waveform envelopes and spectra.
-Comparisons use the matching author's result from each paper.
+Outputs include WAVs, a listening page and run/case manifests.
+Temporary force and basis arrays are deleted after use.
+Per-method pages record author inputs, inferred settings, differences and texture/spectral comparisons.
+Matusiak compares executed author code, while Poirot and Conan CMJ compare author media using inferred parameters.
 
 The committed Agarwal input packages replay four retained rolling reconstructions and twenty fitted object responses without optimization:
 
@@ -50,18 +49,19 @@ python3 tools/agarwal_reproduce.py --retained
 python3 tools/agarwal_response_reproduce.py --retained --output outputs/reproduction/retained-responses
 ```
 
-The [object-response page](docs/AgarwalResponseReproduction.md) also documents fresh fitting, material cohorts and sustained-contact rendering with measured/fitted resonators.
+The [object-response workflow](docs/AgarwalResponseReproduction.md) covers fitting, material cohorts and rendering with measured/fitted resonators.
 Original author audio and source inputs remain under `references/`, with hashes in `docs/ReferenceInputs.json`.
-Our calibration inputs under `repros/` are explicitly distinct from author data.
+Reproduction fixtures and inferred calibration inputs are stored under `repros/`.
 
 ## Performance and scope
 
 [Timings and numerical limits](docs/Validation.md) gives the measured workloads, errors and verification commands.
 [ContactAudioMethodRanking.md](ContactAudioMethodRanking.md) records the remaining paper queue.
-The shared core provides Metal execution, deterministic random streams, modal filtering, finite convolution, spectral losses/gradients, optimization and WAV I/O.
-No universal real-time deadline, arbitrary-material accuracy or perceptual equivalence is claimed.
-Raw WAVs retain gain and can exceed [-1, 1]; listening copies apply only stated constant gain/DC processing.
+The shared core provides Metal execution, random streams, modal filtering, convolution, spectral optimization and WAV I/O.
+Real-time deadlines, arbitrary-material accuracy and perceptual equivalence remain unverified.
+Raw WAVs retain gain and can exceed [-1, 1].
+Listening copies apply stated constant gain/DC processing.
 
 SDT-derived code retains its notices in [src/sdt/NOTICE.md](src/sdt/NOTICE.md).
-The Matusiak implementation identifies its GPL author reference in [docs/Matusiak.md](docs/Matusiak.md).
+The [Matusiak documentation](docs/Matusiak.md) identifies its GPL author reference.
 The project uses [GNU GPL v3](LICENSE).

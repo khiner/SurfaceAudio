@@ -142,7 +142,7 @@ void LumpedEnergy() {
     }
     Check(max_energy < 1e-10, "Lumped discrete energy balance");
 }
-} // namespace
+}
 int main(int argc, char **argv) {
     try {
         const bool cpu_only = argc == 2 && std::string_view(argv[1]) == "--cpu-only";

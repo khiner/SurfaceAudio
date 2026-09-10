@@ -84,7 +84,7 @@ std::vector<Segment> ReadControls(const std::filesystem::path &path) {
     if (result.empty()) throw std::invalid_argument("Empty continuous controls");
     return result;
 }
-} // namespace
+}
 int main(int argc, char **argv) {
     try {
         if (argc == 2 && std::string_view(argv[1]) == "--benchmark") {

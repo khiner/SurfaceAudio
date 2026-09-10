@@ -37,10 +37,11 @@ std::string DeviceName(const Gpu &);
 GpuBuffer CreateBuffer(Gpu &, size_t bytes);
 GpuKernel CreateKernel(Gpu &, std::string_view name);
 
-// One owner thread. Buffers belong to the context and must only be touched by the CPU after WaitGpu.
-// Begin waits for previous use before recycling command memory. Dispatches in a batch run in dependency order.
+// Use one owner thread and access context-owned buffers on the CPU only after WaitGpu.
+// BeginGpu waits before recycling command memory.
+// Batch dispatches execute in dependency order.
 void BeginGpu(Gpu &);
-// Immutable dispatch constants, valid until the next BeginGpu. The batch holds 8 KiB, aligned to 256 bytes per upload.
+// Returns immutable constants valid until the next BeginGpu, with an 8 KiB batch capacity and 256-byte upload alignment.
 GpuBuffer BatchUpload(Gpu &, std::span<const std::byte>);
 template<typename T> GpuBuffer BatchUpload(Gpu &gpu, const T &value) {
     static_assert(std::is_trivially_copyable_v<T>);
@@ -63,4 +64,4 @@ template<typename T> GpuBuffer Upload(Gpu &gpu, std::span<const T> data) {
     return b;
 }
 template<typename T> GpuBuffer Upload(Gpu &gpu, const T &value) { return Upload<T>(gpu, std::span<const T>{&value, 1}); }
-} // namespace surface_audio
+}

@@ -32,7 +32,7 @@ struct GpuState {
     bool Recording{false};
 
     ~GpuState() {
-        // A stalled device must neither deadlock teardown nor free in-flight allocations.
+        // Terminate on timeout to avoid releasing allocations while GPU work is in flight.
         if (Submitted && ![Complete waitUntilSignaledValue:Submitted timeoutMS:30000]) std::terminate();
         [Residency endResidency];
     }
@@ -63,7 +63,7 @@ void Encode(Gpu &gpu, GpuKernel kernel, std::span<const GpuBinding> bindings, Gp
         [encoder endEncoding];
     }
 }
-} // namespace
+}
 
 Gpu CreateGpu(std::string_view library_path) {
     @autoreleasepool {
@@ -170,4 +170,4 @@ uint64_t SubmitGpu(Gpu &gpu) {
     s.Recording = false;
     return s.Submitted;
 }
-} // namespace surface_audio
+}

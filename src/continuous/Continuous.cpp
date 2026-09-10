@@ -33,7 +33,7 @@ template<typename Cdf> void Tabulate(conan::Process &process, Cdf cdf, double lo
         process.Quantiles[index] = float(.5 * (low + high));
     }
 }
-} // namespace
+}
 
 Parameters MakeParameters(Controls c, float sample_rate) {
     if (!std::isfinite(sample_rate) || sample_rate < 8000 || sample_rate > 96000 || !std::isfinite(c.Size) || c.Size < .1 || c.Size > 1 || !std::isfinite(c.Velocity) || c.Velocity < 0 || c.Velocity > 1 || !std::isfinite(c.Roughness) || c.Roughness < 0 || c.Roughness > 1 || !std::isfinite(c.Asymmetry) || c.Asymmetry < 0 || c.Asymmetry > 1 || !std::isfinite(c.ScratchDensity) || c.ScratchDensity <= 0 || c.ScratchDensity > sample_rate || !std::isfinite(c.FrictionSigma) || c.FrictionSigma <= 0 || !std::isfinite(c.FrictionDurationSamples) || c.FrictionDurationSamples < 1 || c.FrictionDurationSamples > .008 * sample_rate || !std::isfinite(c.CutoffHz) || c.CutoffHz < 0 || c.CutoffHz > sample_rate / 2 || !std::isfinite(c.Gain)) throw std::invalid_argument("Invalid continuous interaction controls");
@@ -74,4 +74,4 @@ void EncodeSource(Gpu &gpu, const GpuSource &source) {
     const std::array bindings{GpuBinding{source.Parameters, 0}, GpuBinding{source.States, 1}, GpuBinding{source.Output, 2}, GpuBinding{source.Block, 3}};
     DispatchGpu(gpu, source.Kernel, bindings, {source.Voices});
 }
-} // namespace surface_audio::continuous
+}

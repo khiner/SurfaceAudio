@@ -36,5 +36,5 @@ template<typename T> bool Solve(MAT_THREAD T *a, MAT_THREAD T *b, unsigned n, T 
     }
     return true;
 }
-} // namespace surface_audio::matusiak
+}
 #undef MAT_THREAD

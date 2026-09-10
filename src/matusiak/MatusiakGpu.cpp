@@ -10,7 +10,7 @@ float CheckedFloat(double value) {
     if (!std::isfinite(result) || (value != 0 && result == 0)) throw std::invalid_argument("String coefficient is outside the GPU float range");
     return result;
 }
-} // namespace
+}
 LumpedBatch RenderLumpedGpu(Gpu &gpu, std::span<const LumpedParameters<float>> parameters, uint32_t frames) {
     if (parameters.empty() || !frames || parameters.size() > UINT32_MAX || parameters.size() * frames > UINT32_MAX) throw std::invalid_argument("Invalid bowed mass batch shape");
     for (const auto &p : parameters) {
@@ -95,4 +95,4 @@ StringBatch RenderStringsGpu(Gpu &gpu, Parameters p, std::span<const BowDrive> d
     }
     return {{samples.begin(), samples.end()}, {errors.begin(), errors.end()}, std::move(final_state), {failed.begin(), failed.end()}};
 }
-} // namespace surface_audio::matusiak
+}

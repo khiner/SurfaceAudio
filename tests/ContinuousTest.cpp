@@ -145,7 +145,7 @@ void GpuStreaming() {
     std::cout << "Continuous streaming relative_l2=" << relative << " max=" << maximum << '\n';
     Require(std::isfinite(relative) && relative < .003 && maximum < .025, "CPU GPU continuous streaming parity");
 }
-} // namespace
+}
 int main() {
     try {
         Navigation();

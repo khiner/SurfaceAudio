@@ -45,7 +45,7 @@ def comparison(reference, output):
     n = min(len(author), len(ours))
     author, ours = author[:n, 0], ours[:n, 0]
     pre = slice(int(.02 * rate), int(.48 * rate))
-    # Fix gain before contact; do not fit interaction timing.
+    # Estimate comparison gain only from precontact samples.
     gain = float(np.dot(author[pre], ours[pre]) / np.dot(ours[pre], ours[pre]))
     scaled = ours * gain
     result = {"preinteraction_gain": gain, "whole_record": {"author": metrics(rate, author[:, None]), "ours": metrics(rate, ours[:, None])}, "windows": {}}
@@ -54,7 +54,7 @@ def comparison(reference, output):
         kwargs = dict(fs=rate, window=("kaiser", 5), nperseg=2048, noverlap=1800, boundary=None)
         ma, mb = np.abs(stft(a, **kwargs)[2]), np.abs(stft(b, **kwargs)[2])
         result["windows"][name] = {"waveform_relative_error": float(np.linalg.norm(a - b) / max(np.linalg.norm(a), 1e-30)), "spectrogram_relative_error": float(np.linalg.norm(ma - mb) / max(np.linalg.norm(ma), 1e-30)), "author_texture": texture_metrics(rate, a[:, None]), "ours_texture": texture_metrics(rate, b[:, None])}
-    # Resolve first-mode sidebands that full-spectrum error can hide.
+    # Measure first-mode sidebands separately from aggregate spectral error.
     result["first_mode_peaks_hz"] = []
     for begin in [.51, .6, .8]:
         peaks = []

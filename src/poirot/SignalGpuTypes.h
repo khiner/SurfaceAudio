@@ -13,4 +13,4 @@ struct SignalGpuControls {
 struct SignalGpuMode {
     float Frequency, Loss, Threshold, Weight, Shape;
 };
-} // namespace surface_audio::poirot
+}
