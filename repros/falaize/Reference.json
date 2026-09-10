@@ -1,0 +1,81 @@
+{
+  "title": "Generic passive-guaranteed nonlinear interaction model and structure-preserving spatial discretization procedure with applications in musical acoustics",
+  "authors": [
+    "Antoine Falaize",
+    "David Roze"
+  ],
+  "doi": "10.1007/s11071-024-10438-9",
+  "online_date": "2024-10-18",
+  "issue": "Nonlinear Dynamics 113 (2025), 3249\u20133275",
+  "local_paper_sha256": "ab09609bfaccad4d32719205ba48298b3c413997e32c77a4a439b46d669ee4bc",
+  "author_data_statement": "This manuscript has no associated data.",
+  "paper_code_or_audio_found": false,
+  "framework": {
+    "url": "https://github.com/pyphs/pyphs",
+    "revision": "ff0922838f7dcaa6948e7a30352a006b3ba13527",
+    "license_sha256": "a8258e07c493c2f3387d19d8d7d2f2c2d8b8d11ddfa57a331589541ed9924c8b",
+    "scope": "Author framework predating paper; no friction implementation or paper-specific source found.",
+    "theta_default_source": "pyphs/numerics/numerical_method/_method.py:48"
+  },
+  "reconstruction": {
+    "sample_rate": 96000,
+    "modal_modes": 10,
+    "finite_elements": 20,
+    "bow_velocity": 0.1,
+    "bow_velocity_status": "Inferred from Figure 19 sticking velocity, not stated in Table 3.",
+    "theta": 0,
+    "theta_status": "Framework default; paper gives no explicit time evaluation of state-dependent dissipation.",
+    "hammer_initial_crush": 0,
+    "hammer_velocity": 1,
+    "string_tension": 61483,
+    "initial_state": "At rest except hammer velocity."
+  },
+  "oracle": {
+    "source": "Independent local NumPy/SciPy full coupled residual solve with numerical Jacobian, not author output.",
+    "frames": 4096,
+    "dtype": "little-endian float64",
+    "columns": [
+      "contact displacement",
+      "contact velocity",
+      "interaction force",
+      "interaction state"
+    ],
+    "files_sha256": {
+      "bow_modal_oracle.f64": "4dc08cc3a83d296a81b0779cea4ca682daf32292a6615c926820e99922f3ff32",
+      "hammer_modal_oracle.f64": "bda0b1fb6dcc49fa35c2adb922ca2c247d318782d6b2f7e8ae9672c18274b80d",
+      "hammer_figure_oracle.f64": "1698932f54ed58b25ce439298cca6f24d9936740b2e155665d6ef53e59b46854"
+    }
+  },
+  "figure19": {
+    "source": "Figure 19 approximate plot constraints; original waveform samples are unavailable.",
+    "period_seconds": [
+      0.0021,
+      0.0025
+    ],
+    "late_displacement_peak_m": [
+      5e-05,
+      7e-05
+    ],
+    "time_to_90_percent_amplitude_seconds": [
+      0.25,
+      0.5
+    ]
+  },
+  "hammer_figure_inference": {
+    "equation_force_N_at_0_01_m": 0.07511768544535082,
+    "figure10_force_N_interval": [
+      4.5,
+      5.5
+    ],
+    "figure10_peak_crush_m_interval": [
+      0.0095,
+      0.0105
+    ],
+    "figure12_final_energy_J_interval": [
+      0.0134,
+      0.0138
+    ],
+    "inferred_stiffness_N_m": 920,
+    "reason": "Figure10 corresponds to omitting the thickness multiplier in the printed elastic force; implemented as explicit stiffness=13.8/0.015, preserving the printed potential and chain rule."
+  }
+}

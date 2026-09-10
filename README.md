@@ -12,6 +12,7 @@ C++23 contact-sound synthesis for Apple Silicon and Metal 4.
 | Poirot TASLP 2023 | [String-obstacle collisions and perceptual signal synthesis](docs/Poirot.md) |
 | Conan CMJ 2014 | [Rubbing, scratching, rolling and continuous transitions](docs/Continuous.md) |
 | Matusiak 2024 | [Finite-width bow friction and published robot-transient comparisons](docs/Matusiak2024.md) |
+| Falaize–Roze 2024 | [Modal/FEM string interactions, energy balance and figure reconstructions](docs/Falaize.md) |
 
 The library uses free functions, explicit state structs and contiguous arrays.
 Independent contacts, texture samples, modal work and convolution run on the GPU.
@@ -38,12 +39,12 @@ open outputs/reproduction/listening/index.html
 
 The workflow requires Python, NumPy, SciPy, Matplotlib, FFmpeg and network access for the initial author-input downloads.
 Use `--offline` with cached inputs and `--method NAME` to run one method.
-Names are `agarwal`, `sdt`, `conan`, `matusiak`, `poirot`, `continuous`, `matusiak2024`.
+Names are `agarwal`, `sdt`, `conan`, `matusiak`, `poirot`, `continuous`, `matusiak2024`, and `falaize`.
 Outputs include WAVs, a listening page and run/case manifests.
 Temporary force and basis arrays are deleted after use.
 Per-method pages record author inputs, inferred settings, differences and texture/spectral comparisons.
 Matusiak 2025 compares executed author code, while Poirot and Conan CMJ compare author media using inferred parameters.
-Matusiak 2024 compares published force traces.
+Matusiak 2024 compares published force traces, and Falaize–Roze compares figures.
 Each method records the limits of those comparisons.
 The [Matusiak listening reference](outputs/reproduction/matusiak2024-revised-2026-09-10/index.html) uses archived numerical conventions.
 

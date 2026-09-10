@@ -20,7 +20,7 @@ cmake --build build-sanitize -j8
 UBSAN_OPTIONS=halt_on_error=1 ctest --test-dir build-sanitize --output-on-failure
 ```
 
-All 17 tests passed in Release and with host AddressSanitizer/UndefinedBehaviorSanitizer.
+All 18 tests passed in Release and with host AddressSanitizer/UndefinedBehaviorSanitizer.
 They cover independent equations, gradients, statistical moments, source traces, finite tails, CPU/GPU agreement and streaming state.
 Tests require a Metal device and shaders, with sanitizer coverage limited to host code.
 Run paper reproductions with `python3 tools/Reproduce.py --offline`.
@@ -80,6 +80,7 @@ A fitted contact-interface example differs from ideal FP64 by 0.00523%.
 [Conan CMJ](Continuous.md) records inferred controls/responses, held-out texture comparisons and CPU/Metal timings.
 [Matusiak 2024](Matusiak2024.md) records recovered paper traces, numerical conventions and remaining waveform differences.
 Its archived-convention GPU check covers the full circle transient; the printed convention retains a 60 ms check and full-record precision failure.
+[Falaize–Roze](Falaize.md) records independent dense solves, figure constraints, inferred hammer stiffness and matched CPU/Metal workloads.
 These method timings were measured on September 10.
 Texture metrics cover narrowband concentration, modulation, envelope fluctuation and amplitude statistics.
 
