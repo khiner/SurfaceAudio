@@ -8,6 +8,7 @@ C++23 contact-sound synthesis for Apple Silicon and Metal 4.
 | SDT | [Coupled modal bodies, impact, elasto-plastic friction, rolling and scraping](docs/Sdt.md) |
 | Conan TASLP 2014 | [Correlated micro-impact rolling synthesis and physical reference](docs/Conan.md) |
 | Agarwal ICML 2023 | [Differentiable modal/noise responses, fitting and material sampling](docs/AgarwalResponseReproduction.md) |
+| Matusiak 2025 | [Passive bow-string friction, torsion and compliant bow hair](docs/Matusiak.md) |
 
 The library uses free functions, explicit state structs and contiguous arrays.
 Independent contacts, texture samples, modal work and convolution run on the GPU.
@@ -33,9 +34,11 @@ open outputs/reproduction/listening/index.html
 ```
 
 The workflow requires Python, NumPy, SciPy, Matplotlib, FFmpeg and network access for the initial author-input downloads.
-Use `--offline` with cached inputs or `--method agarwal`, `sdt` or `conan` for one method.
+Use `--offline` with cached inputs or `--method agarwal`, `sdt`, `conan` or `matusiak` for one method.
 It retains output WAVs, a listening page and compact run/case information, and removes large disposable force/basis arrays after use.
 Per-method pages identify author inputs, inferred settings and remaining differences.
+Matusiak compares actual author code outputs.
+The listening pages include texture measures alongside waveform envelopes and spectra.
 Comparisons use the matching author's result from each paper.
 
 The committed Agarwal input packages replay four retained rolling reconstructions and twenty fitted object responses without optimization:
@@ -49,11 +52,6 @@ The [object-response page](docs/AgarwalResponseReproduction.md) also documents f
 Original author audio and source inputs remain under `references/`, with hashes in `docs/ReferenceInputs.json`.
 Our calibration inputs under `repros/` are explicitly distinct from author data.
 
-Existing historical WAVs are preserved without sample changes in the local [searchable audio archive](outputs/audio/index.html).
-Its index retains their original paths, including old listening snapshots; duplicate WAV bytes are stored once.
-The archive includes experiments and force traces, so its files are not all paper reproductions.
-Identical current WAVs share storage through APFS clones; regenerating a file leaves archived audio unchanged.
-
 ## Performance and scope
 
 [Timings and numerical limits](docs/Validation.md) gives the measured workloads, errors and verification commands.
@@ -63,4 +61,5 @@ No universal real-time deadline, arbitrary-material accuracy or perceptual equiv
 Raw WAVs retain gain and can exceed [-1, 1]; listening copies apply only stated constant gain/DC processing.
 
 SDT-derived code retains its notices in [src/sdt/NOTICE.md](src/sdt/NOTICE.md).
+The Matusiak implementation identifies its GPL author reference in [docs/Matusiak.md](docs/Matusiak.md).
 The project uses [GNU GPL v3](LICENSE).

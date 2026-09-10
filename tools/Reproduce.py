@@ -31,12 +31,13 @@ def verify_inputs(methods):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--method", choices=["all", "agarwal", "sdt", "conan"], default="all")
+    available = ["agarwal", "sdt", "conan", "matusiak"]
+    parser.add_argument("--method", choices=["all", *available], default="all")
     parser.add_argument("--build", type=Path, default=ROOT / "build")
     parser.add_argument("--offline", action="store_true", help="Require the already downloaded, pinned reference inputs and SDT library")
     parser.add_argument("--report-only", action="store_true", help="Rebuild the listening page from existing case manifests without synthesizing")
     args = parser.parse_args()
-    methods = ["agarwal", "sdt", "conan"] if args.method == "all" else [args.method]
+    methods = available if args.method == "all" else [args.method]
     if args.report_only:
         build_report(methods)
         return
@@ -53,7 +54,10 @@ def main():
                    "build": str(build), "methods": methods}
     (output / "environment.json").write_text(json.dumps(environment, indent=2) + "\n")
     for method in methods:
-        if method == "conan":
+        if method == "matusiak":
+            run(sys.executable, ROOT / f"tools/{method}_reproduce.py", "--binary", build / f"{method}Reproduce", *(["--offline"] if args.offline else []))
+            verify_inputs([method])
+        elif method == "conan":
             if not args.offline:
                 run(sys.executable, ROOT / "tools/conan_fetch.py")
                 run(sys.executable, ROOT / "tools/conan_velocity.py", "--fetch-only")

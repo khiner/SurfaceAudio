@@ -1,0 +1,21 @@
+{
+  "source": "https://github.com/wasilakis/the_bowed_string",
+  "revision": "0e2d39d0d62460370f1de3945a4f1a2c984b038c",
+  "source_sha256": "708844e74dc11648b2286d6aff3841ab234201ad3c0339275b12eac8129f257e",
+  "runtime": "GNU Octave 11.3.0, Apple Silicon, OPENBLAS_NUM_THREADS=1 VECLIB_MAXIMUM_THREADS=1",
+  "execution": "Original computation body wrapped in a function with plotting omitted; interpolation helper unchanged. All defaults retained, including first zero sample.",
+  "correction": "Second run only: final IJ_mat term + 1/M * 1/O3 changed to + 1/M * 1/O3 * eye(M).",
+  "frames": 22050,
+  "sample_rate": 44100,
+  "format": "row-major little-endian float64",
+  "columns": [
+    "original_bridge_N",
+    "diagonal_bridge_N",
+    "original_mean_friction_N",
+    "diagonal_mean_friction_N",
+    "original_pre_step_energy_J",
+    "diagonal_pre_step_energy_J",
+    "diagonal_center_relative_velocity_m_s"
+  ],
+  "sha256": "b65d2623a14b73a47f29dd149254fb2934fa4a51470d5a3934469f8189bd3cd7"
+}

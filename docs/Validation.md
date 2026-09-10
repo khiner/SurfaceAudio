@@ -20,7 +20,8 @@ cmake --build build-sanitize -j8
 UBSAN_OPTIONS=halt_on_error=1 ctest --test-dir build-sanitize --output-on-failure
 ```
 
-The 13 tests cover independent equations, gradients, statistical moments, source traces, finite tails, CPU/GPU agreement and streaming state.
+All 14 tests passed in Release and with host AddressSanitizer/UndefinedBehaviorSanitizer.
+They cover independent equations, gradients, statistical moments, source traces, finite tails, CPU/GPU agreement and streaming state.
 The Conan executable test exercises published parameters and rejects nonfinite output.
 Tests require the actual Metal device and shaders.
 Sanitizers instrument host code, not GPU kernels.
@@ -34,14 +35,16 @@ CPU timing includes synthesis, ARM SIMD filtering and mixing.
 GPU timing includes synthesis, fused modal filtering/mixing, queue submission, completion waiting and mono readback.
 Both exclude allocation, compilation and file I/O.
 
+Ranges below span three fresh-process runs; each run retains its own p50/p99 calculation.
+
 | Voices | CPU p50 ms | CPU p99 ms | GPU p50 ms | GPU p99 ms |
 |---|---:|---:|---:|---:|
-| 1 | 0.00233 | 0.00692 | 0.37921 | 0.92925 |
-| 64 | 0.11983 | 0.19438 | 0.68963 | 2.58154 |
-| 256 | 0.49613 | 0.55863 | 0.51079 | 1.16725 |
-| 1024 | 1.65050 | 1.73083 | 0.66783 | 1.23775 |
+| 1 | 0.00208–0.00225 | 0.00267–0.00333 | 0.14783–0.19554 | 0.64283–3.00937 |
+| 64 | 0.10437–0.11167 | 0.11563–0.14333 | 0.23700–0.30421 | 0.61942–5.59837 |
+| 256 | 0.41950–0.47892 | 0.43062–0.93275 | 0.32796–0.49750 | 0.64642–5.68904 |
+| 1024 | 1.65779–1.83600 | 1.75246–2.34696 | 0.61621–0.88246 | 1.22962–7.57558 |
 
-The GPU median is lower at 1,024 voices in this run; small batches favor CPU execution.
+The GPU median is consistently lower at 1,024 voices; the 256-voice comparison varies between runs and small batches favor CPU execution.
 These measurements do not benchmark 50-mode spatial Agarwal reconstruction, offline optimizer throughput, or SDT's complete sustained-contact dynamics.
 A 128-frame block spans 2.667 ms at 48 kHz.
 System load, compilation caches and scheduling affect observed tails.
@@ -70,6 +73,11 @@ The test source contains the exact fixtures and acceptance limits.
 Independent gradient checks cover response synthesis, contact fitting, endpoint interpolation and both spectral objectives.
 The pooled spectral objective is an optional inference extension, not an author-specified loss.
 A fitted contact-interface example differs from ideal FP64 by 0.00523%.
+
+## Additional paper reproductions
+
+[Matusiak](Matusiak.md) records full-waveform comparisons with executed author MATLAB code, discrete energy checks, Metal precision and scoped batch timings.
+The common texture descriptors include narrowband concentration, modulation, envelope fluctuation and amplitude statistics; matching them does not prove perceptual equivalence.
 
 ## Scope
 

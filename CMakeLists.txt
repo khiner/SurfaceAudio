@@ -10,7 +10,7 @@ if(NOT APPLE)
     message(FATAL_ERROR "SurfaceAudio targets macOS 26 and Apple Silicon")
 endif()
 
-file(GLOB_RECURSE sources CONFIGURE_DEPENDS src/core/*.cpp src/core/*.mm src/agarwal/*.cpp src/sdt/*.cpp src/conan/*.cpp)
+file(GLOB_RECURSE sources CONFIGURE_DEPENDS src/core/*.cpp src/core/*.mm src/agarwal/*.cpp src/sdt/*.cpp src/conan/*.cpp src/matusiak/*.cpp src/matusiak/*.mm)
 add_library(SurfaceAudio STATIC ${sources})
 target_include_directories(SurfaceAudio PUBLIC src)
 target_compile_options(SurfaceAudio PRIVATE -Wall -Wextra -Wpedantic -mcpu=native "$<$<COMPILE_LANGUAGE:OBJCXX>:-fobjc-arc>")
@@ -61,3 +61,7 @@ surface_audio_executable(agarwalSpatialReproduce tools/agarwal_spatial_reproduce
 surface_audio_executable(agarwalResponseFit tools/agarwal_response_fit.cxx)
 surface_audio_executable(agarwalContactFit tools/agarwal_contact_fit.cxx)
 surface_audio_executable(agarwalEndpointFit tools/agarwal_endpoint_fit.cxx)
+
+foreach(method matusiak)
+    surface_audio_executable(${method}Reproduce tools/${method}_reproduce.cxx)
+endforeach()

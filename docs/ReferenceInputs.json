@@ -810,6 +810,21 @@
       "path": "references/agarwal/icml2023/resynth/glass/20.wav",
       "sha256": "783641e962c7f3ad75085dd18f993855e80eb5c987b75bb2fa565afbbb2bdb33",
       "source_url": "https://mcdermottlab.mit.edu/ICML2023/resynth/glass/20.wav"
+    },
+    {
+      "method": "matusiak",
+      "path": "references/matusiak/FastSautille.mp3",
+      "sha256": "eb856ee9f588caa0cab5236e2bc5c71c395f5c8a525360269085dbefe1f2cb33"
+    },
+    {
+      "method": "matusiak",
+      "path": "references/matusiak/the_bowed_string/LICENSE",
+      "sha256": "3972dc9744f6499f0f9b2dbf76696f2ae7ad8af9b23dde66d6af86c9dfb36986"
+    },
+    {
+      "method": "matusiak",
+      "path": "references/matusiak/the_bowed_string/bowed_string_with_comments.m",
+      "sha256": "708844e74dc11648b2286d6aff3841ab234201ad3c0339275b12eac8129f257e"
     }
   ]
 }

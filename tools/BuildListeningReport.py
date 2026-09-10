@@ -14,7 +14,7 @@ import numpy as np
 from scipy.io import wavfile
 from scipy.signal import welch
 
-from AnalyzeRenders import metrics, read_wave
+from AnalyzeRenders import metrics, read_wave, texture_metrics
 
 
 def spectrum(rate, samples):
@@ -33,6 +33,10 @@ def main():
         parser.error("Review output already exists or is frozen; choose a new --output directory")
     manifest = json.loads(args.manifest.read_text())
     cases = manifest["cases"]
+    generated_wavs = {(args.output / 'audio' / f'{index:02d}-{field}-{kind}.wav').resolve()
+                      for index in range(len(cases)) for field in ('reference', 'synthesis') for kind in ('raw', 'audition')}
+    if any(Path(case[field]).resolve() in generated_wavs for case in cases for field in ('reference', 'synthesis')):
+        parser.error('Report destinations overlap source WAVs; choose a different --output directory')
     args.output.mkdir(parents=True, exist_ok=True)
     assets = args.output / "audio"
     assets.mkdir(exist_ok=True)
@@ -48,7 +52,7 @@ def main():
             label = case.get(field + "_label", label)
             path = Path(case[field])
             rate, samples = read_wave(path)
-            data = metrics(rate, samples)
+            data = {**metrics(rate, samples), "texture": texture_metrics(rate, samples)}
             mono = samples.mean(axis=1)
             ac = samples - samples.mean(axis=0)
             rms = float(np.sqrt(np.mean(ac ** 2)))
@@ -59,6 +63,7 @@ def main():
             audition_name = name + "-audition.wav"
             (assets / raw_name).unlink(missing_ok=True)
             subprocess.run(['/bin/cp', '-c', str(path), str(assets / raw_name)], check=True)
+            (assets / audition_name).unlink(missing_ok=True)
             wavfile.write(assets / audition_name, rate, (ac * gain).astype(np.float32))
             data.update(source=str(path), audition_gain=gain)
             record["signals"][field] = data
@@ -81,6 +86,13 @@ def main():
         source = case.get("source_url", "")
         source_link = f'<a href="{html.escape(source, quote=True)}">Source</a>' if source else ""
         sections.append(f'<section id="case-{index}"><h2>{html.escape(case["title"])}</h2><p>{html.escape(case["notes"])} {source_link}</p><div class="players">{"".join(players)}</div><button class="switch">Switch A/B at current time</button><img loading="lazy" src="{figure_name}" alt="Relative amplitude envelope and normalized spectrum comparison"></section>')
+        descriptors = [('frame_top3_bin_fraction_median', 'Narrowband concentration'), ('amplitude_kurtosis', 'Amplitude kurtosis'), ('envelope_cv', 'Envelope variation'), ('local_envelope_rms', 'Local envelope fluctuation')]
+        rows = []
+        for key, label in descriptors:
+            values = [record['signals'][field]['texture'][key] for field in ['reference', 'synthesis']]
+            cells = ''.join('<td>' + (f'{value:.4g}' if value is not None else 'n/a') + '</td>' for value in values)
+            rows.append(f'<tr><td>{label}</td>{cells}</tr>')
+        sections[-1] = sections[-1].replace('</section>', '<details><summary>Texture measures</summary><p>Computed over each complete case WAV using channel power, without stereo phase cancellation. Diagnostic differences, not perceptual equivalence scores.</p><table><tr><th>Descriptor</th><th>Reference</th><th>Ours</th></tr>' + ''.join(rows) + '</table></details></section>')
         records.append(record)
     (args.output / "Metrics.json").write_text(json.dumps(records, indent=2, allow_nan=False) + "\n")
     page = '''<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>SurfaceAudio published-result comparisons</title>
