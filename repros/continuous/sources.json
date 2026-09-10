@@ -1,0 +1,23 @@
+{
+  "paper": {
+    "title": "An Intuitive Synthesizer of Continuous-Interaction Sounds: Rubbing, Scratching, and Rolling",
+    "authors": "Simon Conan, Etienne Thoret, Mitsuko Aramaki, Olivier Derrien, Charles Gondre, Solvi Ystad, Richard Kronland-Martinet",
+    "publication": "Computer Music Journal 38(4), 24-37, 2014",
+    "doi": "10.1162/COMJ_a_00266",
+    "local_pdf": "/Users/khiner/physical_audio_papers/continuous_interaction_signal_models/conan2014_continuous_interactions.pdf",
+    "sha256": "aeda5cf803dfd204215fcde0f5df701239eac5dd014f99dd82c42ff4ae7a6421"
+  },
+  "author_video": {
+    "page": "https://kronland.fr/publications/an-intuitive-synthesizer-of-continuous-interaction-sounds-rubbing-scratching-and-rolling/",
+    "url": "https://kronland.fr/wp-content/uploads/2015/05/ConanEtAlCMJ2014.mp4",
+    "path": "references/continuous/ConanEtAlCMJ2014.mp4",
+    "sha256": "0256b0f30f88e261553f6bfa84d6e3adcaf52790d8d6d5570e8306b4798e4bcb",
+    "license": "Author companion media; no redistribution license advertised.",
+    "use": "Independent isolated object hit, training/held-out continuous interaction excerpts, and visible action controls. Source input is unchanged."
+  },
+  "implementation": "Independent equation implementation; uses shared native Conan TASLP rolling calibration and core random/modal/GPU primitives. No author implementation was available.",
+  "reproduction": "tools/continuous_reproduce.py --binary build/continuousReproduce --offline",
+  "unavailable": ["Original source code", "Numeric object/modal/material presets", "Gesture time series and velocity calibration", "Original stochastic seeds"],
+  "inferred": ["Modes from isolated hit plus first two seconds of rubbing", "Gesture drive from visible action-panel indicator", "Per-action cutoff and gain, scratching density from first two seconds only"],
+  "heldout": "Last four seconds of fixed-action excerpts; entire transition excerpt. See docs/Continuous.md and generated metrics.json."
+}

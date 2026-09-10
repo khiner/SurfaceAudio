@@ -812,6 +812,11 @@
       "source_url": "https://mcdermottlab.mit.edu/ICML2023/resynth/glass/20.wav"
     },
     {
+      "method": "continuous",
+      "path": "references/continuous/ConanEtAlCMJ2014.mp4",
+      "sha256": "0256b0f30f88e261553f6bfa84d6e3adcaf52790d8d6d5570e8306b4798e4bcb"
+    },
+    {
       "method": "matusiak",
       "path": "references/matusiak/FastSautille.mp3",
       "sha256": "eb856ee9f588caa0cab5236e2bc5c71c395f5c8a525360269085dbefe1f2cb33"

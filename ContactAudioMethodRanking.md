@@ -20,7 +20,7 @@ This is an engineering judgment from the papers and available implementations, n
 | **13** | **Lee 2010 — segmented rolling analysis/synthesis** | Useful recording-based reconstruction with position-dependent filtering. Dependence on detecting individual contacts and fitting their segments makes it a narrower analysis baseline. [Paper](/Users/khiner/physical_audio_papers/contact_sound_analysis/lee2010_rolling_source_filter.pdf) |
 | **14** | **Nakatsuka 2017 — adhesion/microrectangle friction** | Interesting deformation-aware direction, but the microscopic construction introduces substantial assumptions and implementation work. Its demonstrated validation and performance evidence are less convincing for prioritization than the alternatives above. [Paper](/Users/khiner/physical_audio_papers/friction_sound_physical/nakatsuka2017_adhesion.pdf) |
 
-Current implementations also cover [Matusiak 2025](docs/Matusiak.md) and [Poirot 2023](docs/Poirot.md).
+Current implementations also cover [Matusiak 2025](docs/Matusiak.md), [Poirot 2023](docs/Poirot.md), and [Conan CMJ 2014](docs/Continuous.md).
 Their method pages distinguish executed author-code oracles from calibrated media comparisons and document remaining mismatches.
 
 The analysis methods’ lower positions reflect their limited role as standalone generators.

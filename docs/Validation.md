@@ -20,7 +20,7 @@ cmake --build build-sanitize -j8
 UBSAN_OPTIONS=halt_on_error=1 ctest --test-dir build-sanitize --output-on-failure
 ```
 
-All 15 tests passed in Release and with host AddressSanitizer/UndefinedBehaviorSanitizer.
+All 16 tests passed in Release and with host AddressSanitizer/UndefinedBehaviorSanitizer.
 They cover independent equations, gradients, statistical moments, source traces, finite tails, CPU/GPU agreement and streaming state.
 The Conan executable test exercises published parameters and rejects nonfinite output.
 Tests require the actual Metal device and shaders.
@@ -78,6 +78,7 @@ A fitted contact-interface example differs from ideal FP64 by 0.00523%.
 
 [Matusiak](Matusiak.md) records full-waveform comparisons with executed author MATLAB code, discrete energy checks, Metal precision and scoped batch timings.
 [Poirot](Poirot.md) records recovered collision stimuli, the printed-equation discrepancies, pre-contact calibration, held-out collision errors and CPU/Metal timings.
+[Conan CMJ](Continuous.md) records prototype/transition tests, video-derived controls, inferred object responses and held-out texture comparisons.
 The common texture descriptors include narrowband concentration, modulation, envelope fluctuation and amplitude statistics; matching them does not prove perceptual equivalence.
 
 ## Scope
