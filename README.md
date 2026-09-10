@@ -9,6 +9,7 @@ C++23 contact-sound synthesis for Apple Silicon and Metal 4.
 | Conan TASLP 2014 | [Correlated micro-impact rolling synthesis and physical reference](docs/Conan.md) |
 | Agarwal ICML 2023 | [Differentiable modal/noise responses, fitting and material sampling](docs/AgarwalResponseReproduction.md) |
 | Matusiak 2025 | [Passive bow-string friction, torsion and compliant bow hair](docs/Matusiak.md) |
+| Poirot TASLP 2023 | [String-obstacle collisions and perceptual signal synthesis](docs/Poirot.md) |
 
 The library uses free functions, explicit state structs and contiguous arrays.
 Independent contacts, texture samples, modal work and convolution run on the GPU.
@@ -34,10 +35,10 @@ open outputs/reproduction/listening/index.html
 ```
 
 The workflow requires Python, NumPy, SciPy, Matplotlib, FFmpeg and network access for the initial author-input downloads.
-Use `--offline` with cached inputs or `--method agarwal`, `sdt`, `conan` or `matusiak` for one method.
+Use `--offline` with cached inputs or `--method agarwal`, `sdt`, `conan`, `matusiak` or `poirot` for one method.
 It retains output WAVs, a listening page and compact run/case information, and removes large disposable force/basis arrays after use.
 Per-method pages identify author inputs, inferred settings and remaining differences.
-Matusiak compares actual author code outputs.
+Matusiak compares actual author code outputs; Poirot uses recovered author media with explicitly inferred parameters.
 The listening pages include texture measures alongside waveform envelopes and spectra.
 Comparisons use the matching author's result from each paper.
 

@@ -49,6 +49,38 @@ void RandomTest(Gpu &gpu) {
     Require(std::abs(sum / 100000) < .02 && std::abs(squares / 100000 - 1) < .03, "Normal distribution moments");
 }
 
+void BatchConstantsTest(Gpu &gpu) {
+    const auto kernel = CreateKernel(gpu, "RandomSequence");
+    const std::array counts{17u, 257u};
+    const std::array outputs{CreateBuffer(gpu, counts[0] * sizeof(uint32_t)), CreateBuffer(gpu, counts[1] * sizeof(uint32_t))};
+    bool rejected = false;
+    try {
+        BatchUpload(gpu, counts[0]);
+    } catch (const std::invalid_argument &) { rejected = true; }
+    Require(rejected, "Dispatch constants require an active batch");
+    BeginGpu(gpu);
+    for (size_t i = 0; i < counts.size(); ++i) {
+        const std::array bindings{GpuBinding{outputs[i], 0}, GpuBinding{BatchUpload(gpu, counts[i]), 1}};
+        DispatchGpu(gpu, kernel, bindings, {1});
+    }
+    for (unsigned i = 2; i < 32; ++i) BatchUpload(gpu, i);
+    rejected = false;
+    try {
+        BatchUpload(gpu, counts[0]);
+    } catch (const std::invalid_argument &) { rejected = true; }
+    Require(rejected, "Dispatch constant arena rejects overflow");
+    SubmitGpu(gpu);
+    WaitGpu(gpu);
+    for (size_t i = 0; i < counts.size(); ++i) {
+        auto state = MakeRandom(42, 0);
+        for (uint32_t value : BufferSpan<uint32_t>(outputs[i])) Require(value == NextRandom(state), "Queued dispatch constants remain distinct until completion");
+    }
+    BeginGpu(gpu);
+    Require(BatchUpload(gpu, counts[0]).Size == sizeof(uint32_t), "Dispatch constant storage is reusable after completion");
+    SubmitGpu(gpu);
+    WaitGpu(gpu);
+}
+
 void FirTest(Gpu &gpu) {
     const FirBlock p{131, 37};
     auto random = MakeRandom(3);
@@ -356,6 +388,7 @@ int main() {
         auto gpu = CreateGpu();
         std::cout << "Core on " << DeviceName(gpu) << '\n';
         RandomTest(gpu);
+        BatchConstantsTest(gpu);
         FirTest(gpu);
         FixedFirTest(gpu);
         FiniteModesTest(gpu);

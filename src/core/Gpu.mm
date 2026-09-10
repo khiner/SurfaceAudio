@@ -25,6 +25,8 @@ struct GpuState {
     std::array<id<MTL4ArgumentTable>, 32> Tables;
     std::vector<id<MTLBuffer>> Buffers;
     std::vector<Pipeline> Pipelines;
+    GpuBuffer Constants;
+    size_t ConstantBytes{0};
     uint64_t Submitted{0};
     uint32_t Encoded{0};
     bool Recording{false};
@@ -88,7 +90,9 @@ Gpu CreateGpu(std::string_view library_path) {
             table = [s->Device newArgumentTableWithDescriptor:descriptor error:&error];
             if (!table) throw Error("Create argument table", error);
         }
-        return {std::move(s)};
+        Gpu gpu{std::move(s)};
+        gpu.State->Constants = CreateBuffer(gpu, 8192);
+        return gpu;
     }
 }
 
@@ -138,7 +142,18 @@ void BeginGpu(Gpu &gpu) {
     [s.Allocator reset];
     [s.Commands beginCommandBufferWithAllocator:s.Allocator];
     s.Encoded = 0;
+    s.ConstantBytes = 0;
     s.Recording = true;
+}
+
+GpuBuffer BatchUpload(Gpu &gpu, std::span<const std::byte> bytes) {
+    auto &s = *gpu.State;
+    const size_t offset = (s.ConstantBytes + 255) & ~size_t(255);
+    if (!s.Recording || bytes.empty() || bytes.size() > s.Constants.Size - offset) throw std::invalid_argument("GPU batch constants require an active batch and available capacity");
+    const GpuBuffer buffer{static_cast<std::byte *>(s.Constants.Data) + offset, bytes.size(), s.Constants.Address + offset};
+    std::memcpy(buffer.Data, bytes.data(), bytes.size());
+    s.ConstantBytes = offset + bytes.size();
+    return buffer;
 }
 
 void DispatchGpu(Gpu &gpu, GpuKernel kernel, std::span<const GpuBinding> bindings, GpuGrid threads, GpuGrid group) { Encode(gpu, kernel, bindings, threads, group, false); }

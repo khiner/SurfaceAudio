@@ -1,0 +1,232 @@
+{
+  "doi": "10.1109/TASLP.2023.3284515",
+  "accessed": "2026-09-09",
+  "license": "No software or audio redistribution license identified. Author recordings retained locally for research comparison, not vendored into repository.",
+  "files": [
+    {
+      "path": "sounds/D_L2_p_filt.wav",
+      "url": "https://www.prism.cnrs.fr/publications-media/IEEEPoirot/data/sounds/D_L2_p_filt.wav",
+      "archive_url": "https://web.archive.org/web/20240415110128id_/https://www.prism.cnrs.fr/publications-media/IEEEPoirot/data/sounds/D_L2_p_filt.wav",
+      "sha256": "57486c252920af14d6d03119a7fdceac8037a412d3e50082d8f0c082bb0c9c0a",
+      "bytes": 709676
+    },
+    {
+      "path": "sounds/G_buzz_filt.wav",
+      "url": "https://www.prism.cnrs.fr/publications-media/IEEEPoirot/data/sounds/G_buzz_filt.wav",
+      "archive_url": "https://web.archive.org/web/20240415135538id_/https://www.prism.cnrs.fr/publications-media/IEEEPoirot/data/sounds/G_buzz_filt.wav",
+      "sha256": "2544f1d3ac3c8f36914807ac88f413ca28b5f1f153903b541b66b59fafed6fec",
+      "bytes": 714796
+    },
+    {
+      "path": "sounds/M1_x1_y1.wav",
+      "url": "https://www.prism.cnrs.fr/publications-media/IEEEPoirot/data/sounds/M1_x1_y1.wav",
+      "archive_url": "https://web.archive.org/web/20240415084110id_/https://www.prism.cnrs.fr/publications-media/IEEEPoirot/data/sounds/M1_x1_y1.wav",
+      "sha256": "d5ce0c09d12a63d2fa76b3671c810b0c73d17803252419d0d51eae0b98eccbea",
+      "bytes": 441044
+    },
+    {
+      "path": "sounds/M1_x1_y5.wav",
+      "url": "https://www.prism.cnrs.fr/publications-media/IEEEPoirot/data/sounds/M1_x1_y5.wav",
+      "archive_url": "https://web.archive.org/web/20240415083235id_/https://www.prism.cnrs.fr/publications-media/IEEEPoirot/data/sounds/M1_x1_y5.wav",
+      "sha256": "bc2f5b543976bfa8e97d036e0a386b8a8f102ca6aab54e1128d0b8155a6b874b",
+      "bytes": 441044
+    },
+    {
+      "path": "sounds/M1_x1_y9.wav",
+      "url": "https://www.prism.cnrs.fr/publications-media/IEEEPoirot/data/sounds/M1_x1_y9.wav",
+      "archive_url": "https://web.archive.org/web/20240415121750id_/https://www.prism.cnrs.fr/publications-media/IEEEPoirot/data/sounds/M1_x1_y9.wav",
+      "sha256": "e058141d7fd6a962f09c7799c4a0f71e66ac420e797bca019a45c2e13f4d7de4",
+      "bytes": 441044
+    },
+    {
+      "path": "sounds/M1_x2_y1.wav",
+      "url": "https://www.prism.cnrs.fr/publications-media/IEEEPoirot/data/sounds/M1_x2_y1.wav",
+      "archive_url": "https://web.archive.org/web/20240415091503id_/https://www.prism.cnrs.fr/publications-media/IEEEPoirot/data/sounds/M1_x2_y1.wav",
+      "sha256": "78c21e8a68e8bdbe0cd57db38ed920f2c2db349b7a8724a18a9ab3faa71dac5a",
+      "bytes": 441044
+    },
+    {
+      "path": "sounds/M1_x2_y5.wav",
+      "url": "https://www.prism.cnrs.fr/publications-media/IEEEPoirot/data/sounds/M1_x2_y5.wav",
+      "archive_url": "https://web.archive.org/web/20240415215756id_/https://www.prism.cnrs.fr/publications-media/IEEEPoirot/data/sounds/M1_x2_y5.wav",
+      "sha256": "e52768d6602a841b0ac84384a36de7210d1a63dd2cad7dc7c9999ab7973bc75a",
+      "bytes": 441044
+    },
+    {
+      "path": "sounds/M1_x2_y9.wav",
+      "url": "https://www.prism.cnrs.fr/publications-media/IEEEPoirot/data/sounds/M1_x2_y9.wav",
+      "archive_url": "https://web.archive.org/web/20240415085549id_/https://www.prism.cnrs.fr/publications-media/IEEEPoirot/data/sounds/M1_x2_y9.wav",
+      "sha256": "695ed18bdb69053db47c6a768bcd28e073d51233aa12b5680e22e9ef069a963e",
+      "bytes": 441044
+    },
+    {
+      "path": "sounds/M1_x3_y1.wav",
+      "url": "https://www.prism.cnrs.fr/publications-media/IEEEPoirot/data/sounds/M1_x3_y1.wav",
+      "archive_url": "https://web.archive.org/web/20240415091133id_/https://www.prism.cnrs.fr/publications-media/IEEEPoirot/data/sounds/M1_x3_y1.wav",
+      "sha256": "681a1ff8cb053a852515ab62261351c03bf2c01c7200a4d205d96ba9b20518e6",
+      "bytes": 441044
+    },
+    {
+      "path": "sounds/M1_x3_y5.wav",
+      "url": "https://www.prism.cnrs.fr/publications-media/IEEEPoirot/data/sounds/M1_x3_y5.wav",
+      "archive_url": "https://web.archive.org/web/20240415101952id_/https://www.prism.cnrs.fr/publications-media/IEEEPoirot/data/sounds/M1_x3_y5.wav",
+      "sha256": "628867fdb4897b28248ae91dc61f504ba54a5451989e9a2c8fcdc0f549a6625c",
+      "bytes": 441044
+    },
+    {
+      "path": "sounds/M1_x3_y9.wav",
+      "url": "https://www.prism.cnrs.fr/publications-media/IEEEPoirot/data/sounds/M1_x3_y9.wav",
+      "archive_url": "https://web.archive.org/web/20240415131244id_/https://www.prism.cnrs.fr/publications-media/IEEEPoirot/data/sounds/M1_x3_y9.wav",
+      "sha256": "85649ba8cbe813f8ebe4581f7dc627248b2fb0c642b169a53d740cd4d05e2787",
+      "bytes": 441044
+    },
+    {
+      "path": "sounds/M2_x1_y1.wav",
+      "url": "https://www.prism.cnrs.fr/publications-media/IEEEPoirot/data/sounds/M2_x1_y1.wav",
+      "archive_url": "https://web.archive.org/web/20240415094356id_/https://www.prism.cnrs.fr/publications-media/IEEEPoirot/data/sounds/M2_x1_y1.wav",
+      "sha256": "aafc816aeb52b3c1008b61113f68baf05704f3d4c518b9b7917d8b0f23d0b079",
+      "bytes": 441046
+    },
+    {
+      "path": "sounds/M2_x1_y4.wav",
+      "url": "https://www.prism.cnrs.fr/publications-media/IEEEPoirot/data/sounds/M2_x1_y4.wav",
+      "archive_url": "https://web.archive.org/web/20240415113800id_/https://www.prism.cnrs.fr/publications-media/IEEEPoirot/data/sounds/M2_x1_y4.wav",
+      "sha256": "21c10220af0c3e4cd03dd505f5575bd7a1e8a71b9afc4ca53c44dee86d9880c6",
+      "bytes": 441046
+    },
+    {
+      "path": "sounds/M2_x1_y5.wav",
+      "url": "https://www.prism.cnrs.fr/publications-media/IEEEPoirot/data/sounds/M2_x1_y5.wav",
+      "archive_url": "https://web.archive.org/web/20240415090244id_/https://www.prism.cnrs.fr/publications-media/IEEEPoirot/data/sounds/M2_x1_y5.wav",
+      "sha256": "eb22f19b50d51240b12ae085fe0f84ca19e3f073a729157cb188a57756e74a68",
+      "bytes": 441046
+    },
+    {
+      "path": "sounds/M2_x1_y9.wav",
+      "url": "https://www.prism.cnrs.fr/publications-media/IEEEPoirot/data/sounds/M2_x1_y9.wav",
+      "archive_url": "https://web.archive.org/web/20240415081623id_/https://www.prism.cnrs.fr/publications-media/IEEEPoirot/data/sounds/M2_x1_y9.wav",
+      "sha256": "66eec38197d8c896207d9ecea664f47b8967a0f9b7d455811c8c1c58d86646e7",
+      "bytes": 441046
+    },
+    {
+      "path": "sounds/M2_x2_y1.wav",
+      "url": "https://www.prism.cnrs.fr/publications-media/IEEEPoirot/data/sounds/M2_x2_y1.wav",
+      "archive_url": "https://web.archive.org/web/20240415085045id_/https://www.prism.cnrs.fr/publications-media/IEEEPoirot/data/sounds/M2_x2_y1.wav",
+      "sha256": "354281eca81fe899eccb4e66a3c97b818adae21e4404d5f8e8ff194accc202f1",
+      "bytes": 441046
+    },
+    {
+      "path": "sounds/M2_x2_y5.wav",
+      "url": "https://www.prism.cnrs.fr/publications-media/IEEEPoirot/data/sounds/M2_x2_y5.wav",
+      "archive_url": "https://web.archive.org/web/20240415170400id_/https://www.prism.cnrs.fr/publications-media/IEEEPoirot/data/sounds/M2_x2_y5.wav",
+      "sha256": "9b88bb210b3803b0de61688646fc403918a42768bf0649ced831d2a831034cf7",
+      "bytes": 441046
+    },
+    {
+      "path": "sounds/M2_x2_y9.wav",
+      "url": "https://www.prism.cnrs.fr/publications-media/IEEEPoirot/data/sounds/M2_x2_y9.wav",
+      "archive_url": "https://web.archive.org/web/20240416055229id_/https://www.prism.cnrs.fr/publications-media/IEEEPoirot/data/sounds/M2_x2_y9.wav",
+      "sha256": "8c74465c7274d1196c05f453e738d160f92d4123b9b42e2db35a2c3d882ce951",
+      "bytes": 441046
+    },
+    {
+      "path": "sounds/M2_x3_y1.wav",
+      "url": "https://www.prism.cnrs.fr/publications-media/IEEEPoirot/data/sounds/M2_x3_y1.wav",
+      "archive_url": "https://web.archive.org/web/20240415093411id_/https://www.prism.cnrs.fr/publications-media/IEEEPoirot/data/sounds/M2_x3_y1.wav",
+      "sha256": "9a36f859389c8f70e6cb22325b00d9b600569288b448883e08033e57a3e853c2",
+      "bytes": 441046
+    },
+    {
+      "path": "sounds/M2_x3_y5.wav",
+      "url": "https://www.prism.cnrs.fr/publications-media/IEEEPoirot/data/sounds/M2_x3_y5.wav",
+      "archive_url": "https://web.archive.org/web/20240415085504id_/https://www.prism.cnrs.fr/publications-media/IEEEPoirot/data/sounds/M2_x3_y5.wav",
+      "sha256": "01526135a2be39bfe55f7f9206d15f94c3d7dd613f134a8d2b2e51e0f3cd704c",
+      "bytes": 441046
+    },
+    {
+      "path": "sounds/M3_x1_y1.wav",
+      "url": "https://www.prism.cnrs.fr/publications-media/IEEEPoirot/data/sounds/M3_x1_y1.wav",
+      "archive_url": "https://web.archive.org/web/20240415082044id_/https://www.prism.cnrs.fr/publications-media/IEEEPoirot/data/sounds/M3_x1_y1.wav",
+      "sha256": "25e1d9111057db694e3a018e0c772e800d88ec08cb983145da645abaaff67c22",
+      "bytes": 441046
+    },
+    {
+      "path": "sounds/M3_x1_y5.wav",
+      "url": "https://www.prism.cnrs.fr/publications-media/IEEEPoirot/data/sounds/M3_x1_y5.wav",
+      "archive_url": "https://web.archive.org/web/20240415102735id_/https://www.prism.cnrs.fr/publications-media/IEEEPoirot/data/sounds/M3_x1_y5.wav",
+      "sha256": "9fc6d2c570017bac4eabeb6cdd0437e8941a7486908add48f282195c90e29fd2",
+      "bytes": 441046
+    },
+    {
+      "path": "sounds/M3_x1_y9.wav",
+      "url": "https://www.prism.cnrs.fr/publications-media/IEEEPoirot/data/sounds/M3_x1_y9.wav",
+      "archive_url": "https://web.archive.org/web/20240415082816id_/https://www.prism.cnrs.fr/publications-media/IEEEPoirot/data/sounds/M3_x1_y9.wav",
+      "sha256": "66eec38197d8c896207d9ecea664f47b8967a0f9b7d455811c8c1c58d86646e7",
+      "bytes": 441046
+    },
+    {
+      "path": "sounds/M3_x2_y1.wav",
+      "url": "https://www.prism.cnrs.fr/publications-media/IEEEPoirot/data/sounds/M3_x2_y1.wav",
+      "archive_url": "https://web.archive.org/web/20240415114218id_/https://www.prism.cnrs.fr/publications-media/IEEEPoirot/data/sounds/M3_x2_y1.wav",
+      "sha256": "513bf897fa9736050f263798483582f4a0ffb98ec80dd41b0fe7b7a0e6185a1f",
+      "bytes": 441046
+    },
+    {
+      "path": "sounds/M3_x2_y5.wav",
+      "url": "https://www.prism.cnrs.fr/publications-media/IEEEPoirot/data/sounds/M3_x2_y5.wav",
+      "archive_url": "https://web.archive.org/web/20240415084309id_/https://www.prism.cnrs.fr/publications-media/IEEEPoirot/data/sounds/M3_x2_y5.wav",
+      "sha256": "3a642d15874930758c1096bf65122bdc86b24ddceea538f87284090491e3a053",
+      "bytes": 441046
+    },
+    {
+      "path": "sounds/M3_x2_y9.wav",
+      "url": "https://www.prism.cnrs.fr/publications-media/IEEEPoirot/data/sounds/M3_x2_y9.wav",
+      "archive_url": "https://web.archive.org/web/20240415102423id_/https://www.prism.cnrs.fr/publications-media/IEEEPoirot/data/sounds/M3_x2_y9.wav",
+      "sha256": "8c74465c7274d1196c05f453e738d160f92d4123b9b42e2db35a2c3d882ce951",
+      "bytes": 441046
+    },
+    {
+      "path": "sounds/M3_x3_y1.wav",
+      "url": "https://www.prism.cnrs.fr/publications-media/IEEEPoirot/data/sounds/M3_x3_y1.wav",
+      "archive_url": "https://web.archive.org/web/20240415094400id_/https://www.prism.cnrs.fr/publications-media/IEEEPoirot/data/sounds/M3_x3_y1.wav",
+      "sha256": "db52a551367d6edae0638889c24d973934ccf3492534de3214064745219b5658",
+      "bytes": 441046
+    },
+    {
+      "path": "sounds/M3_x3_y5.wav",
+      "url": "https://www.prism.cnrs.fr/publications-media/IEEEPoirot/data/sounds/M3_x3_y5.wav",
+      "archive_url": "https://web.archive.org/web/20240415092145id_/https://www.prism.cnrs.fr/publications-media/IEEEPoirot/data/sounds/M3_x3_y5.wav",
+      "sha256": "eb5d54a109dfa6f38e484bb9c70e1d99d48690d7d3fe65bf25b43fb77cea8f78",
+      "bytes": 441046
+    },
+    {
+      "path": "sounds/M3_x3_y9.wav",
+      "url": "https://www.prism.cnrs.fr/publications-media/IEEEPoirot/data/sounds/M3_x3_y9.wav",
+      "archive_url": "https://web.archive.org/web/20240415093417id_/https://www.prism.cnrs.fr/publications-media/IEEEPoirot/data/sounds/M3_x3_y9.wav",
+      "sha256": "99bb6405f8a786b4512495d01abc8d92a1fcb6eb553570591ebed1cd8011f952",
+      "bytes": 441046
+    },
+    {
+      "path": "author-page.html",
+      "url": "https://web.archive.org/web/20240415080231id_/https://www.prism.cnrs.fr/publications-media/IEEEPoirot/",
+      "sha256": "ceba3aba8de54838aef3b212b1a4186d8dd94475d2d3a0ce1efc1228273c7382",
+      "bytes": 41567
+    },
+    {
+      "path": "local-manuscript.pdf",
+      "url": "local:/Users/khiner/physical_audio_papers/collision_signal_models/poirot2023_collisions.pdf",
+      "sha256": "3e69289a9f8f0051bcc26f83049fe33e6528d8a2e94175bbce0c3926445bb8e2",
+      "bytes": 3013456,
+      "public_record": "https://hal.science/hal-04355439v1",
+      "version": "HAL manuscript submitted 2023-12-20. Not verified as IEEE version of record.",
+      "rights": "HAL cover states CC BY-SA 4.0; following IEEE rights page reserves other uses. Preserve both statements."
+    },
+    {
+      "path": "edinburgh-manuscript.pdf",
+      "url": "https://www.pure.ed.ac.uk/ws/portalfiles/portal/338872061/Bilbao2023IEEEPerceptually.pdf",
+      "sha256": "744c7ff599376523e3a04d31ee2f313b3fa25b445c14efc330f9d13ca848656f",
+      "bytes": 3027308,
+      "version": "Edinburgh repository explicitly labels peer-reviewed version. Not IEEE version of record. Download wrapper generated 2026-09-09."
+    }
+  ]
+}
