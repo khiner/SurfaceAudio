@@ -1,0 +1,31 @@
+{
+  "seed": 2019,
+  "materials": [
+    "metal",
+    "ceramic",
+    "wood_medium",
+    "cardboard"
+  ],
+  "masses_kg": [
+    0.2,
+    1.0
+  ],
+  "secondary_material": "wood_medium",
+  "resonance": [
+    1.0,
+    1.0
+  ],
+  "sample_rate": 44100,
+  "scrape_demo": {
+    "material": "wood_medium",
+    "seconds": 1.5,
+    "ir_seconds": 0.5,
+    "spacing_m": 1e-05,
+    "mass_kg": 0.01,
+    "shear_gain": 1.0,
+    "gamma": 1.0,
+    "low_m": 0.05,
+    "high_m": 0.15,
+    "cycles": 2
+  }
+}

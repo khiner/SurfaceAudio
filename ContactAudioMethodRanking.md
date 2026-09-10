@@ -22,9 +22,10 @@ It reflects engineering judgment from papers and implementations, with comparabl
 
 The [Matusiak](docs/Matusiak.md), [Poirot](docs/Poirot.md), and [Conan CMJ](docs/Continuous.md) implementations have reproduction workflows.
 Their pages distinguish author-code comparisons from calibrated media comparisons and record remaining differences.
-[Matusiak 2024](docs/Matusiak2024.md) and [Falaize–Roze](docs/Falaize.md) also have implementations.
+[Matusiak 2024](docs/Matusiak2024.md), [Falaize–Roze](docs/Falaize.md), and [Traer 2019](docs/Traer.md) also have implementations.
 Matusiak uses explicit archived numerical conventions and records the remaining author-trace differences.
 Falaize–Roze reproduces figure constraints with explicit inferred settings.
+Traer matches later TDW code, with the original 2019 experimental inputs still unavailable.
 The lower-ranked analysis methods support validation of the synthesis methods.
 Lagrange and HaTT remain useful early priorities for reference measurements.
 

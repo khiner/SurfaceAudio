@@ -1,8 +1,10 @@
 #include "core/AudioFile.h"
 #include "core/Convolution.h"
+#include "core/ErbNoise.h"
 #include "core/Gpu.h"
 #include "core/GpuConvolution.h"
 #include "core/GpuFiniteModes.h"
+#include "core/GpuInterpolation.h"
 #include "core/GpuMix.h"
 #include "core/GpuModal.h"
 #include "core/Modal.h"
@@ -34,6 +36,59 @@ void PivotedSolveTest() {
     Require(!Solve(singular.data(), dependent.data(), 2, 0.f), "Zero minimum pivot still rejects a singular system");
     float invalid = std::numeric_limits<float>::quiet_NaN(), value = 1;
     Require(!Solve(&invalid, &value, 1, 0.f), "Pivoted solve rejects nonfinite pivots");
+}
+
+void InterpolationTest(Gpu &gpu) {
+    const std::array nodes{0.f, .25f, 1.f};
+    const std::array positions{-1.f, 0.f, .125f, .25f, .5f, 1.f, 2.f};
+    const std::array values{2.f, -3.f, 5.f};
+    const std::array expected{2.f, 2.f, -.5f, -3.f, -1.f / 3, 5.f, 5.f};
+    std::vector<float> signals(nodes.size() * positions.size());
+    for (size_t node = 0; node < nodes.size(); ++node)
+        for (size_t frame = 0; frame < positions.size(); ++frame) signals[node * positions.size() + frame] = values[node] + float(frame);
+    const auto actual = InterpolateSignalsGpu(gpu, signals, nodes, positions);
+    for (size_t frame = 0; frame < positions.size(); ++frame) Require(std::abs(actual[frame] - expected[frame] - float(frame)) < 1e-6, "Linear signal interpolation preserves nodes and clamps endpoints");
+    const auto single = InterpolateSignalsGpu(gpu, std::span(signals).first(positions.size()), std::span(nodes).first(1), positions);
+    Require(std::ranges::equal(single, std::span(signals).first(positions.size())), "Single-node interpolation preserves every sample");
+    bool rejected = false;
+    try {
+        InterpolateSignalsGpu(gpu, signals, std::array{0.f, 0.f, 1.f}, positions);
+    } catch (const std::invalid_argument &) { rejected = true; }
+    Require(rejected, "Signal interpolation rejects duplicate nodes");
+}
+
+void ErbNoiseTest(Gpu &gpu) {
+    constexpr uint32_t frames = 2049;
+    const ErbNoiseSettings settings{.TapCount = 129, .Seed = 993};
+    for (const uint32_t bands : {1u, 30u}) {
+        const auto reference = ErbNoiseReference(bands, frames, 48000, settings);
+        const auto actual = CreateErbNoise(gpu, bands, frames, 48000, settings);
+        Require(actual.size() == size_t(bands) * frames, "ERB band-major dimensions");
+        double maximum = 0;
+        for (size_t i = 0; i < actual.size(); ++i) maximum = std::max(maximum, std::abs(reference[i] - actual[i]));
+        Require(maximum < 8e-6, "ERB GPU matches FP64 convolution");
+        for (uint32_t band = 0; band < bands; ++band) {
+            double energy = 0, adjacent = 0;
+            for (uint32_t frame = 0; frame < frames; ++frame) {
+                const double value = reference[size_t(band) * frames + frame];
+                energy += value * value;
+                if (frame) adjacent += value * reference[size_t(band) * frames + frame - 1];
+            }
+            Require(energy / frames > .2 && energy / frames < 3, "ERB bands retain normalized noise energy");
+            if (bands == 1) Require(std::abs(adjacent / energy) < .1, "Full-band Gaussian noise is uncorrelated");
+            else if (band == 0) Require(adjacent / energy > .9, "Lowest ERB band has low-frequency correlation");
+            else if (band == bands - 1) Require(adjacent / energy < -.3, "Highest ERB band has high-frequency correlation");
+        }
+        std::cout << "ERB " << bands << " bands max error " << maximum << '\n';
+    }
+    const auto rejected = [](uint32_t bands, uint32_t frames, ErbNoiseSettings settings = {}) {
+        try {
+            ErbNoiseReference(bands, frames, 48000, settings);
+        } catch (const std::invalid_argument &) { return true; }
+        return false;
+    };
+    Require(rejected(0, 1) && rejected(1, 0) && rejected(UINT32_MAX, 2), "ERB dimensions reject empty or overflowing records");
+    Require(rejected(1, 1, {.TapCount = 2}) && rejected(1, 1, {.LowHz = 2000, .HighHz = 1000}), "ERB filters reject invalid support");
 }
 
 void RandomTest(Gpu &gpu) {
@@ -402,6 +457,8 @@ int main() {
         std::cout << "Core on " << DeviceName(gpu) << '\n';
         RandomTest(gpu);
         PivotedSolveTest();
+        ErbNoiseTest(gpu);
+        InterpolationTest(gpu);
         BatchConstantsTest(gpu);
         FirTest(gpu);
         FixedFirTest(gpu);

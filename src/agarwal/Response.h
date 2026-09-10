@@ -1,6 +1,6 @@
 #pragma once
 
-#include "core/Gpu.h"
+#include "core/ErbNoise.h"
 
 #include <array>
 #include <vector>
@@ -11,14 +11,8 @@ inline constexpr uint32_t ResponseModeCount = 10, ResponseParameterCount = 50;
 // [frequency Hz, mode amplitude dB, mode RT60 sec, noise amplitude dB, noise RT60 sec], ten each.
 using ResponseParameters = std::array<float, ResponseParameterCount>;
 
-struct ResponseNoiseSettings {
-    uint32_t TapCount{513};
-    uint64_t Seed{2023};
-    double LowHz{}, HighHz{}; // HighHz=0 selects Nyquist.
-};
+using ResponseNoiseSettings = ErbNoiseSettings;
 
-// Paper: ERB-spaced FIR cutoffs and shared Gaussian noise. Chosen FIR design: eleven ERB edges,
-// odd symmetric Hamming-windowed sinc filters, unit L2 norm (unit expected band RMS, no peak normalization).
 // Seeded noise includes both FIR margins, avoiding padding transients. Hold returned band-major noise fixed during fitting.
 std::vector<float> CreateResponseNoise(Gpu &, uint32_t frames, double sample_rate, const ResponseNoiseSettings & = {});
 std::vector<double> ResponseNoiseReference(uint32_t frames, double sample_rate, const ResponseNoiseSettings & = {});

@@ -990,6 +990,71 @@
       "method": "poirot",
       "path": "references/poirot/sounds/M3_x3_y9.wav",
       "sha256": "99bb6405f8a786b4512495d01abc8d92a1fcb6eb553570591ebed1cd8011f952"
+    },
+    {
+      "method": "traer",
+      "path": "references/traer/clatter/Clatter/Clatter.Core/Data/ImpactMaterials/metal_1_mm.bytes",
+      "sha256": "c8f116782f0d7cc869ba6159fcf321c8ff6f6fd965ad28e822709e9dba662b91"
+    },
+    {
+      "method": "traer",
+      "path": "references/traer/clatter/Clatter/Clatter.Core/ImpactMaterialData.cs",
+      "sha256": "5f9211e44ebfbab32110d2dcce31a47d6089fef478e9528187956b4424aadd79"
+    },
+    {
+      "method": "traer",
+      "path": "references/traer/clatter/Clatter/Clatter.Core/Modes.cs",
+      "sha256": "7f42eb9cb56316786580ea5d208f96cfcfa03ce49fb8eafa3dc944d514b3798e"
+    },
+    {
+      "method": "traer",
+      "path": "references/traer/clatter/LICENSE.md",
+      "sha256": "006622d7a04fbc8f74b126e4e6ff3f5b9b73069f47637721c7a0a4e5dda04593"
+    },
+    {
+      "method": "traer",
+      "path": "references/traer/paper.pdf",
+      "sha256": "efd7e2e61b799864c4d7fcecb84124e585c6adce28d5afcb05db70def68b7182"
+    },
+    {
+      "method": "traer",
+      "path": "references/traer/tdw/LICENSE.txt",
+      "sha256": "9edd9fe4f99bf6456f7fa6d7c69dfb7d35eeb4fd858d08da9bd3766a2fcd988b"
+    },
+    {
+      "method": "traer",
+      "path": "references/traer/tdw/Python/tdw/add_ons/py_impact.py",
+      "sha256": "86417eca6d94d3c4d01f5a63437aec4b7d79a0bad80df4e43beea019d245bbef"
+    },
+    {
+      "method": "traer",
+      "path": "references/traer/tdw/Python/tdw/add_ons/py_impact/material_data/cardboard_1_mm.json",
+      "sha256": "51eb8df5795cf2362130ea1364284e5cb425cc68b24fd46a571f8c117e91b010"
+    },
+    {
+      "method": "traer",
+      "path": "references/traer/tdw/Python/tdw/add_ons/py_impact/material_data/ceramic_1_mm.json",
+      "sha256": "67a42c452fbca36375b50344d38e5253b69d738614ecacd01727b940b0442fd6"
+    },
+    {
+      "method": "traer",
+      "path": "references/traer/tdw/Python/tdw/add_ons/py_impact/material_data/metal_1_mm.json",
+      "sha256": "736988493336d1a857e009ec70ff82a044c31dfd68ea913da89345980db90a06"
+    },
+    {
+      "method": "traer",
+      "path": "references/traer/tdw/Python/tdw/add_ons/py_impact/material_data/wood_medium_1_mm.json",
+      "sha256": "677d1a6d23b1d624044aa010d254dcb5cd0aac00ebe5a2e122fbe25c5db21249"
+    },
+    {
+      "method": "traer",
+      "path": "references/traer/tdw/Python/tdw/add_ons/py_impact/scrape_surfaces/bass_wood.npy",
+      "sha256": "a329845f5eb2c57fd4954abf047a98f9c50c869bd579b628448961d4bd02c12f"
+    },
+    {
+      "method": "traer",
+      "path": "references/traer/tdw/Python/tdw/physics_audio/modes.py",
+      "sha256": "cee89fe57877778474165b2d3951b917040df604627fb7494a6a874407269deb"
     }
   ]
 }

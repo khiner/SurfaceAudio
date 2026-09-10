@@ -5,24 +5,14 @@ struct ResponseBlock {
     uint Frames, Groups;
     float SampleRate;
 };
-struct ResponseNoiseBlock {
-    uint Frames, Taps;
-};
 
-// Recover the multiply/divide residual before reducing cycles. Direct float f*t loses phase at long IR tails.
+// Compensated cycle reduction limits phase error in long impulse-response tails.
 inline float ResponsePhase(float frequency, uint frame, float sample_rate) {
     const float sample = float(frame), product = frequency * sample;
     const float product_error = fma(frequency, sample, -product) + frequency * float(int(frame) - int(sample));
     const float cycles = product / sample_rate;
     const float remainder = (fma(-cycles, sample_rate, product) + product_error) / sample_rate;
     return 2 * M_PI_F * ((cycles - floor(cycles)) + remainder);
-}
-
-kernel void ResponseNoise(constant ResponseNoiseBlock &p [[buffer(0)]], device const float *white [[buffer(1)]], device const float *filters [[buffer(2)]], device float *output [[buffer(3)]], uint2 index [[thread_position_in_grid]]) {
-    if (index.x >= p.Frames || index.y >= 10) return;
-    float sum = 0;
-    for (uint tap = 0; tap < p.Taps; ++tap) sum += filters[index.y * p.Taps + tap] * white[index.x + tap];
-    output[index.y * p.Frames + index.x] = sum;
 }
 
 kernel void ResponseSynthesize(constant ResponseBlock &p [[buffer(0)]], device const float *parameters [[buffer(1)]], device const float *noise [[buffer(2)]], device float *output [[buffer(3)]], uint frame [[thread_position_in_grid]]) {
