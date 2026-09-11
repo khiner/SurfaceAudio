@@ -16,6 +16,7 @@ C++23 contact-sound synthesis for Apple Silicon and Metal 4.
 | Traer 2019 | [Statistical responses, impacts, spatial scrapes and later TDW code comparisons](docs/Traer.md) |
 | Willemsen 2019 | [Stiff-string friction, published figure traces and executed author source](docs/Willemsen.md) |
 | Lagrange 2010 | [Modal analysis, excitation extraction and uncompressed contact resynthesis](docs/Lagrange.md) |
+| Lee 2010 | [Contact detection, position-dependent notch/LPC analysis and rolling resynthesis](docs/Lee.md) |
 
 The library uses free functions, explicit state structs and contiguous arrays.
 Independent contacts, texture samples, modal work and convolution run on the GPU.
@@ -42,21 +43,27 @@ open outputs/reproduction/listening/index.html
 
 The workflow requires Python, NumPy, SciPy, Matplotlib, FFmpeg and network access for the initial author-input downloads.
 Use `--offline` with cached inputs and `--method NAME [NAME ...]` to select methods.
-Names are `agarwal`, `sdt`, `conan`, `matusiak`, `poirot`, `continuous`, `matusiak2024`, `falaize`, `traer`, and `willemsen`, `lagrange`.
+Names are `agarwal`, `sdt`, `conan`, `matusiak`, `poirot`, `continuous`, `matusiak2024`, `falaize`, `traer`, `willemsen`, `lagrange`, and `lee`.
 Outputs include WAVs, a listening page and run/case manifests.
 Temporary force and basis arrays are deleted after use.
 Per-method pages record author inputs, inferred settings, differences and texture/spectral comparisons.
 Matusiak 2025 compares executed author code, while Poirot and Conan CMJ compare author media using inferred parameters.
 Matusiak 2024 compares published force traces, Falaize–Roze compares figures, and Traer compares later TDW author code.
+Willemsen reproduces published figure traces and the corresponding author MATLAB source.
+Lagrange and Lee use identified FoleyAutomatic recordings, with their own published synthesis examples still unavailable.
 Each method records the limits of those comparisons.
 The [Matusiak listening reference](outputs/reproduction/matusiak2024-revised-2026-09-10/index.html) uses archived numerical conventions.
-
-Willemsen reproduces published figures and optionally executes the pinned author MATLAB source in Octave.
-Lagrange provides uncompressed contact reconstruction with a disclosed joint excitation/audio estimator.
+The [contact reconstruction comparisons](outputs/reproduction/listening/index.html) include the current Lagrange, Lee and Willemsen renders.
+Regenerate these three papers with:
 
 ```sh
-python3 tools/Reproduce.py --method willemsen lagrange --author-oracle --offline
+python3 tools/Reproduce.py --method lagrange lee willemsen --author-oracle --offline
 ```
+
+Willemsen's author comparison requires Octave and the cached pinned MATLAB sources.
+Lagrange and Lee use identified FoleyAutomatic input recordings; Lee retains failed audio reconstruction diagnostics.
+Lagrange uses uncompressed sources and preserves causal modal decay after the input ends.
+Per-method documentation and manifests record reconstruction limits and numerical diagnostics.
 
 The committed Agarwal input packages replay four retained rolling reconstructions and twenty fitted object responses without optimization:
 
@@ -73,7 +80,7 @@ Reproduction fixtures and inferred calibration inputs are stored under `repros/`
 
 [Timings and numerical limits](docs/Validation.md) gives the measured workloads, errors and verification commands.
 [ContactAudioMethodRanking.md](ContactAudioMethodRanking.md) records the remaining paper queue.
-The shared core provides Metal execution, FFT convolution, ESPRIT/LPC analysis, modal filtering, random streams, and WAV I/O.
+The shared core provides Metal execution, FFT/FIR convolution, resampling, modal filtering, ESPRIT/LPC analysis, random streams and WAV I/O.
 Real-time deadlines, arbitrary-material accuracy and perceptual equivalence remain unverified.
 Raw WAVs retain gain and can exceed [-1, 1].
 Listening copies apply stated constant gain/DC processing.

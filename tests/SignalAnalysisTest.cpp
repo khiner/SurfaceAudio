@@ -1,6 +1,7 @@
 #include "core/SignalAnalysis.h"
 #include "core/GpuConvolution.h"
 #include "core/GpuFft.h"
+#include "core/GpuResample.h"
 #include <algorithm>
 #include <array>
 #include <cmath>
@@ -86,6 +87,37 @@ void EspritTest() {
     Require(maximum < 1e-11, "ESPRIT reconstructs the full independent signal");
     std::cout << "ESPRIT full-record maximum " << maximum << '\n';
 }
+void ResampleTest(Gpu &gpu) {
+    const std::array input{1.f, 2.f, -3.f, 4.f, .5f, -1.f, 2.f}, taps{.2f, .3f, -.1f, .7f, -.2f, .9f, -.4f};
+    const std::array jobs{FirResampleJob{0, 7, 0, 19, 0, 4, 2, 1, -1}, FirResampleJob{1, 4, 21, 9, 2, 5, 3, 2, 4}, FirResampleJob{0, 7, 30, 5, 0, 7, 1, 2, 3}};
+    const auto actual = ResampleFirGpu(gpu, input, taps, jobs);
+    for (const auto job : jobs) {
+        std::vector<double> upsampled(size_t(job.InputFrames - 1) * job.Upsample + 1);
+        for (uint32_t i = 0; i < job.InputFrames; ++i) upsampled[i * job.Upsample] = input[job.InputOffset + i];
+        std::vector<double> convolved(upsampled.size() + job.Taps - 1);
+        for (size_t i = 0; i < upsampled.size(); ++i)
+            for (uint32_t j = 0; j < job.Taps; ++j) convolved[i + j] += upsampled[i] * taps[job.TapOffset + j];
+        for (uint32_t frame = 0; frame < job.OutputFrames; ++frame) {
+            const int64_t position = int64_t(frame) * job.Downsample + job.Delay;
+            const double expected = position >= 0 && size_t(position) < convolved.size() ? convolved[position] : 0;
+            Require(std::abs(actual[job.OutputOffset + frame] - expected) < 1e-6, "GPU polyphase FIR matches explicit zero insertion and convolution");
+        }
+    }
+    Require(actual[19] == 0 && actual[20] == 0, "Unwritten FIR output gaps are zero");
+    bool rejected = false;
+    try {
+        const std::array overlapping{jobs[0], jobs[0]};
+        ResampleFirGpu(gpu, input, taps, overlapping);
+    } catch (const std::invalid_argument &) { rejected = true; }
+    Require(rejected, "Overlapping FIR output ranges are rejected");
+    for (const auto job : {FirResampleJob{0, 1, 0, UINT32_MAX, 0, 1, 1, UINT32_MAX, 0}, FirResampleJob{0, 1, 0, 1, 0, 1, 1, 1, INT32_MIN}}) {
+        rejected = false;
+        try {
+            CreateFirResampleGpu(gpu, input, taps, std::span{&job, 1});
+        } catch (const std::invalid_argument &) { rejected = true; }
+        Require(rejected, "FIR index arithmetic rejects overflow before allocation");
+    }
+}
 void ConvolutionTest(Gpu &gpu) {
     std::vector<float> input(4099), taps(2051);
     for (size_t i = 0; i < input.size(); ++i) input[i] = float(std::sin(.073 * i) * std::exp(-.002 * i));
@@ -113,6 +145,7 @@ int main() {
         EspritTest();
         auto gpu = CreateGpu();
         FourierTest(gpu);
+        ResampleTest(gpu);
         ConvolutionTest(gpu);
         std::cout << "Signal analysis passed\n";
     } catch (const std::exception &error) {

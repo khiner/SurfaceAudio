@@ -21,7 +21,8 @@ cmake --build build-sanitize -j8
 UBSAN_OPTIONS=halt_on_error=1 ctest --test-dir build-sanitize --output-on-failure
 ```
 
-Tests cover independent equations, gradients, statistical moments, source traces, finite tails, CPU/GPU agreement and streaming state.
+All 25 tests passed in Release and with host AddressSanitizer/UndefinedBehaviorSanitizer.
+They cover independent equations, gradients, statistical moments, source traces, finite tails, CPU/GPU agreement and streaming state.
 Tests require a Metal device and shaders, with sanitizer coverage limited to host code.
 Run paper reproductions with `python3 tools/Reproduce.py --offline`.
 See [object-response reproduction](AgarwalResponseReproduction.md) for fitting and replay commands.
@@ -88,6 +89,7 @@ Its archived-convention GPU check covers the full circle transient; the printed 
 [Traer](Traer.md) records later TDW code comparisons, independent spatial-scrape checks and matched CPU/Metal workloads.
 [Willemsen](Willemsen.md) records exact paper-era source execution, published EPS comparisons and complete CPU/Metal trajectory checks.
 [Lagrange](Lagrange.md) records independent modal/trigger equations, source recovery, causal decay and shared FFT convolution timings.
+[Lee](Lee.md) records independent notch/LPC/QMF checks, full GPU analysis/synthesis timings and contact-detection failure cases.
 These method timings were measured on September 10.
 Texture metrics cover narrowband concentration, modulation, envelope fluctuation and amplitude statistics.
 

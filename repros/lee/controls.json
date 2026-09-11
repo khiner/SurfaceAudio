@@ -1,0 +1,66 @@
+{
+  "threshold": 0.03,
+  "envelope_frames": 16,
+  "tail_seconds": 0.1,
+  "maximum_notches": 12,
+  "lpc_order": [
+    25,
+    10,
+    5,
+    5
+  ],
+  "highpass_hz": 10000,
+  "highpass_taps": 129,
+  "notch_prominence_db": 3,
+  "notch_pole_ratio": 0.95,
+  "qmf_taps": 64,
+  "cases": [
+    {
+      "name": "real_wok",
+      "start_seconds": 56,
+      "end_seconds": 64,
+      "kind": "Measured rock rolling in a wok from FoleyAutomatic2001 author video."
+    },
+    {
+      "name": "trough_pass1",
+      "start_seconds": 17,
+      "end_seconds": 20,
+      "kind": "FoleyAutomatic2001 author CGI rolling simulation, material pass 1.",
+      "highpass_hz": 300,
+      "highpass_taps": 513,
+      "envelope_frames": 128
+    },
+    {
+      "name": "trough_pass2",
+      "start_seconds": 20.5,
+      "end_seconds": 23.5,
+      "kind": "FoleyAutomatic2001 author CGI rolling simulation, material pass 2.",
+      "highpass_hz": 300,
+      "highpass_taps": 513,
+      "envelope_frames": 128
+    },
+    {
+      "name": "trough_pass3",
+      "start_seconds": 24.25,
+      "end_seconds": 27.5,
+      "kind": "FoleyAutomatic2001 author CGI rolling simulation, material pass 3.",
+      "highpass_hz": 300,
+      "highpass_taps": 513,
+      "envelope_frames": 128
+    }
+  ],
+  "notch_fft_minimum": 256,
+  "notch_fft_padding_factor": 4,
+  "notch_magnitude_floor_relative": 1e-08,
+  "notch_minimum_bandwidth_bins": 0.25,
+  "notch_maximum_bandwidth_radians": 1.5707963267948966,
+  "threshold_scale": "Fraction of maximum centered squared high-pass envelope over complete FIR and envelope support",
+  "qmf_design": "64-tap symmetric linear-phase near-PR, coefficients pinned in src/lee/Qmf.h",
+  "lpc_gain": "Square root of unnormalized autocorrelation prediction energy; paper gain normalization unspecified",
+  "analysis_boundary": "Zero extension with full FIR transients before decimation",
+  "synthesis_delay_samples": "Floor of (equivalent FIR tap count - 1) / 2",
+  "last_contact_boundary": "Recording end",
+  "impulse_truncation": "Contact segment duration plus tail_seconds",
+  "detector_boundary": "Exclude incomplete FIR/envelope support and do not count the first valid sample as a rising edge",
+  "notch_isolation": "Greedy prominence selection with nonoverlapping pole half-bandwidths (BW - 2 log(0.95))/2, excluding DC/Nyquist overlap"
+}

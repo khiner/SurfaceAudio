@@ -1,0 +1,63 @@
+{
+  "paper": "https://www.dafx.de/paper-archive/2010/DAFx10/LeeDepalleScavone_DAFx10_P104.pdf",
+  "source_status": "Lee author code and original DAFx 2010 example audio unavailable. FoleyAutomatic 2001 author media provide separate cross-paper inputs.",
+  "files": [
+    {
+      "path": "foleyautomatic.mpeg",
+      "sha256": "8f3ef0f721e0524dc2a6a8e3208ee214ecac93dd8da6c7a139c4202b216b500c",
+      "url": "https://persianney.com/kvdoelcsubc/publications/foleyautomatic.mpeg",
+      "license": "Author-distributed research demonstration, no explicit redistribution license located.",
+      "kind": "author_video"
+    },
+    {
+      "path": "real_wok.wav",
+      "sha256": "dca2b9167963597653cafaf5cd8bca2be3e3e3363535d3d20b87985e069e50c2",
+      "url": "https://persianney.com/kvdoelcsubc/publications/foleyautomatic.mpeg",
+      "license": "Author-distributed research demonstration, no explicit redistribution license located.",
+      "kind": "decoded_excerpt"
+    },
+    {
+      "path": "trough_pass1.wav",
+      "sha256": "27c33b4a6c8858165432723e38d37bd62198fe75f5c073bd3a0c6e50a2232d3b",
+      "url": "https://persianney.com/kvdoelcsubc/publications/foleyautomatic.mpeg",
+      "license": "Author-distributed research demonstration, no explicit redistribution license located.",
+      "kind": "decoded_excerpt"
+    },
+    {
+      "path": "trough_pass2.wav",
+      "sha256": "e975e20906b817034dd1aab149780a5bcf0ce618c6edd3a7b9f6f3050c723529",
+      "url": "https://persianney.com/kvdoelcsubc/publications/foleyautomatic.mpeg",
+      "license": "Author-distributed research demonstration, no explicit redistribution license located.",
+      "kind": "decoded_excerpt"
+    },
+    {
+      "path": "trough_pass3.wav",
+      "sha256": "32edb5eb5f54e643e9e37982ecc16c93aec06ceb92ec9b3ba5151997d0d2626c",
+      "url": "https://persianney.com/kvdoelcsubc/publications/foleyautomatic.mpeg",
+      "license": "Author-distributed research demonstration, no explicit redistribution license located.",
+      "kind": "decoded_excerpt"
+    }
+  ],
+  "decode": {
+    "command": "ffmpeg -i foleyautomatic.mpeg -ac 1 -c:a pcm_f32le decoded.wav",
+    "sample_rate": 44100,
+    "gain_conversion": "None; preserve decoded signed samples",
+    "real_wok_samples": [
+      2469600,
+      2822400
+    ],
+    "trough_pass1_samples": [
+      749700,
+      882000
+    ],
+    "trough_pass2_samples": [
+      904050,
+      1036350
+    ],
+    "trough_pass3_samples": [
+      1069425,
+      1212750
+    ]
+  },
+  "trial_scope": "The same three complete FoleyAutomatic material trials are shared with Lagrange; they are evaluation inputs, not Lee author outputs."
+}
