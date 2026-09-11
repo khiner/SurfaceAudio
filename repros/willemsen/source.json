@@ -1,0 +1,57 @@
+{
+  "repository": "https://github.com/SilvinWillemsen/ElastoPlastic",
+  "commit": "12898a254e69cfbd68705ab028dd8894e4f05dfe",
+  "author_wav": {
+    "url": "https://raw.githubusercontent.com/SilvinWillemsen/ElastoPlastic/a475b2f6ed236fab31afccea99196cab4dd2494e/elastoPlastic.wav",
+    "sha256": "3bfd5440c6c889f70f8e3572cf96633de0a7bf23041d237b09dc700b204bead9",
+    "scope": "Unmodified author repository audio; recording controls are not specified and are not assumed to match Figure 8.",
+    "commit": "a475b2f6ed236fab31afccea99196cab4dd2494e"
+  },
+  "paper": "https://dafx.de/paper-archive/2019/DAFx2019_paper_18.pdf",
+  "video": "https://www.youtube.com/watch?v=-5bDebCW1Qg",
+  "paper_source_commit": "42b7037916898c600ecc20c1fbcd46d1bd5eb649",
+  "figures": {
+    "newPaperWaveform.eps": {
+      "sha256": "7cc56e8330e771ea35aff16e40645c9867aecaa18d7d8e9ae520756a69cb1333",
+      "url": "https://raw.githubusercontent.com/SilvinWillemsen/DAFxPaper/42b7037916898c600ecc20c1fbcd46d1bd5eb649/dafx19_template_V3/DAFx_Templates_LaTeX/newPaperWaveform.eps"
+    },
+    "hysteresis3.eps": {
+      "sha256": "02f232059574ff1ea6ddfa9bb1b05fd12184983aeeedbe64e090ab2825c83116",
+      "url": "https://raw.githubusercontent.com/SilvinWillemsen/DAFxPaper/42b7037916898c600ecc20c1fbcd46d1bd5eb649/dafx19_template_V3/DAFx_Templates_LaTeX/hysteresis3.eps"
+    }
+  },
+  "author_oracle": {
+    "commit": "12898a254e69cfbd68705ab028dd8894e4f05dfe",
+    "sha256": {
+      "StiffStringElastoPlastic.m": "4f76de6f8beb2c1c1c90ec60eced2842cd204ffb48c2990c3d3d567d6b4bcc01",
+      "unscaledCreateStringNR.m": "af9a5e0fb02f0fadcd42505f7a15201fd38e4b9854d752edcdff20efb25d0c62"
+    },
+    "adaptations": [
+      "Override Fs=44100, f0=440, FnInit=5 and requested duration to match published Figure 8 controls.",
+      "Remove plotting blocks and use strcmp for Octave string comparisons.",
+      "Retain numerical update, initial state, bristle damping, point contact and boundary conventions unchanged."
+    ]
+  },
+  "fixtures": {
+    "figure8_pickup.csv": {
+      "sha256": "8946128e1a737c83b1c2c5b6e370b3f071433dcba362549f56141d2aa67e672d",
+      "samples": 442
+    },
+    "figure8_bow.csv": {
+      "sha256": "56404cbace9fe9693719a70c517c255fffbff1385353f69c59b0f3fb85b90562",
+      "samples": 442
+    },
+    "figure9.csv": {
+      "sha256": "f7da5095e2bcd3400de3c82e35dd43feaac8d3a6ccc6f67c2f1dbc3bd5b09014",
+      "samples": 500
+    }
+  },
+  "coordinate_conversion": {
+    "figure8_time_s": ".25 + (eps_x - 80) / 704 * .01",
+    "figure8_pickup_m": "(101.91447 - eps_y) / 38.408685 * 5e-5",
+    "figure8_bow_m": "(294 - eps_y) / 81.6666667 * 1e-4",
+    "figure9_velocity_m_s": "(eps_x - 117.27659) / 1463.83 - .4",
+    "figure9_force_n": "-2 + (297.5 - eps_y) / 770"
+  },
+  "license": "Published paper and its figures: CC BY 3.0, credit Willemsen, Bilbao and Serafin (2019). Author numerical sources are fetched for local execution; no license was found and no source code is vendored."
+}

@@ -20,16 +20,16 @@ It reflects engineering judgment from papers and implementations, with comparabl
 | 13 | [Lee 2010][lee] | Position-dependent rolling reconstruction requiring individual-contact detection and fitting |
 | 14 | [Nakatsuka 2017][nakatsuka] | Deformation-aware friction with substantial microscopic assumptions and limited validation/performance evidence |
 
-The [Matusiak](docs/Matusiak.md), [Poirot](docs/Poirot.md), and [Conan CMJ](docs/Continuous.md) implementations have reproduction workflows.
-Their pages distinguish author-code comparisons from calibrated media comparisons and record remaining differences.
-[Matusiak 2024](docs/Matusiak2024.md), [Falaize–Roze](docs/Falaize.md), and [Traer 2019](docs/Traer.md) also have implementations.
-Matusiak uses explicit archived numerical conventions and records the remaining author-trace differences.
-Falaize–Roze reproduces figure constraints with explicit inferred settings.
-Traer matches later TDW code, with the original 2019 experimental inputs still unavailable.
-The lower-ranked analysis methods support validation of the synthesis methods.
-Lagrange and HaTT remain useful early priorities for reference measurements.
+Implemented methods have reproduction workflows linked from the [README](README.md).
+Willemsen matches published figure traces and executed paper-era source under explicit numerical conventions.
+Lagrange and Lee remain queued for implementation.
+HaTT remains a haptic-data resource whose results concern contact vibration rather than airborne sound.
 
 ## Investigation and implementation queue
+
+Lagrange and Lee are the next analysis methods to implement; Nakatsuka remains queued for friction synthesis.
+HaTT supplies a separate data-driven haptic rendering task, with sound radiation outside its published scope.
+The Agarwal extensions below remain deferred while their input and parameter availability is unresolved.
 
 ### Agarwal 2022 poster and 2025 thesis: continuous-contact forces
 

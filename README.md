@@ -14,6 +14,7 @@ C++23 contact-sound synthesis for Apple Silicon and Metal 4.
 | Matusiak 2024 | [Finite-width bow friction and published robot-transient comparisons](docs/Matusiak2024.md) |
 | Falaize–Roze 2024 | [Modal/FEM string interactions, energy balance and figure reconstructions](docs/Falaize.md) |
 | Traer 2019 | [Statistical responses, impacts, spatial scrapes and later TDW code comparisons](docs/Traer.md) |
+| Willemsen 2019 | [Stiff-string friction, published figure traces and executed author source](docs/Willemsen.md) |
 
 The library uses free functions, explicit state structs and contiguous arrays.
 Independent contacts, texture samples, modal work and convolution run on the GPU.
@@ -39,8 +40,8 @@ open outputs/reproduction/listening/index.html
 ```
 
 The workflow requires Python, NumPy, SciPy, Matplotlib, FFmpeg and network access for the initial author-input downloads.
-Use `--offline` with cached inputs and `--method NAME` to run one method.
-Names are `agarwal`, `sdt`, `conan`, `matusiak`, `poirot`, `continuous`, `matusiak2024`, `falaize`, and `traer`.
+Use `--offline` with cached inputs and `--method NAME [NAME ...]` to select methods.
+Names are `agarwal`, `sdt`, `conan`, `matusiak`, `poirot`, `continuous`, `matusiak2024`, `falaize`, `traer`, and `willemsen`.
 Outputs include WAVs, a listening page and run/case manifests.
 Temporary force and basis arrays are deleted after use.
 Per-method pages record author inputs, inferred settings, differences and texture/spectral comparisons.
@@ -48,6 +49,12 @@ Matusiak 2025 compares executed author code, while Poirot and Conan CMJ compare 
 Matusiak 2024 compares published force traces, Falaize–Roze compares figures, and Traer compares later TDW author code.
 Each method records the limits of those comparisons.
 The [Matusiak listening reference](outputs/reproduction/matusiak2024-revised-2026-09-10/index.html) uses archived numerical conventions.
+
+Willemsen reproduces published figures and optionally executes the pinned author MATLAB source in Octave.
+
+```sh
+python3 tools/Reproduce.py --method willemsen --author-oracle --offline
+```
 
 The committed Agarwal input packages replay four retained rolling reconstructions and twenty fitted object responses without optimization:
 

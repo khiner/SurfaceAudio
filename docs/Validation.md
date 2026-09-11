@@ -20,8 +20,7 @@ cmake --build build-sanitize -j8
 UBSAN_OPTIONS=halt_on_error=1 ctest --test-dir build-sanitize --output-on-failure
 ```
 
-All 19 tests passed in Release and with host AddressSanitizer/UndefinedBehaviorSanitizer.
-They cover independent equations, gradients, statistical moments, source traces, finite tails, CPU/GPU agreement and streaming state.
+Tests cover independent equations, gradients, statistical moments, source traces, finite tails, CPU/GPU agreement and streaming state.
 Tests require a Metal device and shaders, with sanitizer coverage limited to host code.
 Run paper reproductions with `python3 tools/Reproduce.py --offline`.
 See [object-response reproduction](AgarwalResponseReproduction.md) for fitting and replay commands.
@@ -38,12 +37,13 @@ These measurements span three fresh-process runs, each with its own p50/p99 calc
 
 | Voices | CPU p50 ms | CPU p99 ms | GPU p50 ms | GPU p99 ms |
 |---|---:|---:|---:|---:|
-| 1 | 0.00192–0.00279 | 0.00242–0.00804 | 0.19529–0.42875 | 0.32562–1.03046 |
-| 64 | 0.09846–0.15208 | 0.11117–0.20625 | 0.24033–0.68512 | 0.63004–2.55225 |
-| 256 | 0.39158–0.56737 | 0.48154–0.66546 | 0.31946–0.57004 | 0.62504–1.21000 |
-| 1024 | 1.56238–1.56871 | 1.64688–1.66467 | 0.68154–0.75054 | 1.12446–1.25000 |
+| 1 | 0.00213–0.00221 | 0.00337–0.00354 | 0.19479–0.58683 | 0.23221–0.75496 |
+| 64 | 0.10542–0.11204 | 0.11800–0.16996 | 0.24192–0.78125 | 0.61917–1.74925 |
+| 256 | 0.42417–0.43462 | 0.44642–0.63883 | 0.35063–0.67100 | 0.65371–1.34400 |
+| 1024 | 1.70079–1.79662 | 1.91650–2.73679 | 0.62175–1.25233 | 1.19279–2.52712 |
 
-GPU median time is lower at 1024 voices, results vary at 256 voices, and smaller batches favor CPU execution.
+GPU median time is lower in all three runs at 1024 voices and one run at 256 voices.
+Smaller batches favor CPU execution.
 Spatial Agarwal reconstruction, optimizer throughput and complete SDT sustained-contact dynamics are outside this benchmark's scope.
 A 128-frame block spans 2.667 ms at 48 kHz.
 System load, compilation caches and scheduling affect observed tails.
@@ -82,6 +82,7 @@ A fitted contact-interface example differs from ideal FP64 by 0.00523%.
 Its archived-convention GPU check covers the full circle transient; the printed convention retains a 60 ms check and full-record precision failure.
 [Falaize–Roze](Falaize.md) records independent dense solves, figure constraints, inferred hammer stiffness and matched CPU/Metal workloads.
 [Traer](Traer.md) records later TDW code comparisons, independent spatial-scrape checks and matched CPU/Metal workloads.
+[Willemsen](Willemsen.md) records exact paper-era source execution, published EPS comparisons and complete CPU/Metal trajectory checks.
 These method timings were measured on September 10.
 Texture metrics cover narrowband concentration, modulation, envelope fluctuation and amplitude statistics.
 

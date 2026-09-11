@@ -31,13 +31,16 @@ def verify_inputs(methods):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    available = ["agarwal", "sdt", "conan", "matusiak", "poirot", "continuous", "matusiak2024", "falaize", "traer"]
-    parser.add_argument("--method", choices=["all", *available], default="all")
+    available = ["agarwal", "sdt", "conan", "matusiak", "poirot", "continuous", "matusiak2024", "falaize", "traer", "willemsen"]
+    parser.add_argument("--method", nargs="+", choices=["all", *available], default=["all"])
     parser.add_argument("--build", type=Path, default=ROOT / "build")
     parser.add_argument("--offline", action="store_true", help="Require cached reference inputs")
+    parser.add_argument("--author-oracle", action="store_true", help="Execute the pinned Willemsen MATLAB reference in Octave")
     parser.add_argument("--report-only", action="store_true", help="Rebuild the listening page from existing case manifests without synthesizing")
     args = parser.parse_args()
-    methods = available if args.method == "all" else [args.method]
+    methods = available if "all" in args.method else list(dict.fromkeys(args.method))
+    if args.author_oracle and "willemsen" not in methods:
+        parser.error("--author-oracle requires the willemsen method")
     if args.report_only:
         build_report(methods)
         return
@@ -54,8 +57,10 @@ def main():
                    "build": str(build), "methods": methods}
     (output / "environment.json").write_text(json.dumps(environment, indent=2) + "\n")
     for method in methods:
-        if method in ("matusiak", "poirot", "continuous", "matusiak2024", "falaize", "traer"):
-            run(sys.executable, ROOT / f"tools/{method}_reproduce.py", "--binary", build / f"{method}Reproduce", *(["--offline"] if args.offline else []))
+        if method in ("matusiak", "poirot", "continuous", "matusiak2024", "falaize", "traer", "willemsen"):
+            run(sys.executable, ROOT / f"tools/{method}_reproduce.py", "--binary", build / f"{method}Reproduce",
+                *(["--offline"] if args.offline else []),
+                *(["--author-oracle"] if method == "willemsen" and args.author_oracle else []))
             verify_inputs([method])
         elif method == "conan":
             if not args.offline:

@@ -1055,6 +1055,26 @@
       "method": "traer",
       "path": "references/traer/tdw/Python/tdw/physics_audio/modes.py",
       "sha256": "cee89fe57877778474165b2d3951b917040df604627fb7494a6a874407269deb"
+    },
+    {
+      "method": "willemsen",
+      "path": "repros/willemsen/figure8_bow.csv",
+      "sha256": "56404cbace9fe9693719a70c517c255fffbff1385353f69c59b0f3fb85b90562"
+    },
+    {
+      "method": "willemsen",
+      "path": "repros/willemsen/figure8_pickup.csv",
+      "sha256": "8946128e1a737c83b1c2c5b6e370b3f071433dcba362549f56141d2aa67e672d"
+    },
+    {
+      "method": "willemsen",
+      "path": "repros/willemsen/figure9.csv",
+      "sha256": "f7da5095e2bcd3400de3c82e35dd43feaac8d3a6ccc6f67c2f1dbc3bd5b09014"
+    },
+    {
+      "method": "willemsen",
+      "path": "repros/willemsen/source.json",
+      "sha256": "31a0b2e60b94e5334dd928077f063ff78edc579bd11d08b73ab229836ca947bd"
     }
   ]
 }
