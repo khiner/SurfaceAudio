@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Compare fixed-seed Conan syntheses against disjoint author force holdouts."""
+import argparse
 import json
 from pathlib import Path
 import numpy as np
@@ -57,7 +58,18 @@ def compare_events(reference, candidate):
             'interval_ks': float(ks_2samp(np.diff(reference[:, 0]), np.diff(candidate[:, 0])).statistic)}
 
 
+def retain_case_audio(output):
+    cases = json.loads((output / "cases.json").read_text())["cases"]
+    retained = {(ROOT / case[field]).resolve() for case in cases for field in ("reference", "synthesis")}
+    for path in output.glob("*.wav"):
+        if path.resolve() not in retained:
+            path.unlink()
+
+
 def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--keep-diagnostics", action="store_true", help="Retain trial WAVs after successful analysis")
+    args = parser.parse_args()
     inputs = json.loads((OUTPUT / 'inputs.json').read_text())
     parameters = json.loads((OUTPUT / 'parameters.json').read_text())
     result = {'inputs': inputs, 'force': {}, 'audio': {}}
@@ -181,6 +193,8 @@ def main():
                   'mean spectral TV/dB', np.mean([r['spectrum_distance']['normalized_band_total_variation'] for r in records]), np.mean([r['spectrum_distance']['band_db_rmse_40db_reference_range'] for r in records]))
     for key, record in result['audio'].items():
         print(key, record['spectrum_distance'])
+    if not args.keep_diagnostics:
+        retain_case_audio(OUTPUT)
 
 
 if __name__ == '__main__':

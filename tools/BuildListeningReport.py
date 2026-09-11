@@ -4,8 +4,10 @@ import argparse
 import hashlib
 import html
 import json
+import os
 from pathlib import Path
 import subprocess
+from urllib.parse import quote
 
 import matplotlib
 matplotlib.use("Agg")
@@ -62,13 +64,16 @@ def main():
             name = f"{index:02d}-{field}"
             raw_name = name + "-raw.wav"
             audition_name = name + "-audition.wav"
-            (assets / raw_name).unlink(missing_ok=True)
-            subprocess.run(['/bin/cp', '-c', str(path), str(assets / raw_name)], check=True)
+            if args.freeze:
+                subprocess.run(['/bin/cp', '-c', str(path), str(assets / raw_name)], check=True)
+                raw_url = 'audio/' + raw_name
+            else:
+                raw_url = quote(os.path.relpath(path.resolve(), args.output.resolve()), safe='/')
             (assets / audition_name).unlink(missing_ok=True)
             wavfile.write(assets / audition_name, rate, (ac * gain).astype(np.float32))
             data.update(source=str(path), audition_gain=gain)
             record["signals"][field] = data
-            players.append(f'<div><strong>{html.escape(label)}</strong><audio controls preload="none" data-raw="audio/{raw_name}" data-level="audio/{audition_name}" src="audio/{audition_name}"></audio><a href="audio/{raw_name}">Raw WAV</a></div>')
+            players.append(f'<div><strong>{html.escape(label)}</strong><audio controls preload="none" data-raw="{raw_url}" data-level="audio/{audition_name}" src="audio/{audition_name}"></audio><a href="{raw_url}">Raw WAV</a></div>')
             window = max(1, rate // 100)
             count = len(mono) // window
             envelope = np.sqrt(np.mean((mono[:count * window].reshape(count, window) - mono.mean()) ** 2, axis=1))
@@ -122,6 +127,12 @@ document.querySelector('#level').addEventListener('change',e=>document.querySele
 document.querySelectorAll('.switch').forEach(button=>button.addEventListener('click',()=>{const players=button.closest('section').querySelectorAll('audio');const from=players[0].paused?players[1]:players[0],to=from===players[0]?players[1]:players[0];const t=from.currentTime;from.pause();const start=()=>{to.currentTime=Number.isFinite(to.duration)?Math.min(t,Math.max(0,to.duration-.01)):t;to.play().catch(()=>{})};if(to.readyState>=1)start();else{to.addEventListener('loadedmetadata',start,{once:true});to.load()}}));
 </script></html>'''
     (args.output / "index.html").write_text(page)
+    if not args.freeze:
+        sources = {Path(case[field]).resolve() for case in cases for field in ("reference", "synthesis")}
+        retained = {assets / f"{index:02d}-{field}-audition.wav" for index in range(len(cases)) for field in ("reference", "synthesis")}
+        for path in assets.glob("*.wav"):
+            if path not in retained and path.resolve() not in sources:
+                path.unlink()
     if args.freeze:
         files = {str(path.relative_to(args.output)): hashlib.sha256(path.read_bytes()).hexdigest()
                  for path in args.output.rglob("*") if path.is_file()}

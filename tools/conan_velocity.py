@@ -249,6 +249,7 @@ def main():
     parser.add_argument('--offline', action='store_true')
     parser.add_argument('--fetch-only', action='store_true')
     parser.add_argument('--eps-variance', action='store_true', help='Reconstruct using assumed EPS correlation-sum normalization and full-record pulse/gain calibration; no independent holdout.')
+    parser.add_argument("--keep-diagnostics", action="store_true", help="Retain trial WAVs after successful analysis")
     args = parser.parse_args()
     acquire(args.offline)
     if args.fetch_only:
@@ -261,6 +262,9 @@ def main():
     metadata = prepare(curves, args.eps_variance, args.eps_variance)
     subprocess.run([str(args.binary), str(OUTPUT), '--parameters', str(OUTPUT / 'parameters.txt')], check=True)
     analyze(metadata)
+    if not args.keep_diagnostics:
+        from conan_analyze import retain_case_audio
+        retain_case_audio(OUTPUT)
 
 
 if __name__ == '__main__':

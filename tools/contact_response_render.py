@@ -83,6 +83,7 @@ def main():
     parser.add_argument("--responses", type=Path, default=ROOT / "outputs/reproduction/agarwal-response-aligned")
     parser.add_argument("--output", type=Path, default=ROOT / "outputs/reproduction/contact-responses")
     parser.add_argument("--report-only", action="store_true", help="Update author comparisons and the listening page using existing renders")
+    parser.add_argument("--keep-diagnostics", action="store_true", help="Retain force audio and convolution buffers")
     args = parser.parse_args()
     output = args.output.resolve()
     output.mkdir(parents=True, exist_ok=True)
@@ -147,16 +148,11 @@ def main():
                 relative_error = float(np.linalg.norm(rendered - reference) / max(np.linalg.norm(reference), 1e-30))
                 if relative_error > 1e-4:
                     raise RuntimeError(f"GPU convolution relative RMS error {relative_error}: {destination}")
-                ac = rendered.astype(np.float64) - np.mean(rendered, dtype=np.float64)
-                gain = min(.1 / np.sqrt(np.mean(ac * ac)), .89 / np.max(np.abs(ac)))
-                audition = output / f"{motion}-{material.lower()}-{kind}-audition.wav"
-                wavfile.write(audition, 44100, (ac * gain).astype(np.float32))
                 records.append({"motion": motion, "material": material, "response_kind": kind,
                                 "force_source": fingerprint(source), "force": fingerprint(force_path),
                                 "force_source_metadata": source_metadata,
                                 "response": response_pin, "response_provenance": fingerprint(provenance_path),
-                                "output": fingerprint(destination), "audition": fingerprint(audition),
-                                "audition_gain": float(gain), "frames": len(rendered),
+                                "output": fingerprint(destination), "frames": len(rendered),
                                 "gpu_relative_rms_error": relative_error,
                                 "force_activity": activity(force, frames), "output_activity": activity(rendered, frames),
                                 "command": command})
@@ -174,6 +170,10 @@ def main():
     marker.write_text(json.dumps({"description": DESCRIPTION, "synthesis_artifacts": artifact_pins,
                                  "force_frames": 176400, "gate_frames": 882, "records": records}, indent=2, allow_nan=False) + "\n")
     build_report(output, cases)
+    if not args.keep_diagnostics:
+        for pattern in ("*.f32", "*-force.wav", "*-audition.wav"):
+            for path in output.glob(pattern):
+                path.unlink()
 
 
 if __name__ == "__main__":

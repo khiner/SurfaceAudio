@@ -37,6 +37,7 @@ def main():
     parser.add_argument("--offline", action="store_true", help="Require cached reference inputs")
     parser.add_argument("--author-oracle", action="store_true", help="Execute the pinned Willemsen MATLAB reference in Octave")
     parser.add_argument("--report-only", action="store_true", help="Rebuild the listening page from existing case manifests without synthesizing")
+    parser.add_argument("--keep-diagnostics", action="store_true", help="Retain regenerable intermediates after successful checks")
     args = parser.parse_args()
     methods = available if "all" in args.method else list(dict.fromkeys(args.method))
     if args.author_oracle and "willemsen" not in methods:
@@ -56,11 +57,13 @@ def main():
                    "compiler": subprocess.check_output(["/opt/homebrew/opt/llvm/bin/clang++", "--version"], text=True),
                    "build": str(build), "methods": methods}
     (output / "environment.json").write_text(json.dumps(environment, indent=2) + "\n")
+    diagnostics = ["--keep-diagnostics"] if args.keep_diagnostics else []
     for method in methods:
         if method in ("matusiak", "poirot", "continuous", "matusiak2024", "falaize", "traer", "willemsen", "lagrange", "lee"):
             run(sys.executable, ROOT / f"tools/{method}_reproduce.py", "--binary", build / f"{method}Reproduce",
                 *(["--offline"] if args.offline else []),
-                *(["--author-oracle"] if method == "willemsen" and args.author_oracle else []))
+                *(["--author-oracle"] if method == "willemsen" and args.author_oracle else []),
+                *(diagnostics if method in ("lagrange", "lee", "willemsen") else []))
             verify_inputs([method])
         elif method == "conan":
             if not args.offline:
@@ -70,9 +73,9 @@ def main():
             run(sys.executable, ROOT / "tools/conan_fetch.py", "--decode-only")
             run(sys.executable, ROOT / "tools/conan_prepare.py")
             run(build / "conanReproduce", ROOT / "outputs/reproduction/conan")
-            run(sys.executable, ROOT / "tools/conan_analyze.py")
-            run(sys.executable, ROOT / "tools/conan_velocity.py", "--binary", build / "conanReproduce", "--offline")
-            run(sys.executable, ROOT / "tools/conan_velocity.py", "--binary", build / "conanReproduce", "--offline", "--eps-variance")
+            run(sys.executable, ROOT / "tools/conan_analyze.py", *diagnostics)
+            run(sys.executable, ROOT / "tools/conan_velocity.py", "--binary", build / "conanReproduce", "--offline", *diagnostics)
+            run(sys.executable, ROOT / "tools/conan_velocity.py", "--binary", build / "conanReproduce", "--offline", "--eps-variance", *diagnostics)
         elif method == "sdt":
             run(sys.executable, ROOT / "tools/sdt_fetch.py", *(["--offline"] if args.offline else []))
             verify_inputs([method])
@@ -84,7 +87,7 @@ def main():
                 run(sys.executable, ROOT / "tools/agarwal_spatial_fit.py", "--binary", build / "agarwalSpatialReproduce", "--case", case, "--whole-record")
             run(sys.executable, ROOT / "tools/agarwal_reproduce.py", "--binary", build / "agarwalReproduce", "--retained")
     build_report(methods)
-    for method in methods:
+    for method in ([] if args.keep_diagnostics else methods):
         for extension in ("*.f32", "*.f64"):
             for path in (output / method).rglob(extension):
                 path.unlink()

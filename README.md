@@ -52,7 +52,7 @@ Matusiak 2024 compares published force traces, Falaize–Roze compares figures, 
 Willemsen reproduces published figure traces and the corresponding author MATLAB source.
 Lagrange and Lee use identified FoleyAutomatic recordings, with their own published synthesis examples still unavailable.
 Each method records the limits of those comparisons.
-The [Matusiak listening reference](outputs/reproduction/matusiak2024-revised-2026-09-10/index.html) uses archived numerical conventions.
+The [Matusiak listening reference](outputs/reproduction/matusiak2024/listening/index.html) uses archived numerical conventions.
 The [contact reconstruction comparisons](outputs/reproduction/listening/index.html) include the current Lagrange, Lee and Willemsen renders.
 Regenerate these three papers with:
 
@@ -75,6 +75,12 @@ python3 tools/agarwal_response_reproduce.py --retained --output outputs/reproduc
 The [object-response workflow](docs/AgarwalResponseReproduction.md) covers fitting, material cohorts and rendering with measured/fitted resonators.
 Original author audio and source inputs remain under `references/`, with hashes in `docs/ReferenceInputs.json`.
 Reproduction fixtures and inferred calibration inputs are stored under `repros/`.
+Generated outputs are Git-ignored.
+The Lagrange, Lee, Willemsen, and Conan runners discard intermediate audio and trajectories after successful checks.
+Use `python3 tools/Reproduce.py --method lagrange lee willemsen conan --keep-diagnostics --offline` to retain them.
+Failed checks preserve diagnostics; main WAVs, fitted parameters, provenance, and metrics remain available.
+Listening pages link to canonical raw WAVs and retain level-matched audition copies.
+Use `BuildListeningReport.py --freeze` for a self-contained review snapshot.
 
 ## Performance and scope
 

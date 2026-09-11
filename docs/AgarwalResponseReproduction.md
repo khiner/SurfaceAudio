@@ -31,6 +31,8 @@ open outputs/reproduction/agarwal-response-aligned/listening/index.html
 Omit `--skip-loo` for five leave-one-out folds per material, each using four training records and twenty generated samples.
 Use `--case Wood_1` for one fit, `--prepare-only` for input preparation, `--sample-only` to reuse successful fits, or `--analyze-only` to rebuild existing cohort reports.
 The latter operations verify source/preprocessing/parameter provenance before reuse.
+Initialization WAVs are regenerated from pinned parameters and checked against their original hashes when needed.
+Use `--keep-diagnostics` to retain initialization audio and its listening players.
 `--self-test` checks joint covariance, deterministic sampling, held-out exclusion and recording alignment.
 
 The paper-learning-rate experiment is explicit: `--steps 140000 --learning-rate 2e-6 --parameter-scale-mode physical`.
@@ -43,7 +45,7 @@ agarwalResponseFit sample PARAMETERS.f32 OUTPUT.wav FRAMES SEED
 
 Parameters contain fifty little-endian float32 values: ten frequencies in Hz, ten mode amplitudes in dB, ten mode RT60 values in seconds, then ten noise amplitudes in dB and ten noise RT60 values in seconds.
 The renderer preserves digital gain and finite duration.
-Successful fits retain parameter files, initial/fitted WAVs, optimizer settings, alignment, input hashes and synthesis artifact hashes.
+Successful fits retain parameter files, fitted WAVs, optimizer settings, alignment, input hashes and synthesis artifact hashes.
 
 ## Model and inference conventions
 
@@ -83,7 +85,7 @@ These inputs are not identified as the response pairs for the 2021 contact examp
 The [2025 thesis](https://hdl.handle.net/1721.1/158825) and [2026 preprint](https://doi.org/10.64898/2026.01.28.702236) report 1,502 retained responses from 410 objects, but no downloadable numerical database was located in the checked public sources.
 The 2026 model uses twenty noise bands, separate per-band 2D distributions and size conditioning; it is queued, not implemented by this 2023 model.
 
-## Sustained contact example
+## Optional sustained contact example
 
 After the main paper repros and the aligned response fits above:
 

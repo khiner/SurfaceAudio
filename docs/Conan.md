@@ -5,6 +5,10 @@ This is the rolling-specific model; the broader CMJ continuous-interaction model
 
 ## Run
 
+Analysis retains the WAVs selected in `cases.json` and metrics for all trials.
+Use `--keep-diagnostics` with `conan_analyze.py` and `conan_velocity.py` to retain all trial WAVs.
+Regenerating discarded trials requires rerunning synthesis before analysis.
+
 ```sh
 python3 tools/Reproduce.py --method conan
 open outputs/reproduction/listening/index.html

@@ -12,7 +12,7 @@ python3 tools/matusiak2024_reproduce.py --offline --check-author --gpu-voices 64
 
 Outputs are in `outputs/reproduction/matusiak2024/`.
 Raw WAVs contain bridge force in newtons; listening copies apply constant gain and DC removal.
-The [listening reference](../outputs/reproduction/matusiak2024-revised-2026-09-10/index.html) contains eight author-versus-native comparisons.
+The [listening reference](../outputs/reproduction/matusiak2024/listening/index.html) contains eight author-versus-native comparisons.
 Use `--gpu-voices 0` for CPU rendering and `--convention paper` for the printed 2024 discretization.
 The optional `--check-author` requires GNU Octave and the pinned author source under `references/matusiak/`.
 

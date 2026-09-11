@@ -5,6 +5,7 @@ import hashlib
 import json
 from pathlib import Path
 import subprocess
+import sys
 import tempfile
 
 import numpy as np
@@ -277,6 +278,10 @@ def main():
         'convention':args.convention,'integration_sample_rate':args.sample_rate,
         'scope':'2024 interaction with explicitly selected numerical conventions; no fitted drives or parameter optimization'},indent=2)+'\n')
     (output/'cases.json').write_text(json.dumps({'method':'matusiak2024','sample_rate':44100,'cases':listening},indent=2)+'\n')
+    author_cases = [case for case in listening if '_author_' in Path(case['reference']).name]
+    (output/'author-cases.json').write_text(json.dumps({'cases':author_cases},indent=2)+'\n')
+    subprocess.run([sys.executable,str(ROOT/'tools/BuildListeningReport.py'),str(output/'author-cases.json'),
+                    '--output',str(output/'listening')],check=True,cwd=ROOT)
     if author_oracle and not author_oracle['accepted']:
         raise RuntimeError('Adapted author-source comparison failed; see manifest.json')
 

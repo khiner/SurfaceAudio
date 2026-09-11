@@ -4,12 +4,14 @@ import argparse
 import hashlib
 import html
 import json
+import os
 import pathlib
 import platform
 import shutil
 import subprocess
 import sys
 import urllib.request
+from urllib.parse import quote
 
 import numpy as np
 import scipy
@@ -110,17 +112,29 @@ def restore_response(response, metadata):
     return restored.astype(np.float32)
 
 
-def validate_fit_provenance(directory):
+def validate_fit_provenance(directory, binary):
     path = directory / 'provenance.json'
     if not path.exists():
         raise ValueError(f'{directory}: missing successful-fit provenance; regenerate the fit')
     provenance = json.loads(path.read_text())
     if not provenance.get('synthesis_artifacts', {}).get('metallib', {}).get('sha256'):
         raise ValueError(f'{directory}: missing successful-fit shader provenance; regenerate the fit')
+    initial_names = ('initial-response.wav', 'initial.wav')
     for name, expected in provenance['artifact_sha256'].items():
+        if name in initial_names and not (directory / name).exists():
+            continue
         artifact = directory / name
         if not artifact.exists() or digest(artifact) != expected:
             raise ValueError(f'{directory}: stale or altered fit artifact {name}')
+    response = directory / 'initial-response.wav'
+    if not response.exists():
+        subprocess.run([str(binary), 'sample', str(directory / 'initial.f32'), str(response),
+                        str(len(read_wave(directory / 'prepared.wav'))), str(provenance['fit_configuration']['seed'])], check=True)
+    if not (directory / 'initial.wav').exists():
+        wavfile.write(directory / 'initial.wav', RATE, restore_response(read_wave(response), provenance['preprocessing']))
+    for name in initial_names:
+        if digest(directory / name) != provenance['artifact_sha256'][name]:
+            raise ValueError(f'{directory}: regenerated initialization differs from successful fit: {name}')
     return provenance
 
 
@@ -256,7 +270,7 @@ def sample_cohort(binary, directory, parameters, seed, analyze_only):
     return records
 
 
-def listening_report(output, result, cases):
+def listening_report(output, result, cases, keep_diagnostics=False):
     import matplotlib
     matplotlib.use('Agg')
     import matplotlib.pyplot as plt
@@ -271,17 +285,19 @@ def listening_report(output, result, cases):
         ac = x - x.mean()
         rms, peak = np.sqrt(np.mean(ac ** 2)), np.max(np.abs(ac))
         gain = min(.1 / rms if rms else 1., .89 / peak if peak else 1.)
-        shutil.copyfile(path, assets / f'{name}-raw.wav')
+        raw_url = quote(os.path.relpath(path.resolve(), report.resolve()), safe='/')
         wavfile.write(assets / f'{name}-level.wav', RATE, (ac * gain).astype(np.float32))
-        return f'<div>{html.escape(label)}<audio controls preload="none" src="audio/{name}-level.wav" data-level="audio/{name}-level.wav" data-raw="audio/{name}-raw.wav"></audio><a href="audio/{name}-raw.wav">Raw WAV</a></div>'
+        return f'<div>{html.escape(label)}<audio controls preload="none" src="audio/{name}-level.wav" data-level="audio/{name}-level.wav" data-raw="{raw_url}"></audio><a href="{raw_url}">Raw WAV</a></div>'
 
     sections = []
     for case in cases:
         name = case['name']
         panels = [player(pathlib.Path(case[field]), label, f'{name}-{field}') for field, label in
-                  [('reference', 'Author measured IR'), ('initial', 'Initialization'), ('synthesis', 'Fitted on this recording')]]
+                  [('reference', 'Author measured IR'), *([('initial', 'Initialization')] if keep_diagnostics else []),
+                   ('synthesis', 'Fitted on this recording')]]
         causal = [player(pathlib.Path(case[field]), label, f'{name}-{field}') for field, label in
-                  [('prepared_reference', 'Prepared causal reference'), ('initial_response', 'Initial causal response'), ('fitted_response', 'Fitted causal response')]]
+                  [('prepared_reference', 'Prepared causal reference'), *([('initial_response', 'Initial causal response')] if keep_diagnostics else []),
+                   ('fitted_response', 'Fitted causal response')]]
         offset = case['preprocessing']['onset_seconds']
         dc = case['preprocessing']['dc_offset']
         sections.append(f'<section><h2>{name}: calibrated reconstruction</h2><p>Full-record players restore delay {offset:.6f} seconds and DC {dc:.8f}. The raw author recording is unchanged.</p><div class="players">{"".join(panels)}</div><details><summary>Causal reference and responses</summary><div class="players">{"".join(causal)}</div></details></section>')
@@ -314,6 +330,12 @@ def listening_report(output, result, cases):
     page += '\n'.join(sections)
     page += '''<script>document.querySelectorAll('audio').forEach(a=>a.addEventListener('play',()=>document.querySelectorAll('audio').forEach(b=>{if(a!==b)b.pause()})));document.querySelector('#level').addEventListener('change',e=>document.querySelectorAll('audio').forEach(a=>{a.pause();a.src=e.target.checked?a.dataset.level:a.dataset.raw}));</script></html>'''
     (report / 'index.html').write_text(page)
+    for path in assets.glob('*-raw.wav'):
+        path.unlink()
+    if not keep_diagnostics:
+        for pattern in ('*-initial-level.wav', '*-initial_response-level.wav'):
+            for path in assets.glob(pattern):
+                path.unlink()
 
 
 def self_test():
@@ -378,7 +400,7 @@ def main():
     parser.add_argument('--retained', action='store_true', help='Render the twenty committed fitted responses without optimization')
     parser.add_argument('--prepare-only', action='store_true')
     parser.add_argument('--sample-only', action='store_true', help='Reuse existing fits, then synthesize all material and leave-one-out cohorts and report')
-    parser.add_argument('--analyze-only', action='store_true', help='Require existing fit and sample WAVs; recompute deterministic distribution parameters and metrics')
+    parser.add_argument('--analyze-only', action='store_true', help='Reuse fitted and sample WAVs; regenerate initialization and recompute distribution metrics')
     parser.add_argument('--self-test', action='store_true', help='Verify analytic joint covariance and leave-one-out exclusion without audio or executable')
     parser.add_argument('--skip-loo', action='store_true', help='Bounded run without leave-one-out sampling; report marks omitted validation')
     parser.add_argument('--align-onset', action='store_true', help='Subtract median DC and trim before 0.1% cumulative energy; restore delay and DC for full-record comparisons')
@@ -386,6 +408,7 @@ def main():
     parser.add_argument('--learning-rate', type=float, default=2e-6)
     parser.add_argument('--parameter-scale-mode', choices=('physical', 'scaled', 'log-decay'), default='physical',
                         help='Physical parameters, frequency/amplitude scaling, or scaling with log RT60 optimization')
+    parser.add_argument("--keep-diagnostics", action="store_true", help="Retain initialization WAVs and their listening players")
     args = parser.parse_args()
     if args.retained:
         render_retained(args.binary.resolve(), args.output.resolve())
@@ -423,7 +446,7 @@ def main():
             prepared_path = directory / 'prepared.wav'
             preprocessing_path = directory / 'preprocessing.json'
             reuse = args.analyze_only or args.sample_only
-            provenance = validate_fit_provenance(directory) if reuse else None
+            provenance = validate_fit_provenance(directory, args.binary) if reuse else None
             if reuse:
                 if provenance['original_source_sha256'] != digest(path):
                     raise ValueError(f'{name}: source differs from successful fit')
@@ -518,7 +541,12 @@ def main():
             print(f'Analyzed {material}: pooled spectral TV {data["comparison"]["pooled_normalized_band_total_variation"]:.4f}', flush=True)
     save_json(args.output / 'metrics.json', result)
     save_json(args.output / 'cases.json', {'cases': cases})
-    listening_report(args.output, result, cases)
+    listening_report(args.output, result, cases, args.keep_diagnostics)
+    if not args.keep_diagnostics:
+        for case in cases:
+            for field in ("initial", "initial_response"):
+                pathlib.Path(case.pop(field)).unlink(missing_ok=True)
+        save_json(args.output / "cases.json", {"cases": cases})
     print(f'Wrote {args.output / "listening/index.html"}')
 
 
