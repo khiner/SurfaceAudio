@@ -10,6 +10,7 @@ Measurements cover offline workloads, with audio-device deadlines unverified.
 cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release
 cmake --build build -j8
 ctest --test-dir build --output-on-failure
+python3 tests/RenderMetricsTest.py
 ./build/SurfaceAudioBenchmark
 
 cmake -S . -B build-sanitize -G Ninja -DCMAKE_BUILD_TYPE=Debug \
@@ -68,6 +69,9 @@ The test source contains the exact fixtures and acceptance limits.
 | Shared finite modal response, two-second high-Q record | Maximum error 3.53e-6; post-support residual 2.60e-8 |
 | Shared arbitrary-response GPU convolution versus direct double sum | Maximum error below 2e-6 |
 | Shared random streams | Exact CPU/GPU PCG integers |
+| Shared complex GPU FFT, 262,144 samples | Relative L2 1.57e-7; inverse maximum 7.32e-7 |
+| Shared FFT convolution, complete 6,149-sample output | Relative L2 1.33e-7; maximum error 4.83e-6 |
+| Shared ESPRIT, three planted complex modes | Full-record maximum error 2.49e-14 |
 
 Independent gradient checks cover response synthesis, contact fitting, endpoint interpolation and both spectral objectives.
 The pooled spectral objective is an optional loss introduced here for inference.
@@ -83,6 +87,7 @@ Its archived-convention GPU check covers the full circle transient; the printed 
 [Falaize–Roze](Falaize.md) records independent dense solves, figure constraints, inferred hammer stiffness and matched CPU/Metal workloads.
 [Traer](Traer.md) records later TDW code comparisons, independent spatial-scrape checks and matched CPU/Metal workloads.
 [Willemsen](Willemsen.md) records exact paper-era source execution, published EPS comparisons and complete CPU/Metal trajectory checks.
+[Lagrange](Lagrange.md) records independent modal/trigger equations, source recovery, causal decay and shared FFT convolution timings.
 These method timings were measured on September 10.
 Texture metrics cover narrowband concentration, modulation, envelope fluctuation and amplitude statistics.
 

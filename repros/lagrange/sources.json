@@ -1,0 +1,60 @@
+{
+  "paper": "https://doi.org/10.1109/TASL.2009.2038670",
+  "paper_copy": "https://hal.science/hal-01106568/document",
+  "source_page": "https://persianney.com/kvdoelcsubc/jass/",
+  "scope": "FoleyAutomatic author supplemental audio, explicitly cited as analysis inputs in Lagrange section VI-B. Exact CIQS assets and Lagrange reference resyntheses remain unavailable.",
+  "license": "Author demonstration media. No explicit redistribution license found. Rights remain with the authors.",
+  "decode": "ffmpeg -i foleyautomatic.mpeg -vn -c:a pcm_f32le decoded.wav; exact integer sample crops, no normalization or resampling.",
+  "sample_rate": 44100,
+  "files": [
+    {
+      "path": "foleyautomatic.mpeg",
+      "url": "https://persianney.com/kvdoelcsubc/publications/foleyautomatic.mpeg",
+      "sha256": "8f3ef0f721e0524dc2a6a8e3208ee214ecac93dd8da6c7a139c4202b216b500c",
+      "bytes": 13023236
+    }
+  ],
+  "clips": [
+    {
+      "name": "trough_pass1",
+      "source_begin_sample": 749700,
+      "source_end_sample": 882000,
+      "sha256": "27c33b4a6c8858165432723e38d37bd62198fe75f5c073bd3a0c6e50a2232d3b"
+    },
+    {
+      "name": "trough_pass2",
+      "source_begin_sample": 904050,
+      "source_end_sample": 1036350,
+      "sha256": "e975e20906b817034dd1aab149780a5bcf0ce618c6edd3a7b9f6f3050c723529"
+    },
+    {
+      "name": "trough_pass3",
+      "source_begin_sample": 1069425,
+      "source_end_sample": 1212750,
+      "sha256": "32edb5eb5f54e643e9e37982ecc16c93aec06ceb92ec9b3ba5151997d0d2626c"
+    },
+    {
+      "name": "real_rock_wok",
+      "source_begin_sample": 2469600,
+      "source_end_sample": 2822400,
+      "sha256": "dca2b9167963597653cafaf5cd8bca2be3e3e3363535d3d20b87985e069e50c2"
+    },
+    {
+      "name": "synthetic_rock_wok",
+      "source_begin_sample": 3175200,
+      "source_end_sample": 3704400,
+      "sha256": "657acaa50d63437bf0551f55a2261be15ed86ee0babc1da02e0217a7b926bd11"
+    }
+  ],
+  "trial_scope": "The video labels the three trough passes as rolling on different materials. Analyze each complete pass separately; their material identities are unspecified.",
+  "phase_reference": {
+    "url": "https://persianney.com/kvdoelcsubc/jass/jass.zip",
+    "sha256": "9a319297ad4ec43cdd74bf8d143469f0c5f82460a26c255fbb87f4fb721e7349",
+    "version": "JASS 1.25, January 25 2010",
+    "files": [
+      "jass/generators/ModalObject.java",
+      "jass/generators/ModalObjectWithOneContact.java"
+    ],
+    "scope": "Causal modal-filter phase convention only. This SDK is newer than the FoleyAutomatic 2001 video and does not establish its exact settings."
+  }
+}

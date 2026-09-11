@@ -3,6 +3,8 @@
 #include <vector>
 
 namespace surface_audio {
-// Complete mono linear convolution, including the response tail, with no implicit gain or resampling.
+// Returns the complete linear convolution.
+std::vector<float> ConvolveFftGpu(Gpu &, std::span<const float> input, std::span<const float> taps);
+// Returns the complete mono linear convolution at the input gain and sample rate.
 std::vector<float> ConvolveFixedGpu(Gpu &, std::span<const float> excitation, std::span<const float> response);
-} // namespace surface_audio
+}

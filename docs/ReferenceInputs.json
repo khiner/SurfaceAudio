@@ -1057,6 +1057,11 @@
       "sha256": "cee89fe57877778474165b2d3951b917040df604627fb7494a6a874407269deb"
     },
     {
+      "method": "lagrange",
+      "path": "references/lagrange/foleyautomatic.mpeg",
+      "sha256": "8f3ef0f721e0524dc2a6a8e3208ee214ecac93dd8da6c7a139c4202b216b500c"
+    },
+    {
       "method": "willemsen",
       "path": "repros/willemsen/figure8_bow.csv",
       "sha256": "56404cbace9fe9693719a70c517c255fffbff1385353f69c59b0f3fb85b90562"

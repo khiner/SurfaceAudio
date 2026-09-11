@@ -31,7 +31,7 @@ def verify_inputs(methods):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    available = ["agarwal", "sdt", "conan", "matusiak", "poirot", "continuous", "matusiak2024", "falaize", "traer", "willemsen"]
+    available = ["agarwal", "sdt", "conan", "matusiak", "poirot", "continuous", "matusiak2024", "falaize", "traer", "willemsen", "lagrange"]
     parser.add_argument("--method", nargs="+", choices=["all", *available], default=["all"])
     parser.add_argument("--build", type=Path, default=ROOT / "build")
     parser.add_argument("--offline", action="store_true", help="Require cached reference inputs")
@@ -57,7 +57,7 @@ def main():
                    "build": str(build), "methods": methods}
     (output / "environment.json").write_text(json.dumps(environment, indent=2) + "\n")
     for method in methods:
-        if method in ("matusiak", "poirot", "continuous", "matusiak2024", "falaize", "traer", "willemsen"):
+        if method in ("matusiak", "poirot", "continuous", "matusiak2024", "falaize", "traer", "willemsen", "lagrange"):
             run(sys.executable, ROOT / f"tools/{method}_reproduce.py", "--binary", build / f"{method}Reproduce",
                 *(["--offline"] if args.offline else []),
                 *(["--author-oracle"] if method == "willemsen" and args.author_oracle else []))

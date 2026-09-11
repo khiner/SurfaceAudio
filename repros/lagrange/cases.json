@@ -1,0 +1,126 @@
+{
+  "bands": 8,
+  "modes_per_band": 20,
+  "maximum_modes": 80,
+  "whitening_order": 8,
+  "inverse_floor": 1e-08,
+  "window_seconds": 0.023,
+  "meixner_beta": 10,
+  "meixner_gamma": 0.89,
+  "meixner_samples": 200,
+  "interval_scope": "Same-material modal and complete impact windows are input-calibrated choices, not recovered settings or held-out results.",
+  "cases": [
+    {
+      "name": "trough_pass1",
+      "title": "FoleyAutomatic rolling material 1",
+      "modal_interval_samples": [
+        59314,
+        60329
+      ],
+      "impact_interval_samples": [
+        55220,
+        57860
+      ],
+      "modal_gains": "causal_magnitude",
+      "trigger_fit": "joint_waveform",
+      "motion_check": {
+        "minimum_spectral_shape_similarity": 0.85,
+        "minimum_short_cepstrum_similarity": 0.85
+      },
+      "center_impact": true,
+      "reconstruction_check": {
+        "maximum_rms_matched_stft_magnitude_l1": 0.28,
+        "minimum_envelope_correlation": 0.9,
+        "maximum_absolute_mean_over_rms": 0.0001,
+        "maximum_tail_peak_rms_over_reference": 0.01,
+        "maximum_output_tail_energy_fraction": 0.0001
+      },
+      "audio_weight": 0.01
+    },
+    {
+      "name": "trough_pass2",
+      "title": "FoleyAutomatic rolling material 2",
+      "modal_interval_samples": [
+        76073,
+        77087
+      ],
+      "impact_interval_samples": [
+        78100,
+        78980
+      ],
+      "modal_gains": "causal_magnitude",
+      "tone_check": {
+        "frequency_hz": 2998.452079,
+        "half_width_hz": 15,
+        "maximum_excess_db": 3
+      },
+      "trigger_fit": "joint_waveform",
+      "motion_check": {
+        "minimum_spectral_shape_similarity": 0.75,
+        "minimum_short_cepstrum_similarity": 0.65
+      },
+      "center_impact": true,
+      "reconstruction_check": {
+        "maximum_rms_matched_stft_magnitude_l1": 0.25,
+        "minimum_envelope_correlation": 0.92,
+        "maximum_absolute_mean_over_rms": 0.0001,
+        "maximum_tail_peak_rms_over_reference": 0.01,
+        "maximum_output_tail_energy_fraction": 0.0001
+      },
+      "audio_weight": 0.01
+    },
+    {
+      "name": "trough_pass3",
+      "title": "FoleyAutomatic rolling material 3",
+      "modal_interval_samples": [
+        15523,
+        16538
+      ],
+      "impact_interval_samples": [
+        21560,
+        24420
+      ],
+      "modal_gains": "fitted"
+    },
+    {
+      "name": "real_rock_wok",
+      "title": "FoleyAutomatic recorded rock in a wok",
+      "modal_interval_samples": [
+        85554,
+        86568
+      ],
+      "impact_interval_samples": [
+        84700,
+        88220
+      ],
+      "modal_gains": "unit"
+    },
+    {
+      "name": "synthetic_rock_wok",
+      "title": "FoleyAutomatic simulated rock in a wok",
+      "modal_interval_samples": [
+        11907,
+        12921
+      ],
+      "impact_interval_samples": [
+        55660,
+        56760
+      ],
+      "modal_gains": "unit"
+    }
+  ],
+  "envelope_inverse_relative_floor": 0.03,
+  "trigger_amplitude_solver": "nonnegative least squares at Eq9 locations, relative KKT tolerance 1e-7, maximum1500 FISTA steps",
+  "modal_gain_conventions": "fitted: estimated complex gains; unit: unit real gains; magnitude: estimated magnitudes with zero phase; causal_magnitude: fitted magnitudes with JASS causal damped-sine phase",
+  "waveform_fit": {
+    "relative_penalty": 0.001,
+    "iterations": 1200,
+    "scope": "Nonnegative full-waveform convolution fit, an extension of the paper envelope estimator. Coefficients are source basis weights, not identified physical contacts."
+  },
+  "joint_waveform_fit": {
+    "relative_penalty": 0.001,
+    "iterations": 4800,
+    "audio_weight": 0.01,
+    "scope": "Shared nonnegative coefficients fit excitation and audible waveform with each residual normalized by target energy. This extends the published envelope estimator."
+  }
+}

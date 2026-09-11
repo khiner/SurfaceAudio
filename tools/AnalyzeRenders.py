@@ -117,3 +117,103 @@ def texture_metrics(rate, channels):
         'envelope_autocorrelation_ms': autocorrelation,
         'envelope_modulation_fraction_hz': modulation,
     }
+
+
+def reconstruction_metrics(rate, reference, synthesis):
+    """Compare input-duration envelopes and report tail energy and peak 10 ms tail RMS relative to reference RMS."""
+    reference = np.asarray(reference, dtype=np.float64).reshape(-1)
+    synthesis = np.asarray(synthesis, dtype=np.float64).reshape(-1)
+    window = max(1, round(rate * .01))
+    if len(reference) < window or not np.isfinite(reference).all() or not np.isfinite(synthesis).all():
+        raise ValueError('Require finite waveforms and at least 10 ms of reference audio')
+    frames = len(reference) // window
+    aligned = np.zeros(len(reference))
+    overlap = min(len(reference), len(synthesis))
+    aligned[:overlap] = synthesis[:overlap]
+    a = np.sqrt(np.mean(reference[:frames * window].reshape(frames, window) ** 2, axis=1))
+    b = np.sqrt(np.mean(aligned[:frames * window].reshape(frames, window) ** 2, axis=1))
+    a /= max(float(np.linalg.norm(a)), 1e-30)
+    b /= max(float(np.linalg.norm(b)), 1e-30)
+    active = a > a.max() * .01
+    missing = active & (b < a * .1)
+    total = max(float(np.dot(synthesis, synthesis)), 1e-30)
+    tail = synthesis[len(reference):]
+    starts = np.arange(0, len(tail), window)
+    tail_rms = np.sqrt(np.add.reduceat(tail * tail, starts) / np.minimum(window, len(tail) - starts)) if len(tail) else np.zeros(1)
+    reference_rms = max(float(np.sqrt(np.mean(reference * reference))), 1e-30)
+    return {
+        'normalized_envelope_relative_error': float(np.linalg.norm(a - b)),
+        'reference_energy_missing_fraction': float(np.dot(a[missing], a[missing])),
+        'active_frame_coverage': float(np.count_nonzero(active & ~missing) / max(np.count_nonzero(active), 1)),
+        'output_tail_energy_fraction': float(np.dot(synthesis[len(reference):], synthesis[len(reference):]) / total),
+        'tail_peak_rms_over_reference': float(np.max(tail_rms) / reference_rms),
+        'scope': 'Envelopes use unit L2 norm for this diagnostic only; saved WAV gain is unchanged. '
+                 'Active reference frames exceed -40 dB of peak envelope; missing output is below 10% of the corresponding normalized input envelope.'}
+
+
+def periodicity_comparison(rate, reference, synthesis):
+    """Compare changing cepstral structure at 5–60 ms periods over active input frames."""
+    reference = np.asarray(reference, dtype=np.float64).reshape(-1)
+    synthesis = np.asarray(synthesis, dtype=np.float64).reshape(-1)
+    aligned = np.pad(synthesis[:len(reference)], (0, max(0, len(reference) - len(synthesis))))
+    window, hop = min(4096, len(reference)), max(1, round(rate * .01))
+    if window <= hop or not np.isfinite(reference).all() or not np.isfinite(synthesis).all():
+        raise ValueError('Require finite waveforms longer than one analysis hop')
+    spectra = [abs(signal.stft(x, rate, nperseg=window, noverlap=window - hop, boundary=None, padded=False)[2]) ** 2
+               for x in (reference, aligned)]
+    energy = spectra[0].sum(axis=0)
+    active = energy > energy.max() * .01
+    periods = np.arange(window) / rate
+    selected = (periods >= .005) & (periods <= .06)
+    features = []
+    for power in spectra:
+        log_power = np.log(np.maximum(power, max(float(power.max()) * 1e-8, 1e-30)))
+        cepstrum = np.fft.irfft(log_power, n=window, axis=0)[selected][:, active]
+        features.append(cepstrum - cepstrum.mean(axis=1, keepdims=True) if active.any() else cepstrum)
+    a, b = features
+    denominator = float(np.linalg.norm(a) * np.linalg.norm(b))
+    return {'dynamic_cepstrum_similarity': float(np.sum(a * b) / denominator) if denominator > 1e-20 else 0.,
+            'scope': 'Cosine similarity of time-centered real cepstra over active reference frames and 5–60 ms periods. '
+                     'A value of 1 is identical changing periodic structure; this is not a perceptual score or a physical contact-rate estimate.'}
+
+
+def spectral_motion_comparison(rate, reference, synthesis):
+    """Compare changing spectral shape and short-period cepstra over active reference frames."""
+    reference = np.asarray(reference, dtype=np.float64).reshape(-1)
+    synthesis = np.asarray(synthesis, dtype=np.float64).reshape(-1)
+    aligned = np.pad(synthesis[:len(reference)], (0, max(0, len(reference) - len(synthesis))))
+    window, hop = min(4096, len(reference)), max(1, round(rate * .01))
+    if window <= hop or not np.isfinite(reference).all() or not np.isfinite(synthesis).all():
+        raise ValueError('Require finite waveforms longer than one analysis hop')
+    frequencies = np.fft.rfftfreq(window, 1 / rate)
+    periods = np.arange(window) / rate
+    powers = [abs(signal.stft(x, rate, nperseg=window, noverlap=window - hop, boundary=None, padded=False)[2]) ** 2
+              for x in (reference, aligned)]
+    energy = powers[0].sum(axis=0)
+    active = energy > energy.max() * .01
+    features = []
+    for power in powers:
+        log_power = np.log(np.maximum(power, max(float(power.max()) * 1e-8, 1e-30)))
+        shape = log_power[(frequencies >= 80) & (frequencies <= 4000)][:, active]
+        cepstrum = np.fft.irfft(log_power, n=window, axis=0)[(periods >= .0005) & (periods <= .004)][:, active]
+        if active.any():
+            shape -= shape.mean(axis=0, keepdims=True)
+            shape -= shape.mean(axis=1, keepdims=True)
+            cepstrum -= cepstrum.mean(axis=1, keepdims=True)
+        features.append((shape, cepstrum))
+    def similarity(a, b):
+        denominator = float(np.linalg.norm(a) * np.linalg.norm(b))
+        return float(np.sum(a * b) / denominator) if denominator > 1e-20 else 0.
+    return {'spectral_shape_similarity': similarity(features[0][0], features[1][0]),
+            'short_cepstrum_similarity': similarity(features[0][1], features[1][1]),
+            'scope': 'Time-centered 80–4000 Hz log spectra with per-frame level removed, and time-centered 0.5–4 ms real cepstra. '
+                     'Active reference frames exceed 1% of peak spectral energy. These are structural diagnostics, not perceptual scores.'}
+
+
+def band_power_fraction(rate, samples, frequency, half_width):
+    samples = np.asarray(samples, dtype=np.float64).reshape(-1)
+    power = abs(np.fft.rfft(samples)) ** 2
+    power[1:-1 if len(samples) % 2 == 0 else None] *= 2
+    frequencies = np.fft.rfftfreq(len(samples), 1 / rate)
+    selected = abs(frequencies - frequency) <= half_width
+    return float(power[selected].sum() / max(float(power.sum()), 1e-30))

@@ -22,12 +22,13 @@ It reflects engineering judgment from papers and implementations, with comparabl
 
 Implemented methods have reproduction workflows linked from the [README](README.md).
 Willemsen matches published figure traces and executed paper-era source under explicit numerical conventions.
-Lagrange and Lee remain queued for implementation.
+Lagrange uses a disclosed estimator extension; its original synthesis WAVs remain unavailable.
+Lee remains queued for implementation.
 HaTT remains a haptic-data resource whose results concern contact vibration rather than airborne sound.
 
 ## Investigation and implementation queue
 
-Lagrange and Lee are the next analysis methods to implement; Nakatsuka remains queued for friction synthesis.
+Lee remains queued for analysis/synthesis, followed by Nakatsuka friction synthesis.
 HaTT supplies a separate data-driven haptic rendering task, with sound radiation outside its published scope.
 The Agarwal extensions below remain deferred while their input and parameter availability is unresolved.
 
