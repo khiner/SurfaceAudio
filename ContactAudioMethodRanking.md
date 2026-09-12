@@ -30,13 +30,13 @@ HaTT remains a haptic-data resource whose results concern contact vibration rath
 
 Nakatsuka 2017 is the next unimplemented sound-synthesis method in the ranking.
 HaTT supplies a separate data-driven haptic rendering task, with sound radiation outside its published scope.
-The continuous-contact extension remains deferred; the object-acoustics model has a reconstruction workflow.
+The Agarwal extensions below have implementations with disclosed substitute data; exact author-stimulus reproduction remains unresolved.
 
 ### Agarwal 2022 poster and 2025 thesis: continuous-contact forces
 
-Investigate finite micro-impact convolution and fixed-response ramps in thesis Chapters 4–5.
+[Finite micro-impact convolution and fixed-response contact synthesis](docs/Agarwal2025.md) implement thesis Chapters 4–5.
 The [poster][poster] uses summed stiffness, while the [thesis][thesis] uses series-equivalent stiffness.
-This extension remains queued, with 2021 curvature units and trajectory integration constants unresolved.
+The reproduction exercises complete force terms, published mass/radius and stiffness controls, and explicit curvature units and trajectory anchors.
 [Retained reconstructions](docs/Agarwal.md) identify omitted force terms and compare with matching author examples.
 
 ### Agarwal, Traer and McDermott 2023: response fitting

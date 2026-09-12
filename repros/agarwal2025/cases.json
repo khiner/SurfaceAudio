@@ -1,0 +1,73 @@
+{
+  "source": "Agarwal 2025 thesis, Chapter 4, pp. 150-156 and 161-162",
+  "duration_seconds": 2.4,
+  "speed_m_s": 0.005,
+  "acceleration_m_s2": 0.035,
+  "start_m": 0.003,
+  "spacing_m": 1.394068e-06,
+  "alpha_scale_m": 1e-06,
+  "alpha_constant": 0.03,
+  "levels": 33,
+  "oversampling": 8,
+  "gaussian_half_width_samples": 5,
+  "gaussian_sigma_ratio": 0.4,
+  "beta1": 0.05,
+  "beta2": 1,
+  "rolling_stiffness": 1000,
+  "rolling_dissipation": 0.1,
+  "eccentricity_fraction": 0.01,
+  "stiffness_ball_n_m": 100000000,
+  "stiffness_surface_n_m": 100000000,
+  "micro_impact_velocity_m_s": 1,
+  "micro_impact_scale": 1,
+  "gate_seconds": 0.02,
+  "surface_response": "Wood_1",
+  "object_response": "Metal_1",
+  "cases": [
+    {
+      "name": "scrape-light",
+      "motion": "scrape",
+      "profile": "bass_wood",
+      "mass_kg": 0.05,
+      "radius_m": 0.008
+    },
+    {
+      "name": "scrape-heavy",
+      "motion": "scrape",
+      "profile": "bass_wood",
+      "mass_kg": 10,
+      "radius_m": 0.05
+    },
+    {
+      "name": "roll-light",
+      "motion": "roll",
+      "profile": "poplar_wood",
+      "mass_kg": 0.05,
+      "radius_m": 0.008
+    },
+    {
+      "name": "roll-heavy",
+      "motion": "roll",
+      "profile": "poplar_wood",
+      "mass_kg": 10,
+      "radius_m": 0.05
+    },
+    {
+      "name": "scrape-hard",
+      "motion": "scrape",
+      "profile": "bass_wood",
+      "mass_kg": 0.1,
+      "radius_m": 0.008,
+      "stiffness_ball_n_m": 500000000.0
+    },
+    {
+      "name": "scrape-soft",
+      "motion": "scrape",
+      "profile": "bass_wood",
+      "mass_kg": 0.1,
+      "radius_m": 0.008,
+      "stiffness_ball_n_m": 50000.0
+    }
+  ],
+  "scope": "Mass/radius pairs and micro-impact stiffnesses follow Chapter 4 Experiments 1 and 2. Profiles come from the older author TDW repository and responses from the 2023 public corpus. Motion, endpoint height anchors, a micrometre interpretation of alpha, equal response gains, gating and rolling coefficients are reconstruction choices; exact thesis stimuli remain unavailable."
+}
