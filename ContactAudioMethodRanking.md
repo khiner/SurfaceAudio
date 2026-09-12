@@ -30,7 +30,7 @@ HaTT remains a haptic-data resource whose results concern contact vibration rath
 
 Nakatsuka 2017 is the next unimplemented sound-synthesis method in the ranking.
 HaTT supplies a separate data-driven haptic rendering task, with sound radiation outside its published scope.
-The Agarwal extensions below remain deferred while their input and parameter availability is unresolved.
+The continuous-contact extension remains deferred; the object-acoustics model has a reconstruction workflow.
 
 ### Agarwal 2022 poster and 2025 thesis: continuous-contact forces
 
@@ -52,10 +52,9 @@ Author code, fitted distributions, and the connection to the exact 2021 inputs a
 ### Agarwal, Traer, Schwartz and McDermott 2026: object acoustics
 
 [“Intuitive knowledge of object acoustics enables perceptual separation of physical variables from impact sounds”][impact] is a bioRxiv preprint.
-It was posted January 28, 2026, and remains queued for implementation.
-Recover measured responses and fitted material/size distributions, and establish the relationship to Traer 2019.
-Implement sampled modal-plus-noise responses and impact-force coupling, then reproduce examples and ablations.
-Access to underlying data and parameters remains unverified.
+[The implementation](docs/Agarwal2026.md) provides response fitting, statistical sampling, nonlinear impacts and controlled ablations.
+Twenty measured inputs from the public 2023 corpus supply the response-fitting comparisons.
+The full 2026 response survey, material/size distributions, source code and exact experimental stimuli remain unavailable.
 The [response documentation](docs/AgarwalResponseReproduction.md) distinguishes the 2023 and 2026 models.
 Local PDFs are available for [2023][icml-local] and [2026][impact-local].
 

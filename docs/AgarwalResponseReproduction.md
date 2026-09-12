@@ -83,7 +83,7 @@ No perceptual equivalence claim follows from successful optimization.
 
 These inputs are not identified as the response pairs for the 2021 contact examples or as a verified subset of the later database.
 The [2025 thesis](https://hdl.handle.net/1721.1/158825) and [2026 preprint](https://doi.org/10.64898/2026.01.28.702236) report 1,502 retained responses from 410 objects, but no downloadable numerical database was located in the checked public sources.
-The 2026 model uses twenty noise bands, separate per-band 2D distributions and size conditioning; it is queued, not implemented by this 2023 model.
+The 2026 model uses twenty noise bands, separate per-band 2D distributions and size conditioning; [its separate implementation](Agarwal2026.md) preserves those differences.
 
 ## Optional sustained contact example
 

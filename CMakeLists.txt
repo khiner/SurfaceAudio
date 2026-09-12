@@ -59,6 +59,7 @@ set_tests_properties(ConanReproductionTest PROPERTIES TIMEOUT 60 RESOURCE_LOCK M
 
 surface_audio_executable(agarwalSpatialReproduce tools/agarwal_spatial_reproduce.cxx)
 surface_audio_executable(agarwalResponseFit tools/agarwal_response_fit.cxx)
+surface_audio_executable(agarwalObjectReproduce tools/agarwal_object_reproduce.cxx)
 surface_audio_executable(agarwalContactFit tools/agarwal_contact_fit.cxx)
 surface_audio_executable(agarwalEndpointFit tools/agarwal_endpoint_fit.cxx)
 

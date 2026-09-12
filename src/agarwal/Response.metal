@@ -2,7 +2,7 @@
 using namespace metal;
 
 struct ResponseBlock {
-    uint Frames, Groups;
+    uint Frames, Groups, NoiseBands;
     float SampleRate;
 };
 
@@ -21,24 +21,26 @@ kernel void ResponseSynthesize(constant ResponseBlock &p [[buffer(0)]], device c
     float sum = 0;
     for (uint mode = 0; mode < 10; ++mode) {
         sum += pow(10.f, parameters[10 + mode] / 20 - 3 * t / parameters[20 + mode]) * sin(ResponsePhase(parameters[mode], frame, p.SampleRate));
-        sum += pow(10.f, parameters[30 + mode] / 20 - 3 * t / parameters[40 + mode]) * noise[mode * p.Frames + frame];
+        sum += pow(10.f, parameters[30 + mode] / 20 - 3 * t / parameters[30 + p.NoiseBands + mode]) * noise[mode * p.Frames + frame];
     }
+    for (uint band = 10; band < p.NoiseBands; ++band)
+        sum += pow(10.f, parameters[30 + band] / 20 - 3 * t / parameters[30 + p.NoiseBands + band]) * noise[band * p.Frames + frame];
     output[frame] = sum;
 }
 
 // Each group writes one parameter's 256-frame partial. A second dispatch sums partials, without atomics.
 kernel void ResponseDifferentiate(constant ResponseBlock &p [[buffer(0)]], device const float *parameters [[buffer(1)]], device const float *noise [[buffer(2)]], device const float *adjoint [[buffer(3)]], device float *partial [[buffer(4)]], uint2 group [[threadgroup_position_in_grid]], uint lane [[thread_index_in_threadgroup]], uint simd_lane [[thread_index_in_simdgroup]], uint simd_id [[simdgroup_index_in_threadgroup]]) {
-    const uint frame = group.x * 256 + lane, parameter = group.y, mode = parameter % 10;
+    const uint frame = group.x * 256 + lane, parameter = group.y, mode = parameter < 30 ? parameter % 10 : (parameter - 30) % p.NoiseBands;
     float value = 0;
     if (frame < p.Frames) {
         const float t = float(frame) / p.SampleRate;
         const bool is_noise = parameter >= 30;
-        const float rt = parameters[(is_noise ? 40 : 20) + mode];
+        const float rt = parameters[(is_noise ? 30 + p.NoiseBands : 20) + mode];
         const float envelope = pow(10.f, parameters[(is_noise ? 30 : 10) + mode] / 20 - 3 * t / rt);
         if (parameter < 10) value = envelope * 2 * M_PI_F * t * cos(ResponsePhase(parameters[mode], frame, p.SampleRate));
         else {
             value = envelope * (is_noise ? noise[mode * p.Frames + frame] : sin(ResponsePhase(parameters[mode], frame, p.SampleRate)));
-            value *= (parameter < 20 || (parameter >= 30 && parameter < 40)) ? log(10.f) / 20 : log(10.f) * 3 * t / (rt * rt);
+            value *= (parameter < 20 || (parameter >= 30 && parameter < 30 + p.NoiseBands)) ? log(10.f) / 20 : log(10.f) * 3 * t / (rt * rt);
         }
         value *= adjoint[frame];
     }

@@ -7,6 +7,7 @@ C++23 contact-sound synthesis for Apple Silicon and Metal 4.
 | Agarwal 2021 | [Constrained scraping/rolling forces and position-dependent surface/object responses](docs/Agarwal.md) |
 | SDT | [Coupled modal bodies, impact, elasto-plastic friction, rolling and scraping](docs/Sdt.md) |
 | Conan TASLP 2014 | [Correlated micro-impact rolling synthesis and physical reference](docs/Conan.md) |
+| Agarwal 2026 | [Statistical object responses and nonlinear impact-force coupling](docs/Agarwal2026.md) |
 | Agarwal ICML 2023 | [Differentiable modal/noise responses, fitting and material sampling](docs/AgarwalResponseReproduction.md) |
 | Matusiak 2025 | [Passive bow-string friction, torsion and compliant bow hair](docs/Matusiak.md) |
 | Poirot TASLP 2023 | [String-obstacle collisions and perceptual signal synthesis](docs/Poirot.md) |
@@ -43,7 +44,7 @@ open outputs/reproduction/listening/index.html
 
 The workflow requires Python, NumPy, SciPy, Matplotlib, FFmpeg and network access for the initial author-input downloads.
 Use `--offline` with cached inputs and `--method NAME [NAME ...]` to select methods.
-Names are `agarwal`, `sdt`, `conan`, `matusiak`, `poirot`, `continuous`, `matusiak2024`, `falaize`, `traer`, `willemsen`, `lagrange`, and `lee`.
+Names are `agarwal`, `sdt`, `conan`, `matusiak`, `poirot`, `continuous`, `matusiak2024`, `falaize`, `traer`, `willemsen`, `lagrange`, `lee`, and `agarwal2026`.
 Outputs include WAVs, a listening page and run/case manifests.
 Temporary force and basis arrays are deleted after use.
 Per-method pages record author inputs, inferred settings, differences and texture/spectral comparisons.

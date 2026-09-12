@@ -4,7 +4,6 @@
 #import <Metal/Metal.h>
 
 #include <algorithm>
-#include <array>
 #include <exception>
 #include <vector>
 
@@ -22,7 +21,7 @@ struct GpuState {
     id<MTLSharedEvent> Complete;
     id<MTL4CommandAllocator> Allocator;
     id<MTL4CommandBuffer> Commands;
-    std::array<id<MTL4ArgumentTable>, 32> Tables;
+    std::vector<id<MTL4ArgumentTable>> Tables;
     std::vector<id<MTLBuffer>> Buffers;
     std::vector<Pipeline> Pipelines;
     GpuBuffer Constants;
@@ -42,12 +41,22 @@ namespace {
 std::runtime_error Error(std::string_view operation, NSError *error) { return std::runtime_error(std::string(operation) + ": " + (error ? error.localizedDescription.UTF8String : "Metal returned nil")); }
 NSString *String(std::string_view text) { return [[NSString alloc] initWithBytes:text.data() length:text.size() encoding:NSUTF8StringEncoding]; }
 
+id<MTL4ArgumentTable> CreateTable(GpuState &s) {
+    auto descriptor = [MTL4ArgumentTableDescriptor new];
+    descriptor.maxBufferBindCount = 16;
+    NSError *error = nil;
+    auto table = [s.Device newArgumentTableWithDescriptor:descriptor error:&error];
+    if (!table) throw Error("Create argument table", error);
+    return table;
+}
+
 void Encode(Gpu &gpu, GpuKernel kernel, std::span<const GpuBinding> bindings, GpuGrid grid, GpuGrid group, bool groups) {
     auto &s = *gpu.State;
-    if (!s.Recording || s.Encoded == s.Tables.size()) throw std::logic_error("GPU batch not begun or dispatch capacity exceeded");
+    if (!s.Recording) throw std::logic_error("GPU batch not begun");
     if (kernel.Index >= s.Pipelines.size() || !group.X || !group.Y || !group.Z || uint64_t(group.X) * group.Y * group.Z > kernel.MaxThreads) throw std::invalid_argument("Invalid GPU dispatch geometry");
     if (!grid.X || !grid.Y || !grid.Z) return;
     @autoreleasepool {
+        if (s.Encoded == s.Tables.size()) s.Tables.push_back(CreateTable(s));
         auto table = s.Tables[s.Encoded++];
         for (const auto &binding : bindings) {
             if (binding.Index >= 16 || binding.Offset >= binding.Buffer.Size) throw std::invalid_argument("Invalid GPU buffer binding");
@@ -84,12 +93,6 @@ Gpu CreateGpu(std::string_view library_path) {
         s->Allocator = [s->Device newCommandAllocator];
         s->Commands = [s->Device newCommandBuffer];
         if (!s->Complete || !s->Allocator || !s->Commands) throw Error("Create command resources", nil);
-        auto descriptor = [MTL4ArgumentTableDescriptor new];
-        descriptor.maxBufferBindCount = 16;
-        for (auto &table : s->Tables) {
-            table = [s->Device newArgumentTableWithDescriptor:descriptor error:&error];
-            if (!table) throw Error("Create argument table", error);
-        }
         Gpu gpu{std::move(s)};
         gpu.State->Constants = CreateBuffer(gpu, 8192);
         return gpu;

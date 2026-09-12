@@ -31,7 +31,7 @@ def verify_inputs(methods):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    available = ["agarwal", "sdt", "conan", "matusiak", "poirot", "continuous", "matusiak2024", "falaize", "traer", "willemsen", "lagrange", "lee"]
+    available = ["agarwal", "sdt", "conan", "matusiak", "poirot", "continuous", "matusiak2024", "falaize", "traer", "willemsen", "lagrange", "lee", "agarwal2026"]
     parser.add_argument("--method", nargs="+", choices=["all", *available], default=["all"])
     parser.add_argument("--build", type=Path, default=ROOT / "build")
     parser.add_argument("--offline", action="store_true", help="Require cached reference inputs")
@@ -59,7 +59,10 @@ def main():
     (output / "environment.json").write_text(json.dumps(environment, indent=2) + "\n")
     diagnostics = ["--keep-diagnostics"] if args.keep_diagnostics else []
     for method in methods:
-        if method in ("matusiak", "poirot", "continuous", "matusiak2024", "falaize", "traer", "willemsen", "lagrange", "lee"):
+        if method == "agarwal2026":
+            run(sys.executable, ROOT / "tools/agarwal2026_reproduce.py", "--binary", build / "agarwalObjectReproduce",
+                "--fit-binary", build / "agarwalResponseFit", *(["--offline"] if args.offline else []), *diagnostics)
+        elif method in ("matusiak", "poirot", "continuous", "matusiak2024", "falaize", "traer", "willemsen", "lagrange", "lee"):
             run(sys.executable, ROOT / f"tools/{method}_reproduce.py", "--binary", build / f"{method}Reproduce",
                 *(["--offline"] if args.offline else []),
                 *(["--author-oracle"] if method == "willemsen" and args.author_oracle else []),

@@ -2,9 +2,9 @@
 #include "core/AudioFile.h"
 #include "core/BinaryFile.h"
 #include "core/GpuSpectral.h"
+#include "core/GpuFullSpectrum.h"
 
 #include <algorithm>
-#include <array>
 #include <chrono>
 #include <cmath>
 #include <filesystem>
@@ -13,6 +13,7 @@
 #include <iostream>
 #include <limits>
 #include <ranges>
+#include <optional>
 #include <string>
 
 using namespace surface_audio;
@@ -22,10 +23,11 @@ using Clock = std::chrono::steady_clock;
 
 std::vector<float> ReadParameters(const std::filesystem::path &path) {
     auto values = ReadBinary<float>(path);
-    if (values.size() != ResponseParameterCount) throw std::invalid_argument("Expected 50 response parameters");
+    if (values.size() != ResponseParameterCount && values.size() != ObjectResponseParameterCount) throw std::invalid_argument("Expected 50 or 70 response parameters");
+    const size_t noise_decay = 30 + (values.size() - 30) / 2;
     for (size_t i = 0; i < values.size(); ++i) {
         if (!std::isfinite(values[i])) throw std::invalid_argument("Nonfinite response parameter");
-        if ((i < 10 && (values[i] <= 0 || values[i] >= 22050)) || (((i >= 20 && i < 30) || i >= 40) && values[i] <= 0)) throw std::invalid_argument("Invalid response frequency or RT60");
+        if ((i < 10 && (values[i] <= 0 || values[i] >= 22050)) || (((i >= 20 && i < 30) || i >= noise_decay) && values[i] <= 0)) throw std::invalid_argument("Invalid response frequency or RT60");
     }
     return values;
 }
@@ -39,29 +41,32 @@ void Fit(const std::filesystem::path &input, const std::filesystem::path &initia
         if (!std::isfinite(x)) throw std::invalid_argument("Nonfinite target waveform");
     if (!steps || !std::isfinite(learning_rate) || learning_rate <= 0) throw std::invalid_argument("Invalid optimizer settings");
     auto parameters = ReadParameters(initial_path), best = parameters;
+    const uint32_t bands = uint32_t((parameters.size() - 30) / 2), noise_decay = 30 + bands;
     std::filesystem::create_directories(output);
     auto gpu = CreateGpu();
     const ResponseNoiseSettings noise_settings{.Seed = seed};
-    const auto noise = CreateResponseNoise(gpu, uint32_t(target.Samples.size()), float(target.SampleRate), noise_settings);
-    const auto response = CreateResponseGpu(gpu, uint32_t(target.Samples.size()), float(target.SampleRate), noise);
-    const SpectralLossOptions loss_options{.Scale = loss_scale == "linear" ? SpectralMagnitudeScale::Linear : loss_scale == "ln" ? SpectralMagnitudeScale::NaturalLog :
+    const auto noise = CreateResponseNoise(gpu, uint32_t(target.Samples.size()), float(target.SampleRate), noise_settings, bands);
+    const auto response = CreateResponseGpu(gpu, uint32_t(target.Samples.size()), float(target.SampleRate), noise, bands);
+    const SpectralLossOptions loss_options{.HuberDelta = bands == 20 ? 3.f : 1.f, .Scale = loss_scale == "linear" ? SpectralMagnitudeScale::Linear : loss_scale == "ln" ? SpectralMagnitudeScale::NaturalLog :
                                                                                                                                    SpectralMagnitudeScale::Decibels};
     const auto spectral = CreateSpectralLossGpu(gpu, target.Samples, target.SampleRate, loss_options);
+    const auto full_spectrum = bands == 20 ? std::optional{CreateFullSpectrumGpu(gpu, target.Samples, loss_options)} : std::nullopt;
     const bool scaled = scale_mode != "physical", log_decay = scale_mode == "log-decay";
-    auto master = std::views::iota(size_t{0}, parameters.size()) | std::views::transform([&](size_t i) { return log_decay && ((i >= 20 && i < 30) || i >= 40) ? std::log(double(parameters[i])) : double(parameters[i]); }) | std::ranges::to<std::vector>();
-    std::array<double, ResponseParameterCount> first{}, second{};
+    auto master = std::views::iota(size_t{0}, parameters.size()) | std::views::transform([&](size_t i) { return log_decay && ((i >= 20 && i < 30) || i >= noise_decay) ? std::log(double(parameters[i])) : double(parameters[i]); }) | std::ranges::to<std::vector>();
+    std::vector<double> first(parameters.size()), second(parameters.size());
     double best_loss = std::numeric_limits<double>::infinity(), initial_loss = 0, final_loss = 0;
     uint32_t best_step = 0;
     uint64_t bound_updates = 0;
     const auto start = Clock::now();
     std::ofstream trace(output / "loss.csv");
-    trace << "step,total,fft4096,fft1024,fft256,fft64,seconds\n"
+    trace << "step,total,fft4096,fft1024,fft256,fft64" << (full_spectrum ? ",full_spectrum" : "") << ",seconds\n"
           << std::setprecision(10);
     for (uint32_t step = 0; step <= steps; ++step) {
         SetParameters(response, parameters);
         BeginGpu(gpu);
         EncodeResponse(gpu, response);
         EncodeSpectralLoss(gpu, spectral, response.Output);
+        if (full_spectrum) EncodeFullSpectrumGpu(gpu, *full_spectrum, response.Output, spectral.Gradient, spectral.Loss);
         if (step < steps) EncodeResponseGradient(gpu, response, spectral.Gradient);
         SubmitGpu(gpu);
         WaitGpu(gpu);
@@ -80,6 +85,7 @@ void Fit(const std::filesystem::path &input, const std::filesystem::path &initia
         if (step % 100 == 0 || step == steps) {
             trace << step;
             for (float value : losses) trace << ',' << value;
+            if (full_spectrum) trace << ',' << BufferSpan<float>(full_spectrum->Loss)[0];
             trace << ',' << std::chrono::duration<double>(Clock::now() - start).count() << '\n';
             trace.flush();
         }
@@ -88,8 +94,8 @@ void Fit(const std::filesystem::path &input, const std::filesystem::path &initia
         const auto gradient = BufferSpan<float>(response.Gradient);
         const double correction1 = 1 - std::pow(.9, double(step + 1)), correction2 = 1 - std::pow(.999, double(step + 1));
         for (size_t i = 0; i < parameters.size(); ++i) {
-            const double scale = scaled && (i < 20 || (i >= 30 && i < 40)) ? 100 : 1;
-            const bool decay = (i >= 20 && i < 30) || i >= 40;
+            const double scale = scaled && (i < 20 || (i >= 30 && i < noise_decay)) ? 100 : 1;
+            const bool decay = (i >= 20 && i < 30) || i >= noise_decay;
             const double derivative = gradient[i] * scale * (log_decay && decay ? parameters[i] : 1);
             if (!std::isfinite(derivative)) throw std::runtime_error("Nonfinite fitting gradient");
             first[i] = .9 * first[i] + .1 * derivative;
@@ -121,18 +127,19 @@ void Fit(const std::filesystem::path &input, const std::filesystem::path &initia
              << ",\n  \"seconds\": " << std::chrono::duration<double>(Clock::now() - start).count()
              << ",\n  \"device\": \"" << DeviceName(gpu) << "\",\n  \"optimizer\": \"Adam beta1=0.9 beta2=0.999 epsilon=1e-8; double master parameters\",\n"
              << "  \"parameter_bounds\": {\"frequency_hz\": [1,22049], \"amplitude_db\": [-160,60], \"rt60_seconds\": [0.00001,20]},\n"
-             << "  \"loss_convention\": \"sum of four mean Huber losses, delta 1, periodic Hann, quarter-window hop, centered zero padding, unnormalized one-sided " << loss_scale << " magnitude, magnitude floor 1e-6\",\n"
-             << "  \"noise_convention\": \"fixed shared Gaussian excitation, 513-tap centered Hamming FIR, ten ERB bands from zero to Nyquist, unit expected RMS per band\",\n"
+             << "  \"loss_convention\": \"sum of four mean Huber losses" << (full_spectrum ? " plus full-record spectrum" : "") << ", delta " << loss_options.HuberDelta << ", periodic Hann, quarter-window hop, centered zero padding, unnormalized one-sided " << loss_scale << " magnitude, magnitude floor 1e-6\",\n"
+             << "  \"noise_convention\": \"fixed shared Gaussian excitation, 513-tap centered Hamming FIR, " << bands << " ERB bands from zero to Nyquist, unit expected RMS per band\",\n"
              << "  \"scope\": \"known-recording reconstruction; not author parameters or a perceptual equivalence score\"\n}\n";
     if (!metadata || !trace) throw std::runtime_error("Cannot write fitting metadata");
 }
 
 void Sample(const std::filesystem::path &parameters_path, const std::filesystem::path &output, uint32_t frames, uint64_t seed) {
     const auto parameters = ReadParameters(parameters_path);
+    const uint32_t bands = uint32_t((parameters.size() - 30) / 2);
     auto gpu = CreateGpu();
     const ResponseNoiseSettings settings{.Seed = seed};
-    const auto noise = CreateResponseNoise(gpu, frames, 44100, settings);
-    const auto response = CreateResponseGpu(gpu, frames, 44100, noise);
+    const auto noise = CreateResponseNoise(gpu, frames, 44100, settings, bands);
+    const auto response = CreateResponseGpu(gpu, frames, 44100, noise, bands);
     SetParameters(response, parameters);
     BeginGpu(gpu);
     EncodeResponse(gpu, response);
