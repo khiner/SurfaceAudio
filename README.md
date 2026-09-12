@@ -81,7 +81,8 @@ Generated outputs are Git-ignored.
 The Lagrange, Lee, Willemsen, and Conan runners discard intermediate audio and trajectories after successful checks.
 Use `python3 tools/Reproduce.py --method lagrange lee willemsen conan --keep-diagnostics --offline` to retain them.
 Failed checks preserve diagnostics; main WAVs, fitted parameters, provenance, and metrics remain available.
-Listening pages link to canonical raw WAVs and retain level-matched audition copies.
+Listening pages link to canonical raw WAVs and share identical level-matched audio under `outputs/playback/`.
+Rebuilding a page removes playback files that ordinary pages no longer reference.
 Use `BuildListeningReport.py --freeze` for a self-contained review snapshot.
 
 ## Performance and scope

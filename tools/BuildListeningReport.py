@@ -1,13 +1,16 @@
 #!/usr/bin/env python3
 """Build an offline audio comparison from an explicitly labeled JSON case manifest."""
 import argparse
+import fcntl
 import hashlib
 import html
+import io
 import json
 import os
+import re
 from pathlib import Path
 import subprocess
-from urllib.parse import quote
+from urllib.parse import quote, unquote
 
 import matplotlib
 matplotlib.use("Agg")
@@ -25,23 +28,23 @@ def spectrum(rate, samples):
     return frequency, power
 
 
-def main():
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("manifest", type=Path)
-    parser.add_argument("--output", type=Path, default=Path("outputs/reproduction/listening"))
-    parser.add_argument("--freeze", action="store_true", help="Create a new review snapshot that this tool will refuse to overwrite")
-    args = parser.parse_args()
-    if (args.output / "Freeze.json").exists() or (args.freeze and args.output.exists()):
-        parser.error("Review output already exists or is frozen; choose a new --output directory")
+def audio_links(root):
+    return {(page.parent / unquote(html.unescape(url))).resolve()
+            for page in root.rglob("*.html")
+            for url in re.findall(r'data-(?:raw|level)="([^"]+)"', page.read_text())}
+
+
+def build_report(args, cache=None):
     manifest = json.loads(args.manifest.read_text())
     cases = manifest["cases"]
     generated_wavs = {(args.output / 'audio' / f'{index:02d}-{field}-{kind}.wav').resolve()
                       for index in range(len(cases)) for field in ('reference', 'synthesis') for kind in ('raw', 'audition')}
     if any(Path(case[field]).resolve() in generated_wavs for case in cases for field in ('reference', 'synthesis')):
-        parser.error('Report destinations overlap source WAVs; choose a different --output directory')
+        raise ValueError('Report destinations overlap source WAVs; choose a different --output directory')
     args.output.mkdir(parents=True, exist_ok=True)
     assets = args.output / "audio"
-    assets.mkdir(exist_ok=True)
+    if args.freeze:
+        assets.mkdir(exist_ok=True)
     records, sections = [], []
     for index, case in enumerate(cases):
         group = case.get("group")
@@ -69,11 +72,18 @@ def main():
                 raw_url = 'audio/' + raw_name
             else:
                 raw_url = quote(os.path.relpath(path.resolve(), args.output.resolve()), safe='/')
-            (assets / audition_name).unlink(missing_ok=True)
-            wavfile.write(assets / audition_name, rate, (ac * gain).astype(np.float32))
+            encoded = io.BytesIO()
+            wavfile.write(encoded, rate, (ac * gain).astype(np.float32))
+            payload = encoded.getvalue()
+            audition = assets / audition_name if args.freeze else cache / (hashlib.sha256(payload).hexdigest() + ".wav")
+            if not audition.exists() or audition.read_bytes() != payload:
+                temporary = audition.with_suffix(".tmp")
+                temporary.write_bytes(payload)
+                temporary.replace(audition)
+            level_url = quote(os.path.relpath(audition.resolve(), args.output.resolve()), safe='/')
             data.update(source=str(path), audition_gain=gain)
             record["signals"][field] = data
-            players.append(f'<div><strong>{html.escape(label)}</strong><audio controls preload="none" data-raw="{raw_url}" data-level="audio/{audition_name}" src="audio/{audition_name}"></audio><a href="{raw_url}">Raw WAV</a></div>')
+            players.append(f'<div><strong>{html.escape(label)}</strong><audio controls preload="none" data-raw="{raw_url}" data-level="{level_url}" src="{level_url}"></audio><a href="{raw_url}">Raw WAV</a></div>')
             window = max(1, rate // 100)
             count = len(mono) // window
             envelope = np.sqrt(np.mean((mono[:count * window].reshape(count, window) - mono.mean()) ** 2, axis=1))
@@ -126,18 +136,40 @@ document.querySelectorAll('audio').forEach(a=>a.addEventListener('play',()=>docu
 document.querySelector('#level').addEventListener('change',e=>document.querySelectorAll('audio').forEach(a=>{a.pause();a.src=e.target.checked?a.dataset.level:a.dataset.raw}));
 document.querySelectorAll('.switch').forEach(button=>button.addEventListener('click',()=>{const players=button.closest('section').querySelectorAll('audio');const from=players[0].paused?players[1]:players[0],to=from===players[0]?players[1]:players[0];const t=from.currentTime;from.pause();const start=()=>{to.currentTime=Number.isFinite(to.duration)?Math.min(t,Math.max(0,to.duration-.01)):t;to.play().catch(()=>{})};if(to.readyState>=1)start();else{to.addEventListener('loadedmetadata',start,{once:true});to.load()}}));
 </script></html>'''
-    (args.output / "index.html").write_text(page)
+    temporary_page = args.output / "index.tmp"
+    temporary_page.write_text(page)
+    temporary_page.replace(args.output / "index.html")
     if not args.freeze:
         sources = {Path(case[field]).resolve() for case in cases for field in ("reference", "synthesis")}
-        retained = {assets / f"{index:02d}-{field}-audition.wav" for index in range(len(cases)) for field in ("reference", "synthesis")}
-        for path in assets.glob("*.wav"):
-            if path not in retained and path.resolve() not in sources:
+        retained = audio_links(cache.parent) | sources
+        for path in (*assets.glob("*.wav"), *cache.glob("*.wav")):
+            if path.resolve() not in retained:
                 path.unlink()
     if args.freeze:
         files = {str(path.relative_to(args.output)): hashlib.sha256(path.read_bytes()).hexdigest()
                  for path in args.output.rglob("*") if path.is_file()}
         (args.output / "Freeze.json").write_text(json.dumps({"manifest": manifest, "files_sha256": files}, indent=2) + "\n")
     print(f"Wrote {len(records)} listening comparisons to {args.output / 'index.html'}")
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("manifest", type=Path)
+    parser.add_argument("--output", type=Path, default=Path("outputs/reproduction/listening"))
+    parser.add_argument("--freeze", action="store_true", help="Create a new review snapshot that this tool will refuse to overwrite")
+    args = parser.parse_args()
+    if (args.output / "Freeze.json").exists() or (args.freeze and args.output.exists()):
+        parser.error("Review output already exists or is frozen; choose a new --output directory")
+    if args.freeze:
+        build_report(args)
+    else:
+        outputs = Path(__file__).resolve().parents[1] / "outputs"
+        root = outputs if args.output.resolve().is_relative_to(outputs) else args.output.resolve().parent
+        cache = root / "playback"
+        cache.mkdir(parents=True, exist_ok=True)
+        with (cache / ".lock").open("a") as lock:
+            fcntl.flock(lock, fcntl.LOCK_EX)
+            build_report(args, cache)
 
 
 if __name__ == "__main__":
