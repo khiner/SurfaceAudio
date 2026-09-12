@@ -6,6 +6,7 @@ import hashlib
 import html
 import io
 import json
+import math
 import os
 import re
 from pathlib import Path
@@ -17,7 +18,7 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
 from scipy.io import wavfile
-from scipy.signal import welch, stft
+from scipy.signal import resample_poly, welch, stft
 
 from AnalyzeRenders import metrics, read_wave, texture_metrics
 
@@ -34,11 +35,23 @@ def audio_links(root):
             for url in re.findall(r'data-(?:raw|level)="([^"]+)"', page.read_text())}
 
 
+def playback_url(rate, samples, output, cache, name):
+    encoded = io.BytesIO()
+    wavfile.write(encoded, rate, samples.astype(np.float32))
+    payload = encoded.getvalue()
+    path = cache / (hashlib.sha256(payload).hexdigest() + '.wav') if cache else output / 'audio' / name
+    if not path.exists() or path.read_bytes() != payload:
+        temporary = path.with_suffix('.tmp')
+        temporary.write_bytes(payload)
+        temporary.replace(path)
+    return quote(os.path.relpath(path.resolve(), output.resolve()), safe='/')
+
+
 def build_report(args, cache=None):
     manifest = json.loads(args.manifest.read_text())
     cases = manifest["cases"]
     generated_wavs = {(args.output / 'audio' / f'{index:02d}-{field}-{kind}.wav').resolve()
-                      for index in range(len(cases)) for field in ('reference', 'synthesis') for kind in ('raw', 'audition')}
+                      for index in range(len(cases)) for field in ('reference', 'synthesis') for kind in ('raw', 'audition', 'unscaled')}
     if any(Path(case[field]).resolve() in generated_wavs for case in cases for field in ('reference', 'synthesis')):
         raise ValueError('Report destinations overlap source WAVs; choose a different --output directory')
     args.output.mkdir(parents=True, exist_ok=True)
@@ -62,28 +75,26 @@ def build_report(args, cache=None):
             mono = samples.mean(axis=1)
             ac = samples - samples.mean(axis=0)
             rms = float(np.sqrt(np.mean(ac ** 2)))
-            peak = float(np.max(np.abs(ac)))
-            gain = min(.1 / rms if rms else 1, .89 / peak if peak else 1)
             name = f"{index:02d}-{field}"
             raw_name = name + "-raw.wav"
-            audition_name = name + "-audition.wav"
             if args.freeze:
                 subprocess.run(['/bin/cp', '-c', str(path), str(assets / raw_name)], check=True)
                 raw_url = 'audio/' + raw_name
             else:
                 raw_url = quote(os.path.relpath(path.resolve(), args.output.resolve()), safe='/')
-            encoded = io.BytesIO()
-            wavfile.write(encoded, rate, (ac * gain).astype(np.float32))
-            payload = encoded.getvalue()
-            audition = assets / audition_name if args.freeze else cache / (hashlib.sha256(payload).hexdigest() + ".wav")
-            if not audition.exists() or audition.read_bytes() != payload:
-                temporary = audition.with_suffix(".tmp")
-                temporary.write_bytes(payload)
-                temporary.replace(audition)
-            level_url = quote(os.path.relpath(audition.resolve(), args.output.resolve()), safe='/')
-            data.update(source=str(path), audition_gain=gain)
+            playback_rate, playback, unscaled_url = rate, samples, raw_url
+            if rate < 8000:
+                playback_rate = 48000
+                divisor = math.gcd(rate, playback_rate)
+                playback = resample_poly(samples, playback_rate // divisor, rate // divisor, axis=0)
+                unscaled_url = playback_url(playback_rate, playback, args.output, cache, name + '-unscaled.wav')
+            playback_ac = playback - playback.mean(axis=0)
+            playback_rms, peak = float(np.sqrt(np.mean(playback_ac ** 2))), float(np.max(np.abs(playback_ac)))
+            gain = min(.1 / playback_rms if playback_rms else 1, .89 / peak if peak else 1)
+            level_url = playback_url(playback_rate, playback_ac * gain, args.output, cache, name + '-audition.wav')
+            data.update(source=str(path), audition_gain=gain, playback_sample_rate=playback_rate)
             record["signals"][field] = data
-            players.append(f'<div><strong>{html.escape(label)}</strong><audio controls preload="none" data-raw="{raw_url}" data-level="{level_url}" src="{level_url}"></audio><a href="{raw_url}">Raw WAV</a></div>')
+            players.append(f'<div><strong>{html.escape(label)}</strong><audio controls preload="metadata" data-raw="{unscaled_url}" data-level="{level_url}" src="{level_url}"></audio><a download href="{raw_url}">Raw WAV</a></div>')
             window = max(1, rate // 100)
             count = len(mono) // window
             envelope = np.sqrt(np.mean((mono[:count * window].reshape(count, window) - mono.mean()) ** 2, axis=1))
@@ -124,7 +135,7 @@ def build_report(args, cache=None):
     page = '''<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>SurfaceAudio sound comparisons</title>
 <style>body{font:16px/1.5 system-ui;max-width:1050px;margin:32px auto;padding:0 20px;color:#202a35;background:#fafafa}section{background:white;border:1px solid #ddd;border-radius:8px;padding:22px;margin:24px 0}h1{font-size:28px}h2{font-size:21px}audio{display:block;width:100%;margin:8px 0}.players{display:grid;grid-template-columns:1fr 1fr;gap:24px}img{width:100%;height:auto}button{margin:12px 0;padding:8px}a{color:#355e91}@media(max-width:600px){.players{grid-template-columns:1fr}}</style>
 <h1>SurfaceAudio sound comparisons</h1><p>Each case identifies its reference as an input recording, a published author example, or executed author code. Shared input recordings are evaluation material, not author-generated outputs of the methods being compared.</p>
-<p><label><input id="level" type="checkbox" checked> Match playback level and remove each channel's constant DC offset</label><br>Playback copies target AC RMS 0.1 with a 0.89 peak ceiling. Only one constant gain and DC offset are applied per file. Raw WAVs preserve the case files before this playback processing; case notes identify any earlier reference extraction or gain conversion. Plots normalize level for comparison; they are not perceptual equivalence scores. Spectrograms use each record's AC RMS and a common −60 to 0 dB color scale.</p>'''
+<p><label><input id="level" type="checkbox" checked> Match playback level and remove each channel's constant DC offset</label><br>Playback copies target AC RMS 0.1 with a 0.89 peak ceiling using one constant gain and DC offset per file. Signals below 8 kHz are resampled to 48 kHz for browser playback, preserving duration and pitch. Raw WAV downloads retain the original samples and rates; case notes identify any earlier reference extraction or gain conversion. Plots normalize level for comparison; they are not perceptual equivalence scores. Spectrograms use each record's AC RMS and a common −60 to 0 dB color scale.</p>'''
     if "title" in manifest:
         page = page.replace("SurfaceAudio sound comparisons", html.escape(manifest["title"]))
     if "description" in manifest:

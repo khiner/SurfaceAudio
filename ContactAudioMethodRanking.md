@@ -24,12 +24,13 @@ Implemented methods have reproduction workflows linked from the [README](README.
 Willemsen matches published figure traces and executed paper-era source under explicit numerical conventions.
 Lagrange uses a disclosed estimator extension; Lee retains failed audio reconstruction diagnostics and is deferred.
 Their original synthesis WAVs remain unavailable.
-HaTT remains a haptic-data resource whose results concern contact vibration rather than airborne sound.
+HaTT renders the published haptic models and compares with executed author interpolation; its output concerns contact vibration.
 
 ## Investigation and implementation queue
 
-Nakatsuka 2017 is the next unimplemented sound-synthesis method in the ranking.
-HaTT supplies a separate data-driven haptic rendering task, with sound radiation outside its published scope.
+Nakatsuka 2017 is the remaining unimplemented sound-synthesis method in the ranking.
+[HaTT](docs/Hatt.md) replays all 100 published textures at both provided sample rates; airborne radiation remains outside its scope.
+Agarwal 2021 and Lee 2010 retain unresolved audio reproduction differences; Lagrange statistical compression remains deferred.
 The Agarwal extensions below have implementations with disclosed substitute data; exact author-stimulus reproduction remains unresolved.
 
 ### Agarwal 2022 poster and 2025 thesis: continuous-contact forces

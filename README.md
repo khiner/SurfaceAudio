@@ -19,6 +19,7 @@ C++23 contact-sound synthesis for Apple Silicon and Metal 4.
 | Willemsen 2019 | [Stiff-string friction, published figure traces and executed author source](docs/Willemsen.md) |
 | Lagrange 2010 | [Modal analysis, excitation extraction and uncompressed contact resynthesis](docs/Lagrange.md) |
 | Lee 2010 | [Contact detection, position-dependent notch/LPC analysis and rolling resynthesis](docs/Lee.md) |
+| HaTT 2014 | [Published texture models, force/speed interpolation and haptic vibration rendering](docs/Hatt.md) |
 
 The library uses free functions, explicit state structs and contiguous arrays.
 Independent contacts, texture samples, modal work and convolution run on the GPU.
@@ -45,7 +46,7 @@ open outputs/reproduction/listening/index.html
 
 The workflow requires Python, NumPy, SciPy, Matplotlib, FFmpeg and network access for the initial author-input downloads.
 Use `--offline` with cached inputs and `--method NAME [NAME ...]` to select methods.
-Names are `agarwal`, `sdt`, `conan`, `matusiak`, `poirot`, `continuous`, `matusiak2024`, `falaize`, `traer`, `willemsen`, `lagrange`, `lee`, `agarwal2026`, and `agarwal2025`.
+The `--help` output lists the available method names.
 Outputs include WAVs, a listening page and run/case manifests.
 Temporary force and basis arrays are deleted after use.
 Per-method pages record author inputs, inferred settings, differences and texture/spectral comparisons.
@@ -53,10 +54,11 @@ Matusiak 2025 compares executed author code, while Poirot and Conan CMJ compare 
 Matusiak 2024 compares published force traces, Falaize–Roze compares figures, and Traer compares later TDW author code.
 Willemsen reproduces published figure traces and the corresponding author MATLAB source.
 Lagrange and Lee use identified FoleyAutomatic recordings, with their own published synthesis examples still unavailable.
+HaTT executes the author interpolation source with common innovations and retains ten texture comparisons.
 Each method records the limits of those comparisons.
 The [Matusiak listening reference](outputs/reproduction/matusiak2024/listening/index.html) uses archived numerical conventions.
-The [contact reconstruction comparisons](outputs/reproduction/listening/index.html) include the current Lagrange, Lee and Willemsen renders.
-Regenerate these three papers with:
+The [combined listening page](outputs/reproduction/listening/index.html) contains the methods selected by the latest reproduction run.
+Regenerate Lagrange, Lee and Willemsen with:
 
 ```sh
 python3 tools/Reproduce.py --method lagrange lee willemsen --author-oracle --offline
@@ -76,6 +78,7 @@ python3 tools/agarwal_response_reproduce.py --retained --output outputs/reproduc
 
 The [object-response workflow](docs/AgarwalResponseReproduction.md) covers fitting, material cohorts and rendering with measured/fitted resonators.
 Original author audio and source inputs remain under `references/`, with hashes in `docs/ReferenceInputs.json`.
+HaTT inputs retain Penn’s non-profit research license; their terms are separate from this library’s license.
 Reproduction fixtures and inferred calibration inputs are stored under `repros/`.
 Generated outputs are Git-ignored.
 The Lagrange, Lee, Willemsen, and Conan runners discard intermediate audio and trajectories after successful checks.

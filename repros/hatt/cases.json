@@ -1,0 +1,38 @@
+{
+  "sources": [
+    {
+      "file": "models.zip",
+      "url": "https://repository.upenn.edu/server/api/core/bitstreams/dc23e82c-46df-41f9-8ac7-e9b7fe084f1e/content",
+      "sha256": "582b2722c2c6c4ec44e2e62a9f32622e9bb80e25e7b1d0c9772c81ce79936a23"
+    },
+    {
+      "file": "rendering.zip",
+      "url": "https://repository.upenn.edu/server/api/core/bitstreams/c5ec32dc-9728-4f59-a382-b0e7a762c81b/content",
+      "sha256": "5127434772933fcb1b358dc20c90401372284e8d878b24da5191c66ea672f9cb"
+    },
+    {
+      "file": "license.pdf",
+      "url": "https://repository.upenn.edu/server/api/core/bitstreams/c3c70778-1c6e-412b-8e99-8c5e57aa7a33/content",
+      "sha256": "f338cd6668389ae5d76d684c72c436f15702e17350f9d06cf2b46f35890a833b"
+    }
+  ],
+  "listen": [
+    "Sandpaper 100",
+    "Cork",
+    "Denim",
+    "Floortile 1",
+    "Carpet 1",
+    "Styrofoam",
+    "Aluminum",
+    "Brick 1",
+    "Carbon Fiber",
+    "Wood"
+  ],
+  "seconds": 3,
+  "seed": 2014,
+  "author_audio_relative_l2_limits": {
+    "10000": {
+      "Floortile 5": 0.07
+    }
+  }
+}

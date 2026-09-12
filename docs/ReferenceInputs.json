@@ -1085,6 +1085,21 @@
       "method": "willemsen",
       "path": "repros/willemsen/source.json",
       "sha256": "31a0b2e60b94e5334dd928077f063ff78edc579bd11d08b73ab229836ca947bd"
+    },
+    {
+      "method": "hatt",
+      "path": "references/hatt/models.zip",
+      "sha256": "582b2722c2c6c4ec44e2e62a9f32622e9bb80e25e7b1d0c9772c81ce79936a23"
+    },
+    {
+      "method": "hatt",
+      "path": "references/hatt/rendering.zip",
+      "sha256": "5127434772933fcb1b358dc20c90401372284e8d878b24da5191c66ea672f9cb"
+    },
+    {
+      "method": "hatt",
+      "path": "references/hatt/license.pdf",
+      "sha256": "f338cd6668389ae5d76d684c72c436f15702e17350f9d06cf2b46f35890a833b"
     }
   ]
 }
