@@ -1100,6 +1100,16 @@
       "method": "hatt",
       "path": "references/hatt/license.pdf",
       "sha256": "f338cd6668389ae5d76d684c72c436f15702e17350f9d06cf2b46f35890a833b"
+    },
+    {
+      "method": "nakatsuka",
+      "path": "references/nakatsuka/supplement.pdf",
+      "sha256": "c34609485daf366c714b3fd8c9b6f65f317772c64125458bb7ff1d9278ee2604"
+    },
+    {
+      "method": "nakatsuka",
+      "path": "references/nakatsuka/demo.mp4",
+      "sha256": "385c7ad6d1e986da4ea522ae02a88d3b96e408000d4c3b74ceb242357217113b"
     }
   ]
 }

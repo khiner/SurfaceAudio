@@ -20,6 +20,7 @@ C++23 contact-sound synthesis for Apple Silicon and Metal 4.
 | Lagrange 2010 | [Modal analysis, excitation extraction and uncompressed contact resynthesis](docs/Lagrange.md) |
 | Lee 2010 | [Contact detection, position-dependent notch/LPC analysis and rolling resynthesis](docs/Lee.md) |
 | HaTT 2014 | [Published texture models, force/speed interpolation and haptic vibration rendering](docs/Hatt.md) |
+| Nakatsuka 2017 | [Deformable contact, microrectangle vibration and point-source radiation](docs/Nakatsuka.md) |
 
 The library uses free functions, explicit state structs and contiguous arrays.
 Independent contacts, texture samples, modal work and convolution run on the GPU.
@@ -55,6 +56,7 @@ Matusiak 2024 compares published force traces, Falaize–Roze compares figures, 
 Willemsen reproduces published figure traces and the corresponding author MATLAB source.
 Lagrange and Lee use identified FoleyAutomatic recordings, with their own published synthesis examples still unavailable.
 HaTT executes the author interpolation source with common innovations and retains ten texture comparisons.
+Nakatsuka compares reconstructed scenes with excerpts from the author’s 2016 predecessor demo under disclosed missing-input choices.
 Each method records the limits of those comparisons.
 The [Matusiak listening reference](outputs/reproduction/matusiak2024/listening/index.html) uses archived numerical conventions.
 The [combined listening page](outputs/reproduction/listening/index.html) contains the methods selected by the latest reproduction run.

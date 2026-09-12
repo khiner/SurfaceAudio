@@ -28,7 +28,8 @@ HaTT renders the published haptic models and compares with executed author inter
 
 ## Investigation and implementation queue
 
-Nakatsuka 2017 is the remaining unimplemented sound-synthesis method in the ranking.
+All ranked methods now have implementations.
+[Nakatsuka](docs/Nakatsuka.md) reconstructs the printed microrectangle model with explicit scene and adhesion differences.
 [HaTT](docs/Hatt.md) replays all 100 published textures at both provided sample rates; airborne radiation remains outside its scope.
 Agarwal 2021 and Lee 2010 retain unresolved audio reproduction differences; Lagrange statistical compression remains deferred.
 The Agarwal extensions below have implementations with disclosed substitute data; exact author-stimulus reproduction remains unresolved.

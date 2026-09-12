@@ -31,7 +31,7 @@ def verify_inputs(methods):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    available = ["agarwal", "sdt", "conan", "matusiak", "poirot", "continuous", "matusiak2024", "falaize", "traer", "willemsen", "lagrange", "lee", "agarwal2026", "agarwal2025", "hatt"]
+    available = ["agarwal", "sdt", "conan", "matusiak", "poirot", "continuous", "matusiak2024", "falaize", "traer", "willemsen", "lagrange", "lee", "agarwal2026", "agarwal2025", "hatt", "nakatsuka"]
     parser.add_argument("--method", nargs="+", choices=["all", *available], default=["all"])
     parser.add_argument("--build", type=Path, default=ROOT / "build")
     parser.add_argument("--offline", action="store_true", help="Require cached reference inputs")
@@ -63,11 +63,11 @@ def main():
             option, executable = ("--fit-binary", "agarwalResponseFit") if method == "agarwal2026" else ("--force-binary", "agarwalReproduce")
             run(sys.executable, ROOT / f"tools/{method}_reproduce.py", "--binary", build / "agarwalObjectReproduce",
                 option, build / executable, *(["--offline"] if args.offline else []), *diagnostics)
-        elif method in ("matusiak", "poirot", "continuous", "matusiak2024", "falaize", "traer", "willemsen", "lagrange", "lee", "hatt"):
+        elif method in ("matusiak", "poirot", "continuous", "matusiak2024", "falaize", "traer", "willemsen", "lagrange", "lee", "hatt", "nakatsuka"):
             run(sys.executable, ROOT / f"tools/{method}_reproduce.py", "--binary", build / f"{method}Reproduce",
                 *(["--offline"] if args.offline else []),
                 *(["--author-oracle"] if method == "willemsen" and args.author_oracle else []),
-                *(diagnostics if method in ("lagrange", "lee", "willemsen", "hatt") else []))
+                *(diagnostics if method in ("lagrange", "lee", "willemsen", "hatt", "nakatsuka") else []))
             verify_inputs([method])
         elif method == "conan":
             if not args.offline:

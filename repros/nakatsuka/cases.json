@@ -1,0 +1,117 @@
+{
+  "sources": [
+    {
+      "file": "supplement.pdf",
+      "url": "https://diglib.eg.org/server/api/core/bitstreams/d5c7593b-01ef-479e-97f7-048279c0d175/content",
+      "sha256": "c34609485daf366c714b3fd8c9b6f65f317772c64125458bb7ff1d9278ee2604"
+    },
+    {
+      "file": "demo.mp4",
+      "url": "https://diglib.eg.org/server/api/core/bitstreams/cd5fb42f-6bd6-423b-9afe-8857aa9229c2/content",
+      "sha256": "385c7ad6d1e986da4ea522ae02a88d3b96e408000d4c3b74ceb242357217113b"
+    }
+  ],
+  "seconds": 2,
+  "cases": [
+    {
+      "name": "cloth",
+      "scene": {
+        "columns": 30,
+        "rows": 30,
+        "speed_m_s": 0.1,
+        "sphere_radius_m": 0.04,
+        "initial_height_m": 0.041,
+        "shifted_adhesion": 1,
+        "motion_start_s": 0.35,
+        "motion_duration_s": 0.65,
+        "settling_time_s": 0.5,
+        "origin_y_m": 0,
+        "adhesion": 0.01,
+        "adhesion_distance_m": 0.0001,
+        "motion_rise_s": 0.3,
+        "motion_fall_s": 0.3
+      },
+      "material": {
+        "modulus_pa": 928700000000.0,
+        "poisson_ratio": 0.85,
+        "areal_density_kg_m2": 15.4,
+        "thickness_m": 1e-06,
+        "width_m": 0.0005,
+        "height_m": 0.0005,
+        "width_stddev_m": 1e-06,
+        "height_stddev_m": 1e-06
+      },
+      "reference_speed": 0.1,
+      "odd_modes": 3,
+      "author_start": 10
+    },
+    {
+      "name": "cloth-half-speed",
+      "scene": {
+        "columns": 30,
+        "rows": 30,
+        "speed_m_s": 0.05,
+        "sphere_radius_m": 0.04,
+        "initial_height_m": 0.041,
+        "shifted_adhesion": 1,
+        "motion_start_s": 0.8,
+        "motion_duration_s": 0.95,
+        "settling_time_s": 0.5,
+        "origin_y_m": 0,
+        "adhesion": 0.01,
+        "adhesion_distance_m": 0.0001,
+        "motion_rise_s": 0.45,
+        "motion_fall_s": 0.45
+      },
+      "material": {
+        "modulus_pa": 928700000000.0,
+        "poisson_ratio": 0.85,
+        "areal_density_kg_m2": 15.4,
+        "thickness_m": 1e-06,
+        "width_m": 0.0005,
+        "height_m": 0.0005,
+        "width_stddev_m": 1e-06,
+        "height_stddev_m": 1e-06
+      },
+      "reference_speed": 0.1,
+      "odd_modes": 3,
+      "author_start": 19
+    },
+    {
+      "name": "copper",
+      "scene": {
+        "columns": 22,
+        "rows": 11,
+        "speed_m_s": 0.1,
+        "sphere_radius_m": 0,
+        "initial_height_m": 0.001,
+        "shifted_adhesion": 1,
+        "motion_start_s": 0.35,
+        "motion_duration_s": 0.9,
+        "settling_time_s": 0.5,
+        "origin_y_m": 0,
+        "adhesion": 0.01,
+        "adhesion_distance_m": 0.0001,
+        "motion_rise_s": 0.8,
+        "motion_fall_s": 0.05
+      },
+      "material": {
+        "modulus_pa": 129800000000.0,
+        "poisson_ratio": 0.343,
+        "areal_density_kg_m2": 8.94,
+        "thickness_m": 1e-06,
+        "width_m": 1e-08,
+        "height_m": 1e-08,
+        "width_stddev_m": 0.00031622776601683794,
+        "height_stddev_m": 0.00031622776601683794
+      },
+      "reference_speed": 0.1,
+      "odd_modes": 3,
+      "author_start": 29.2
+    }
+  ],
+  "comparison_limits": {
+    "envelope_rmse": 0.3,
+    "spectral_rmse_db": 2
+  }
+}
