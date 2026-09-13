@@ -14,7 +14,7 @@ void Energy(Gpu &gpu, const GpuPooledSpectral &pool, GpuBuffer spectrum) {
     const std::array bindings{GpuBinding{pool.Parameters, 0}, GpuBinding{pool.Regions, 1}, GpuBinding{spectrum, 2}, GpuBinding{pool.Energy, 3}};
     DispatchGroupsGpu(gpu, pool.ReduceEnergy, bindings, {pool.Pools}, {256});
 }
-} // namespace
+}
 
 GpuPooledSpectral CreatePooledSpectral(Gpu &gpu, const SpectralLossGpu &spectral, std::span<const SpectralPoolBand> bands, SpectralPoolOptions options) {
     if (!std::isfinite(options.Weight) || options.Weight < 0) throw std::invalid_argument("Invalid pooled spectral weight");
@@ -85,4 +85,4 @@ void EncodePooledSpectral(Gpu &gpu, const SpectralLossGpu &spectral, const GpuPo
     const std::array add{GpuBinding{r.Parameters, 0}, GpuBinding{pool.Parameters, 1}, GpuBinding{pool.Adjoint, 2}, GpuBinding{pool.Loss, 3}, GpuBinding{spectral.Gradient, 4}, GpuBinding{spectral.Loss, 5}};
     DispatchGpu(gpu, pool.Add, add, {spectral.Samples});
 }
-} // namespace surface_audio
+}

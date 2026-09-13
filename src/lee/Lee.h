@@ -41,7 +41,7 @@ std::vector<Notch> EstimateNotches(std::span<const double>, double prominence_db
 std::vector<double> FilterNotches(std::span<const double>, std::span<const Notch>, bool inverse);
 Analysis AnalyzeGpu(Gpu &, std::span<const float>, uint32_t sample_rate, Settings = {});
 Analysis Analyze(std::span<const float>, uint32_t sample_rate, Settings = {});
-// Rate scales onset times, and trajectory reverses the sequence of contact filters without reversing their causal responses.
+// Rate scales onset times; trajectory reverses contact-filter order while preserving each causal response.
 std::vector<float> Synthesize(const Analysis &, double rate = 1, double gain = 1, bool reverse_trajectory = false);
 std::vector<float> SynthesizeGpu(Gpu &, const Analysis &, double rate = 1, double gain = 1, bool reverse_trajectory = false);
 }

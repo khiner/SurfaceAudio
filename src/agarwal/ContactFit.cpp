@@ -12,7 +12,7 @@ namespace {
 struct ContactFitBlock {
     uint32_t Modes, ForceFrames, Frames, Taps, SampleRate, Groups;
 };
-} // namespace
+}
 
 std::array<float, 2> ContactFitLogDecayBounds() {
     const double minimum = std::log(double(ContactFitMinimumDecay)), maximum = std::log(double(ContactFitMaximumDecay));
@@ -54,4 +54,4 @@ void EncodeContactFitGradient(Gpu &gpu, const ContactFitGpu &state, GpuBuffer sa
     const std::array reduce{GpuBinding{state.Block, 0}, GpuBinding{state.PartialGradient, 1}, GpuBinding{state.Gradient, 2}};
     DispatchGroupsGpu(gpu, state.Reduce, reduce, {state.Modes}, {256});
 }
-} // namespace surface_audio::agarwal
+}

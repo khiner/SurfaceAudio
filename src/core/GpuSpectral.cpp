@@ -37,7 +37,7 @@ void Forward(Gpu &gpu, const SpectralLossGpu &state, const SpectralResolutionGpu
     const std::array finish{GpuBinding{resolution.Parameters, 0}, GpuBinding{resolution.Transform, 1}, GpuBinding{spectrum, 2}, GpuBinding{resolution.Twiddles, 3}};
     DispatchGpu(gpu, state.FinishForward, finish, {resolution.Size, resolution.Frames});
 }
-} // namespace
+}
 
 SpectralLossGpu CreateSpectralLossGpu(Gpu &gpu, std::span<const float> target, uint32_t sample_rate, SpectralLossOptions options) {
     if (target.empty() || target.size() > (1u << 22) || !sample_rate || !std::isfinite(options.MagnitudeFloor) || options.MagnitudeFloor < 1e-12f || options.MagnitudeFloor > 1e6f || !std::isfinite(options.HuberDelta) || options.HuberDelta <= 0 || !std::has_single_bit(options.HopDivisor) || options.HopDivisor > 64 || uint32_t(options.Scale) > uint32_t(SpectralMagnitudeScale::Linear)) throw std::invalid_argument("Invalid spectral loss dimensions or options");
@@ -67,4 +67,4 @@ void EncodeSpectralLoss(Gpu &gpu, const SpectralLossGpu &state, GpuBuffer wavefo
     const std::array reduce{GpuBinding{r0.Parameters, 0}, GpuBinding{r1.Parameters, 1}, GpuBinding{r2.Parameters, 2}, GpuBinding{r3.Parameters, 3}, GpuBinding{r0.FrameLoss, 4}, GpuBinding{r1.FrameLoss, 5}, GpuBinding{r2.FrameLoss, 6}, GpuBinding{r3.FrameLoss, 7}, GpuBinding{state.Loss, 8}};
     DispatchGroupsGpu(gpu, state.Reduce, reduce, {1}, {256});
 }
-} // namespace surface_audio
+}

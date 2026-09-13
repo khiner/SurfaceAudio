@@ -22,8 +22,8 @@ struct RandomState {
     RandomWide State{0}, Sequence{1};
 };
 
-// PCG-XSH-RR. Per-contact streams are independent of dispatch/block boundaries.
 inline RandomWord NextRandom(SURFACE_THREAD RandomState &r) {
+    // PCG-XSH-RR streams are independent of dispatch and block boundaries.
     const auto previous = r.State;
     r.State = previous * RandomWide(6364136223846793005ULL) + r.Sequence;
     const auto bits = RandomWord(((previous >> 18u) ^ previous) >> 27u);
@@ -50,6 +50,6 @@ inline float Normal(SURFACE_THREAD RandomState &r) {
     return std::sqrt(-2.f * std::log(u)) * std::cos(6.283185307179586f * v);
 #endif
 }
-} // namespace surface_audio
+}
 
 #undef SURFACE_THREAD

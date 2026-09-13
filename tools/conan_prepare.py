@@ -29,7 +29,7 @@ def impacts(samples, rate, threshold):
     offset = .5 * (samples[peaks - 1] - samples[peaks + 1]) / curvature
     amplitude = samples[peaks] - .25 * (samples[peaks - 1] - samples[peaks + 1]) * offset
     duration = 2 * widths / rate
-    # Small, weak peaks are retained for event statistics, but not duration fitting.
+    # Use weak peaks for event statistics only.
     duration[(amplitude < 3 * threshold) | (duration < .0003) | (duration > .004)] = 0
     return np.column_stack(((peaks + offset) / rate, amplitude, duration))
 
@@ -39,11 +39,10 @@ def main():
     metadata = {'sample_rate': 44100, 'cases': {}, 'ir_diagnostics': {}}
     for key, name in NAMES.items():
         rate, samples = read(name)
-        # Whole-record activity determines the crop and midpoint before the disjoint fit/holdout split.
         active = np.flatnonzero(samples > .05 * samples.max())
         start, end = max(0, active[0] - 44), min(len(samples), active[-1] + 44)
         midpoint = (start + end) // 2
-        # Detector floor fixed using training data only. Never tune against holdout.
+        # The detection threshold uses training data only.
         threshold = .05 * samples[start:midpoint].max()
         train = impacts(samples[start:midpoint], rate, threshold)
         full = impacts(samples[start:end], rate, threshold)
@@ -67,8 +66,7 @@ def main():
         assert lag >= 0
         aligned = convolution[lag:lag + len(reference)]
         split = len(reference) // 2
-        # Alignment and scalar gain are channel identification, not force synthesis.
-        # Fit gain on first half; report reconstruction error on the second half.
+        # Fit gain on the first half and evaluate the second half.
         gain = float(np.sum(aligned[:split] * reference[:split]) / np.sum(aligned[:split] ** 2))
         holdout_error = float(np.linalg.norm(gain * aligned[split:] - reference[split:]) / np.linalg.norm(reference[split:]))
         trimmed = gain * response[lag:]

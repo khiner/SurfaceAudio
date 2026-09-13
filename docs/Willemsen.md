@@ -6,7 +6,7 @@ Output is dry string displacement; instrument-body filtering and radiation are o
 
 The authors' [MATLAB source][source] at commit `12898a254e69cfbd68705ab028dd8894e4f05dfe` reproduces Figures 8 and 9.
 Controls are 44,100 Hz sampling, nominal 440 Hz pitch, 5 N normal force, 0.1 m/s bow velocity, and bow position 0.25.
-Comparisons use original physical samples without gain, time, pitch, or parameter fitting.
+Comparisons preserve the original samples, units, timing, pitch and parameters.
 
 ## Run
 
@@ -41,8 +41,6 @@ The final command benchmarks 64 CPU/Metal trajectories of 44,100 samples each.
 
 ## Published equations and source conventions
 
-Both conventions use the same model and stepping kernel.
-
 | Setting | `Scheme::Paper`, API default | `Scheme::AuthorFigure`, reproduction default |
 | --- | --- | --- |
 | Grid | N+1 samples, simply supported | N samples, two zero cells at each end |
@@ -64,7 +62,7 @@ The source repository's additional `elastoPlastic.wav` has unspecified recording
 CSV fixtures contain the original vector paths from `newPaperWaveform.eps` and `hysteresis3.eps`, with displacement, velocity, and force in SI units.
 Credit: Silvin Willemsen, Stefan Bilbao, and Stefania Serafin, 2019, CC BY 3.0.
 Figure 8 retains 442 points per waveform; Figure 9 retains 500 points, limited by three-decimal EPS coordinate precision.
-Figure 9 uses nearest-sample curve distance without changing velocity or force scales.
+Figure 9 uses nearest-sample curve distance at the original velocity and force scales.
 
 | Comparison on Apple M5 Max, Homebrew Clang 23, Release | Result |
 | --- | ---: |

@@ -59,4 +59,4 @@ void RenderModal(ModalBank &bank, uint32_t frames, std::span<const float> input,
             output[std::size_t(voice) * frames + frame] = total;
         }
 }
-} // namespace surface_audio
+}

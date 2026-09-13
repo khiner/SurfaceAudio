@@ -1,6 +1,6 @@
 # Poirot collision signal model
 
-This method implements Poirot et al., [“A Perceptually Evaluated Signal Model: Collisions Between a Vibrating Object and an Obstacle”][paper].
+Implements Poirot et al., [“A Perceptually Evaluated Signal Model: Collisions Between a Vibrating Object and an Obstacle”][paper].
 The paper appeared in TASLP 31, 2338–2350, 2023.
 It models modal power transfer, collision sidebands, and the return to ordinary string decay.
 The implementation includes streaming C++, Metal synthesis, and an independent FP64 stiff-string/obstacle reference.
@@ -28,10 +28,8 @@ String comparisons cover the collision model, while the site's tanpura and membr
 [Source provenance](../repros/poirot/sources.json) records URLs, timestamps, hashes, and rights information.
 Author files remain under ignored `references/poirot/`.
 
-The local [HAL manuscript][hal] has a CC BY-SA cover and an IEEE rights statement.
-The [Edinburgh PDF][edinburgh] identifies itself as a peer-reviewed manuscript.
-The IEEE typeset version remains unverified.
-HAL corrects the excitation sign, but both manuscripts retain the equation discrepancies below.
+The [HAL][hal] and [Edinburgh][edinburgh] manuscripts retain the equation discrepancies below.
+HAL corrects the excitation sign; source versions and rights are recorded in the provenance manifest.
 
 ## Equations and discrepancies
 
@@ -50,7 +48,7 @@ The implementation uses recipient weighting:
 T_i = -lambda max(P_i-p_i,0) + theta_i sum_j lambda max(P_j-p_j,0)
 ```
 
-An independent literal-equation counterexample remains in `PoirotTest`.
+`PoirotTest` includes a counterexample to the printed equation.
 Printed Equation 16 uses normalized `theta_i` for splitting, limiting the first-mode upper shift to about 6.5 Hz for 41 midpoint modes.
 The upper frequency shift in Figure 7 and the recording approaches `f1/3`.
 The calibrated option uses absolute modal shape for splitting and normalized weights for power transfer.
@@ -80,7 +78,7 @@ Other signal stimuli retain this modal shape with a precontact scalar gain estim
 Only M2_x1_y1 and M2_x1_y5 determine the split-power scale, with the paper's lambda and Table II height ratios fixed.
 Heights use first-mode amplitude at activation multiplied by its shape at the obstacle.
 M3, other positions, and weak M2_x1_y9 are held out from collision fitting.
-These settings are inferred from audio, and the unpublished author implementation remains unknown.
+These settings are inferred from audio.
 
 The physical reference fits precontact M1_x1_y9 on 46 segments with wave speed 410.634047 and stiffness 1.3399786.
 Its fitted loss0 is 0.0500082708 and loss1 is 0.00206600956, in the units above.
@@ -106,7 +104,7 @@ At 0.51–0.59 s, strong midpoint first-mode peaks are 273.37/539.00 Hz for the 
 Literal Equation 16 produces a dominant upper component at 416.03 Hz.
 Some moderate cases exceed relative waveform error 1 because frequency-shift phase accumulates differently despite similar spectra.
 The five-twelfths case also retains a substantial spectral mismatch.
-Individual errors remain in the manifest and listening pairs, and perceptual equivalence remains untested.
+The manifest records individual errors; perceptual equivalence is untested.
 
 ## Validation and performance
 

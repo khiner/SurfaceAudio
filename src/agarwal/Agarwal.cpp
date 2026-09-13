@@ -90,7 +90,7 @@ void BuildUnchecked(const ImpulseResponses &responses, double morph, std::span<f
         for (uint32_t lag = 0; lag < responses.TapCount; ++lag) output[lag] += float(responses.ObjectGain * responses.Object.Amplitudes[mode * responses.TapCount + lag] * std::sin(omega * lag));
     }
 }
-} // namespace
+}
 
 double Alpha(double normal_force, const ConstraintSettings &settings) {
     Require(Nonnegative(normal_force), "Agarwal normal force must be finite and nonnegative");
@@ -220,4 +220,4 @@ std::vector<double> ExponentialEnvelopes(std::span<const double> amplitude, std:
     return result;
 }
 
-} // namespace surface_audio::agarwal
+}

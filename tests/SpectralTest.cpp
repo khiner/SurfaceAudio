@@ -17,7 +17,6 @@ void Require(bool condition, const char *message) {
     if (!condition) throw std::runtime_error(message);
 }
 
-// Scalar double direct DFT, with no FFT implementation or GPU intermediates.
 std::vector<double> Magnitudes(std::span<const double> waveform, uint32_t size, SpectralLossOptions options) {
     const uint32_t hop = size / options.HopDivisor, frames = 1 + uint32_t(waveform.size()) / hop, bins = size / 2 + 1;
     std::vector<double> result(size_t(frames) * bins);
@@ -183,7 +182,7 @@ void NarrowbandTest(Gpu &gpu) {
         for (uint32_t index = 0; index < 5; ++index) maximum_error = std::max(maximum_error, std::abs(actual[index] - expected[index]));
         std::cout << std::setprecision(12) << "Default-floor narrowband bin " << bin << " GPU loss " << actual[0] << ", direct DFT " << expected[0] << ", maximum part error " << maximum_error << '\n';
         Require(maximum_error < 2e-5, "Default-floor narrowband spectral loss versus direct DFT");
-        // Perturb one edge sample so the oracle also probes near-floor bins.
+        // An edge-sample perturbation exercises bins near the magnitude floor.
         std::vector<double> plus(values), minus(values);
         plus.front() += 1e-10;
         minus.front() -= 1e-10;
@@ -195,7 +194,7 @@ void NarrowbandTest(Gpu &gpu) {
     }
 }
 
-} // namespace
+}
 
 int main() {
     try {

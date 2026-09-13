@@ -23,9 +23,10 @@ double BesselI0(double x) {
 void ValidateFactor(uint32_t factor) {
     if (!factor || factor > 128) throw std::invalid_argument("Invalid decimation factor");
 }
-} // namespace
+}
 
 std::vector<double> KaiserDecimateCoefficients(uint32_t factor) {
+    // Cutoff .475/factor cycles/input sample and radius 64*factor use Kaiser beta 10.
     ValidateFactor(factor);
     if (factor == 1) return {1};
     const uint32_t radius{64 * factor};
@@ -60,4 +61,4 @@ void DispatchDecimateGpu(Gpu &gpu, const GpuDecimatePlan &plan, GpuBuffer input,
     if (plan.Factor == 1) DispatchGpu(gpu, plan.Kernel, bindings, {plan.OutputFrames, plan.Channels}, {64});
     else DispatchGroupsGpu(gpu, plan.Kernel, bindings, {plan.OutputFrames, plan.Channels}, {128});
 }
-} // namespace surface_audio
+}

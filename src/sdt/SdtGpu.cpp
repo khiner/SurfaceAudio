@@ -27,4 +27,4 @@ void ValidateGpuContactStates(std::span<const GpuContactState> states) {
         if (states[index].Error != GpuContactError::None) throw std::domain_error("SDT GPU contact " + std::to_string(index) + " exceeded the affine prediction domain");
     }
 }
-} // namespace surface_audio::sdt
+}

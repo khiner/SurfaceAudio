@@ -24,7 +24,7 @@ struct ReferenceState {
     double Distance{};
 };
 
-// Equation (4), with SI material properties. Both Poisson ratios must lie in (-1, .5).
+// Returns Equation (4) stiffness from SI inputs, requiring both Poisson ratios in (-1, .5).
 double ContactStiffness(double radius, double young_exciter, double poisson_exciter, double young_resonator, double poisson_resonator);
 double ContactForce(const ReferenceParameters &parameters, double compression, double velocity);
 std::vector<double> FractalSurface(unsigned sample_count, double power_exponent, double maximum_height, uint64_t seed);
@@ -38,4 +38,4 @@ struct ContactMeasurement {
 };
 ContactMeasurement MeasureContact(const ReferenceParameters &parameters, double input_velocity);
 
-} // namespace surface_audio::conan
+}

@@ -124,7 +124,6 @@ int main(int argc, char **argv) {
             if (response.SampleRate != 44100 || response.Channels != 1) throw std::runtime_error("Response must be mono 44100 Hz");
         const auto render_responses = [&](std::span<const float> force, const std::string &name) {
             for (size_t index = 0; index < responses.size(); ++index) {
-                // Four seconds of newly generated force followed by the complete response tail.
                 const auto sound = ConvolveFixedGpu(gpu, force.first(4 * 44100), responses[index].Samples);
                 WriteWave(output / (name + "-ir" + std::to_string(index + 1) + ".wav"), 44100, 1, sound);
             }

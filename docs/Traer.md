@@ -2,7 +2,7 @@
 
 Implements [Traer, Cusimano and McDermott's rigid-body impacts and scrapes][paper].
 The model includes cosine resonances, noise transients, joint Gaussian sampling, spring impacts and spatially varying responses.
-Comparisons execute later TDW author code; the original 2019 listening experiments remain unreproduced.
+Comparisons execute later TDW author code.
 
 ```sh
 cmake --build build --target TraerTest traerReproduce -j8
@@ -40,8 +40,8 @@ Depth derivatives use centered finite differences and linear interpolation with 
 Profile quilting joins measured rows using overlap-error selection and a linear crossfade; overlap length is an explicit implementation choice.
 
 Equation 9 interpolates response amplitudes between neighboring centerpoints while preserving modal frequencies and decays.
-Current output-time position selects the response for every convolution lag, with endpoint clamping and the final position held through the tail.
-Shared Metal FIR convolution and signal interpolation implement this linear combination without a time-varying FIR matrix.
+Current output-time position selects the response for every convolution lag, with endpoint clamping and the final position repeated through the tail.
+Shared Metal FIR convolution and signal interpolation evaluate the response mixture.
 
 ## Source comparisons and limitations
 
@@ -54,7 +54,7 @@ At the paper's 0.7 g pellet mass this produces one zero sample and nonfinite nor
 
 The runner executes the original TDW `Modes`, `_get_object_modes` and `_synth_impact_modes` bodies with isolated imports and decorators.
 Four materials and two masses produce eight full-waveform comparisons with original sampled parameters and known normalization.
-Clatter source and one material file support provenance comparison; its C# program is not executed.
+Clatter contributes source and material data for provenance comparison only.
 TDW has a BSD-style two-clause license, Clatter uses Hippocratic License 3.0, and the paper is CC BY 3.0.
 
 The scrape demonstration uses a later TDW basswood profile, wood-medium modal means and prescribed back-and-forth motion.

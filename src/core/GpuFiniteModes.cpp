@@ -42,4 +42,4 @@ std::vector<float> ConvolveFiniteModesGpu(Gpu &gpu, std::span<const float> excit
     const auto samples = BufferSpan<float>(mix.Output);
     return {samples.begin(), samples.end()};
 }
-} // namespace surface_audio
+}

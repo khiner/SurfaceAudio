@@ -19,4 +19,4 @@ void EncodeModal(Gpu &gpu, const GpuModal &modal, GpuBuffer excitation) {
     const std::array bindings{GpuBinding{modal.Parameters, 0}, GpuBinding{modal.Coefficients, 1}, GpuBinding{modal.State, 2}, GpuBinding{excitation, 3}, GpuBinding{modal.Output, 4}};
     DispatchGroupsGpu(gpu, modal.Synthesize, bindings, {modal.Block.Voices}, {modal.Threads});
 }
-} // namespace surface_audio
+}

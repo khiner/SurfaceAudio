@@ -25,7 +25,6 @@ std::vector<float> Run(Gpu &gpu, std::span<const float> input, uint32_t frames, 
     const auto values = BufferSpan<float>(output);
     return {values.begin(), values.end()};
 }
-// Independent I0 integral quadrature, rather than the production power series.
 double IntegralI0(double x) {
     constexpr uint32_t intervals{1024};
     double sum{0};
@@ -158,7 +157,7 @@ void TestBufferViews(Gpu &gpu) {
         for (float value : BufferSpan<float>(output)) Near(value, .375, 3e-7, "Adjacent nonoverlapping GPU views are valid in both orders");
     }
 }
-} // namespace
+}
 int main() {
     try {
         auto gpu = CreateGpu();

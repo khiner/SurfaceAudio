@@ -23,7 +23,7 @@ ARCHIVES = {
     'content/img/VeloAnalyse.zip': '95ba720ad40b8a1a8cc634512b3db45949fb8aaa9e3854f5946285387313686b',
     'content/snd/VeloAnalyseSnd.zip': 'abc4ecd5806c465b5b327c9ac314578d2dd8f331aceb5a911729d059f34162b9',
 }
-# Explicit EPS axis limits and original PostScript tick coordinates, not raster estimates.
+# Source EPS axis limits and PostScript tick coordinates.
 AXES = {
     'aAmpli': (874, 6084, 4490, 396, 0, 100, -.96, -.925),
     'aDt': (874, 6084, 4490, 396, 0, 100, -.96, -.925),
@@ -71,8 +71,7 @@ def acquire(offline):
 
 
 def vertices(text, count):
-    # MATLAB's /MP {3 1 roll moveto 1 sub {rlineto} repeat}: deltas
-    # are consumed from the operand stack in reverse order after the starting point.
+    # MATLAB /MP consumes relative vertices from the PostScript stack in reverse order.
     assert '/MP {3 1 roll moveto 1 sub {rlineto} repeat}' in text
     result = []
     for block in re.findall(r'^([ \t]*(?:-?\d+\s+)+)MP stroke', text, re.M):
@@ -105,7 +104,6 @@ def published_curves():
         curves[name] = {'eps': str(path.relative_to(ROOT)), 'axes': dict(zip(('left', 'right', 'bottom', 'top', 'x_min', 'x_max', 'y_min', 'y_max'), axes)),
                         'one_coordinate_unit_y': (y_max - y_min) / abs(top - bottom), 'curves': decoded}
     (OUTPUT / 'published-curves.json').write_text(json.dumps(curves, indent=2) + '\n')
-    # Independently read first vertices and axis ticks from the source EPS.
     for name, expected in (('aAmpli', -.96 + (4490 - 3139) * .035 / 4094),
                            ('bAmpli', .04 + (4490 - 638) * .20 / 4094),
                            ('MuDt', 150 + (4801 - 482) * 45 / 4396)):
@@ -165,8 +163,7 @@ def prepare(curves, whole_record, eps_variance):
         holdout[:, 1] *= amplitude_gain
         amplitude = whitening(training[:-1, 1], mean_a, table['aAmpli'][index], table['bAmpli'][index])
         interval = whitening(np.diff(training[:, 0]), mean_t, table['aDt'][index], table['bDt'][index])
-        # Absolute correlation normalization is unpublished. This optional estimate
-        # assumes centered correlation sums over the associated decoded record.
+        # The unpublished normalization is approximated by centered correlation sums over the decoded record.
         estimated_intervals = (end - start) / table['MuDt'][index]
         eps_sigma_a = np.sqrt(curves['CAA']['curves'][index]['y'][100] / estimated_intervals
                               / variance_factor(table['aAmpli'][index], table['bAmpli'][index]))

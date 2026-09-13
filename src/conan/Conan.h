@@ -88,8 +88,8 @@ inline float Whiten(CONAN_THREAD const Process &process, CONAN_THREAD FilterStat
     return output;
 }
 
-// Quadratic probability spacing resolves rare residual tails without enlarging GPU parameters.
 inline float QuantileProbability(unsigned index) {
+    // Quadratic probability spacing allocates more quantiles to rare residual tails.
     const float position = static_cast<float>(index) / (QuantileCount - 1);
     return position <= .5f ? 2 * position * position : 1 - 2 * (1 - position) * (1 - position);
 }
@@ -108,8 +108,8 @@ inline float Quantile(CONAN_THREAD const Process &process, float uniform) {
     return process.Quantiles[index] + (uniform - lower) / (upper - lower) * (process.Quantiles[index + 1] - process.Quantiles[index]);
 }
 
-// Abramowitz-Stegun 26.2.17, maximum absolute CDF error 7.5e-8 before float rounding.
 inline float NormalCdf(float value) {
+    // Abramowitz-Stegun 26.2.17, maximum absolute CDF error 7.5e-8 before float rounding.
 #ifdef __METAL_VERSION__
     const float absolute = metal::abs(value);
     const float density = 0.3989422804014327f * metal::exp(-0.5f * value * value);
@@ -124,7 +124,7 @@ inline float NormalCdf(float value) {
 
 inline Event NextEvent(CONAN_THREAD const Parameters &parameters, CONAN_THREAD State &state) {
     const float gaussian = Normal(state.Random);
-    // One shared innovation is essential: independent noise destroys the amplitude/timing correlation.
+    // The shared innovation preserves amplitude/timing correlation.
     const float uniform = (parameters.Amplitude.Empirical || parameters.Interval.Empirical) ? NormalCdf(gaussian) : 0;
     const float amplitude_input = parameters.Amplitude.Empirical ? Quantile(parameters.Amplitude, uniform) : parameters.Amplitude.Sigma * gaussian;
     const float interval_input = parameters.Interval.Empirical ? Quantile(parameters.Interval, uniform) : parameters.Interval.Sigma * gaussian;
@@ -225,14 +225,14 @@ struct DurationLaw {
     double RSquared{};
 };
 
-// Fit exponent on isolated contacts, then hold it fixed while fitting rolling contacts.
+// Use the isolated-contact exponent when fitting rolling-contact durations.
 DurationLaw FitDurationLaw(std::span<const Impact> impacts, double fixed_exponent = -1);
 Fit FitProcess(std::span<const double> series, bool empirical = false);
 std::vector<Impact> ExtractImpacts(std::span<const float> force, double sample_rate, double threshold = 0);
 Parameters Calibrate(std::span<const Impact> impacts, float sample_rate, bool empirical = false, float duration_exponent = 0.29f);
 #endif
 
-} // namespace surface_audio::conan
+}
 
 #undef CONAN_THREAD
 

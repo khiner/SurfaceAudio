@@ -12,6 +12,6 @@ struct Adam {
 };
 
 Adam CreateAdam(std::span<const float> initial, std::span<const std::array<double, 2>> bounds);
-// beta1=.9, beta2=.999, epsilon=1e-8. Double master update, float output; returns clipped update count.
+// Updates double master parameters, writes float output and returns the clipped-update count.
 uint64_t UpdateAdam(Adam &, std::span<const float> gradient, std::span<float> parameters, double learning_rate);
-} // namespace surface_audio
+}

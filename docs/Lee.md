@@ -2,7 +2,7 @@
 
 Implements the [DAFx 2010 rolling source/filter method](https://www.dafx.de/paper-archive/2010/DAFx10/LeeDepalleScavone_DAFx10_P104.pdf).
 Original Lee source code, recordings, and synthesis examples remain unrecovered.
-The FoleyAutomatic comparisons are failed audio reconstruction diagnostics; numerical agreement alone does not establish a successful paper reproduction.
+The FoleyAutomatic reconstructions fail audio similarity checks despite numerical agreement.
 
 ## Run
 
@@ -42,7 +42,7 @@ The supplied 64-tap symmetric QMF satisfies equation 7 and gives near-perfect re
 Notch estimation fits three reciprocal-spectrum dB samples around each peak, with a 3 dB prominence threshold.
 Bandwidth is the full width 3 dB below the quadratic peak.
 Greedy prominence selection excludes overlapping pole bandwidths and features overlapping DC or Nyquist.
-This prevents repeated inverse filters at unresolved valleys and QMF edges; it is an explicit reconstruction choice.
+This inferred selection rule prevents repeated inverse filters at unresolved valleys and QMF edges.
 LPC gain is the square root of unnormalized prediction energy, which the paper leaves unspecified.
 
 Metal 4 accelerates contact detection filtering, contact QMF convolutions, synthesis filtering, and overlap summation.
@@ -69,12 +69,11 @@ Our recorded example is the 56–64 s rock-in-wok crop from FoleyAutomatic 2001,
 The three CGI rolling inputs use video seconds 17–20, 20.5–23.5, and 24.25–27.5 and contain little useful energy above 10 kHz.
 They use a 300 Hz cutoff, 513 taps, a 128-sample envelope, and a 0.03 relative threshold.
 Those detections are signal features; physical contact times remain unidentified.
-The four examples yield 89, 126, 145, and 13 events, respectively.
 Shared FoleyAutomatic inputs establish neither the original accelerometer conditions nor the quality of Lee's published synthesis.
 The MPEG codec further limits the references, and raw synthesis peaks can exceed unity.
 
 Tests cover independent SciPy filtering, Toeplitz LPC, onset indices, analytic notch responses, QMF reconstruction, and CPU/GPU agreement.
 They also cover crop boundaries, overlapping notches, finite output, and deterministic synthesis.
 Separate no-notch ablations expose the contribution of notch estimation.
-Full-record metrics report lost activity and spectral and envelope differences without treating these failed reconstructions as successful reproductions.
-The author video has no explicit redistribution license identified on its download page.
+Full-record metrics report lost activity and spectral and envelope differences.
+The author video has an unspecified redistribution license.

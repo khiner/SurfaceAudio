@@ -35,7 +35,6 @@ GpuTrajectoryData PrepareGpuTrajectoryData(const SurfaceGrid &surface, std::span
         return result;
     };
     const RollingSettings ball = rolling ? *rolling : RollingSettings{};
-    // Validate force parameters without preparing the surface.
     if (rolling) RollingForce({}, {.NormalForce = 0}, scraping, ball);
     else ScrapingForce({}, {.NormalForce = 0}, scraping);
     GpuTrajectoryData result{};
@@ -73,4 +72,4 @@ void ValidateGpuTrajectoryStatus(std::span<const uint32_t> status) {
     }
 }
 
-} // namespace surface_audio::agarwal
+}

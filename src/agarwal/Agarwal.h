@@ -79,7 +79,6 @@ void BuildImpulseResponse(const ImpulseResponses &responses, double morph, std::
 // Frame-major coefficients for core/Convolution.h: [frame * TapCount + lag].
 void BuildImpulseResponseBlock(const ImpulseResponses &responses, std::span<const float> morph, std::span<float> coefficients);
 
-// Exponential envelopes are an explicit convenience for modal data without measured envelopes.
 std::vector<double> ExponentialEnvelopes(std::span<const double> amplitude, std::span<const double> decay_seconds, uint32_t tap_count, double sample_rate);
 
-} // namespace surface_audio::agarwal
+}

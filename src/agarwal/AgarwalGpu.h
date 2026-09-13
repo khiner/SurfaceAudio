@@ -31,14 +31,14 @@ static_assert(sizeof(GpuTrajectoryParameters) == 88);
 struct GpuTrajectoryData {
     GpuTrajectoryParameters Parameters;
     std::vector<float> Heights;
-    // Left-edge slopes followed by top-edge slopes. Kernel buffer 6.
+    // Left-edge slopes followed by top-edge slopes in kernel buffer 6.
     std::vector<float> BoundarySlopes;
     // SoA planes: X, Y, VelocityX, VelocityY, NormalForce, each FrameCount floats.
     std::vector<float> Motions;
 };
 
 GpuTrajectoryData PrepareGpuTrajectoryData(const SurfaceGrid &surface, std::span<const Motion> motion, const ConstraintSettings &constraints, const ScrapingSettings &scraping, const RollingSettings *rolling = nullptr);
-// Status 1 means invalid rolling penetration. Status 2 means nonfinite arithmetic.
+// Reports status 1 for invalid rolling penetration and status 2 for nonfinite arithmetic.
 void ValidateGpuTrajectoryStatus(std::span<const uint32_t> status);
 
-} // namespace surface_audio::agarwal
+}

@@ -75,4 +75,4 @@ struct GpuBodyRange {
 GpuBodyRange AppendBody(const Body &body, std::vector<GpuMode> &modes, std::vector<GpuModeState> &states);
 void ValidateGpuContactStates(std::span<const GpuContactState> states);
 #endif
-} // namespace surface_audio::sdt
+}

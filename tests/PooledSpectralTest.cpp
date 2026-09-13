@@ -19,8 +19,6 @@ struct ReferenceCells {
     uint32_t Times;
 };
 
-// Independent scalar double DFT and center/bin membership; no GPU transforms,
-// regions, membership maps, target scales or reduction buffers are consulted.
 ReferenceCells Cells(std::span<const double> samples, uint32_t rate, uint32_t size, uint32_t hop, std::span<const SpectralPoolBand> bands, SpectralPoolOptions options) {
     const uint32_t times = 1 + (options.EventSamples - 1) / options.TimePoolSamples;
     ReferenceCells result{std::vector<double>(bands.size() * times), std::vector<uint32_t>(bands.size() * times), times};
@@ -30,6 +28,7 @@ ReferenceCells Cells(std::span<const double> samples, uint32_t rate, uint32_t si
             const double frequency = double(bin) * rate / size;
             for (uint32_t band = 0; band < bands.size(); ++band) {
                 if (frequency < bands[band].LowerHz || frequency >= bands[band].UpperHz) continue;
+                // Independent FP64 DFT with separately calculated frame, band and normalization weights.
                 std::complex<double> sum = 0;
                 for (uint32_t n = 0; n < size; ++n) {
                     const int64_t sample = int64_t(center) + n - size / 2;
@@ -172,7 +171,7 @@ void InvalidTest(Gpu &gpu) {
     } catch (const std::invalid_argument &) { rejected = true; }
     Require(rejected, "Overlapping pooled bins rejected");
 }
-} // namespace
+}
 
 int main() {
     try {

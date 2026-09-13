@@ -174,7 +174,7 @@ void TestInvalid() {
     } catch (const std::runtime_error &) { exhausted = true; }
     Require(exhausted && stats.ModeRejections == 1000000, "Impossible distribution stops at the explicit rejection limit");
 }
-} // namespace
+}
 
 int main() {
     try {

@@ -30,7 +30,7 @@ def modal_peak_ranking(f, power, force_power=None, smoothing_bins=9, floor_ratio
         if maximum <= 0:
             raise ValueError('Cannot rank response modes from silent in-band excitation')
         score = power / np.maximum(smoothed, maximum * floor_ratio)
-        # Anti-alias stopband zeros outside the analysis band must not set its peak threshold.
+        # Set the peak threshold within the analysis band to exclude anti-alias stopband zeros.
         prominence = score[active].max() * 1e-5
     peaks, _ = signal.find_peaks(score, distance=5, prominence=prominence)
     peaks = peaks[active[peaks]]

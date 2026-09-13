@@ -52,4 +52,4 @@ std::vector<float> ConvolveSpatialGpu(Gpu &gpu, std::span<const float> excitatio
     }
     return result;
 }
-} // namespace surface_audio::agarwal
+}

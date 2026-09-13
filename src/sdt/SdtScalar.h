@@ -134,6 +134,6 @@ template<typename T> inline T StepScraping(ScrapingParametersT<T> parameters, SD
     state.GroundTrace = ground;
     return out;
 }
-} // namespace surface_audio::sdt
+}
 
 #undef SDT_THREAD

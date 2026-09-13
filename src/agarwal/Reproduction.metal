@@ -11,7 +11,7 @@ kernel void AgarwalAtlasCurvature(constant AgarwalAtlasBlock &p [[buffer(0)]], d
     const float alpha = mix(.01f, .05f, float(level) / (p.Levels - 1));
     if (p.RelativeCorrection) {
         const float u = alpha * p.AlphaScale * raw[x], q = u * u;
-        // tanh(u)/u - 1 for |u| <= .1, without subtracting nearly equal floats.
+        // This series avoids cancellation in tanh(u)/u - 1 for |u| <= .1.
         output[index] = q * (-1.f / 3 + q * (2.f / 15 + q * (-17.f / 315 + q * (62.f / 2835 - q * 1382.f / 155925))));
         return;
     }

@@ -37,7 +37,7 @@ The library defaults to `NumericalConvention::Paper2024`.
 | Material density | Published 10059 kg/m3 | Derived from tension and the stated 137.2 m/s wave speed |
 | Torsional energy and damping work | Physical weighting | Archived `h/hT` weighting |
 
-The archive adaptation changes the numerical model and its energy weighting; its energy checks apply to that selected system.
+Energy checks apply to the selected numerical convention and its energy weighting.
 Both presets use five inclusive contacts over a 1 cm bow, simply supported transverse endpoints and fixed torsional endpoints.
 Integration defaults to 44100 Hz; `--sample-rate` selects another rate and comparison WAVs are resampled with polyphase filtering.
 The paper leaves integration rate, contact count and interpolation order unspecified; its plotted traces exhibit a 50 kHz sample lattice.
@@ -54,14 +54,13 @@ Derived solver code retains GPL-3.0-only notices.
 ## Accuracy and limits
 
 The optional author check executes the pinned MATLAB sparse matrices and Newton solve with explicit 2024 hair, friction and control substitutions.
-All eight complete CPU renders agree with that adapted execution within `1.05e-7` relative L2.
-This comparison covers the adapted archive; the original 2024 script remains unavailable.
+All eight complete CPU renders agree with the adapted archive execution within `1.05e-7` relative L2.
 Independent tests cover interpolation, reconstructed slip, hair balance, nonzero initial energy and sustained oscillation.
 The eight reconstructions have cumulative energy errors below `3e-14 J`.
 
 Spectral error is relative L2 between AC STFT magnitudes without fitted gain.
 The amplitude ratio uses standard deviation over the final 40% of each record.
-AC waveform relative L2 ranges from 0.279 to 1.288, so the published trajectories are not reproduced sample-exactly.
+AC waveform relative L2 ranges from 0.279 to 1.288 against the published trajectories.
 
 | Case | Spectral error | Sustained AC amplitude / author |
 |---|---:|---:|
@@ -80,7 +79,7 @@ Stored-energy relative L2 is `4.21e-5`, maximum energy-accounting error is `8.41
 The GPU test covers that complete transient; the printed convention has a 60 ms acceptance test and fails full-record precision agreement.
 One M5 Max Release run takes 2.77 s on FP64 CPU and 3.38 s on FP32 Metal for that complete batch.
 Both timings include mechanics and energy accounting; Metal includes kernel setup, allocation, dispatch and readback.
-These checks establish numerical agreement for the tested workload; audio-device deadlines remain unverified.
+Audio-device deadlines remain unverified.
 
 [paper]: https://doi.org/10.1121/10.0028228
 [synthesis]: https://www.mdw.ac.at/iwk/?PageId=206

@@ -1,6 +1,6 @@
 # Matusiak bowed-string friction
 
-This method implements [“Numerical modelling of elasto-plastic friction in bow–string interaction with guaranteed passivity”][paper].
+Implements [“Numerical modelling of elasto-plastic friction in bow–string interaction with guaranteed passivity”][paper].
 The paper is by Matusiak, Chatziioannou and Van Walstijn (Frontiers in Signal Processing, 2025).
 It includes a finite-width bow, transverse stiff-string motion, torsion, compliant bow hair, and implicit elasto-plastic friction.
 FP64 C++ is compared with the authors' MATLAB computation executed in GNU Octave.
@@ -14,7 +14,7 @@ python3 tools/matusiak_reproduce.py --binary build/matusiakReproduce
 ```
 
 Use `--offline` with cached references and `--author-reference` to regenerate both author computations with `octave-cli`.
-The committed fixture supports native checks without MATLAB or Octave.
+Native checks use the committed fixture.
 Use `--gpu-voices 0` for CPU-only reproduction or change the default 128-voice batch.
 WAVs, a manifest, and listening cases are saved in `outputs/reproduction/matusiak/`.
 `bridge_force.wav` stores newtons, and `bridge_listening.wav` applies one recorded gain.
@@ -53,8 +53,7 @@ The final bow-hair term in the author's `IJ_mat` adds a scalar to every entry, w
 The native solver follows Equation 59, and both original and corrected author outputs are retained.
 The corrected author run changes only this term to `1/M * 1/O3 * eye(M)`.
 Final assumed and reconstructed slip velocities differ by 4.38e-5 m/s in the original and 1.31e-15 m/s in the corrected run.
-Both runs satisfy their reported energy balance and have nonnegative bristle dissipation in this example.
-The discrepancy does not establish a passivity violation in the original run.
+Both runs satisfy the reported energy balance and have nonnegative bristle dissipation in this example.
 Against the unchanged author output, native relative waveform L2 error is 0.0276.
 Active-bin short-time spectral RMSE is 0.401 dB, and relative RMS-envelope error is 0.000495.
 
@@ -93,7 +92,7 @@ The 128-voice workload used three fresh-process M5 Max Release runs, 22050 frame
 | 1 | 0.0566 s | 2.85 s |
 | 128 | 7.40–7.89 s | 4.04–7.95 s |
 
-The single-voice row is one additional measurement.
+The single-voice row uses one measurement.
 Both paths use identical float-rounded controls.
 CPU timing includes state construction, trajectory generation, and full energy accounting, with comparison reductions excluded.
 GPU timing includes kernel creation, allocation, upload, dispatch, waiting, and readback, with global energy accounting excluded.
@@ -109,8 +108,9 @@ Each reproduction manifest records its timings and errors.
 
 The official [fast sautillé example][audio] is downloaded and decoded as `author_fast_sautille.wav` when FFmpeg is available.
 It is a separate listening reference requiring periodic force/velocity drives and a measured cello impulse response.
-Those inputs are absent from the archived code and the inspected later main revision `3c29a71bcd3b35891710b4e4642c31ec7a1be11d`.
-The matched reproduction covers the supplied 0.5 s bridge-force computation, while the sautillé recording remains unreproduced.
+Those inputs are absent from the supplied reference package.
+The matched reproduction covers the supplied 0.5 s bridge-force computation.
+The sautillé recording remains unreproduced.
 The manifest compares waveform, short-time spectrum, RMS envelope, and texture for matching computations.
 
 [paper]: https://doi.org/10.3389/frsip.2025.1525044

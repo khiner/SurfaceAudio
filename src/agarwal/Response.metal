@@ -28,7 +28,7 @@ kernel void ResponseSynthesize(constant ResponseBlock &p [[buffer(0)]], device c
     output[frame] = sum;
 }
 
-// Each group writes one parameter's 256-frame partial. A second dispatch sums partials, without atomics.
+// Dispatch one group per parameter and 256-frame block, then reduce the partial gradients.
 kernel void ResponseDifferentiate(constant ResponseBlock &p [[buffer(0)]], device const float *parameters [[buffer(1)]], device const float *noise [[buffer(2)]], device const float *adjoint [[buffer(3)]], device float *partial [[buffer(4)]], uint2 group [[threadgroup_position_in_grid]], uint lane [[thread_index_in_threadgroup]], uint simd_lane [[thread_index_in_simdgroup]], uint simd_id [[simdgroup_index_in_threadgroup]]) {
     const uint frame = group.x * 256 + lane, parameter = group.y, mode = parameter < 30 ? parameter % 10 : (parameter - 30) % p.NoiseBands;
     float value = 0;

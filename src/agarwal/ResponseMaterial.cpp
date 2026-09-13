@@ -33,7 +33,7 @@ template<size_t Dimensions, typename Valid> std::array<float, Dimensions> Draw(c
     }
     throw std::runtime_error("Response material sampling exceeded one million attempts");
 }
-} // namespace
+}
 
 ResponseMaterial FitResponseMaterial(std::span<const ResponseParameters> records) {
     if (records.size() < 2 || records.size() > std::numeric_limits<uint32_t>::max() / ResponseModeCount) throw std::invalid_argument("Response material requires at least two records");
@@ -70,4 +70,4 @@ ResponseParameters SampleResponseMaterial(const ResponseMaterial &material, Rand
     std::ranges::copy(noise, result.begin() + 30);
     return result;
 }
-} // namespace surface_audio::agarwal
+}

@@ -21,4 +21,4 @@ void Convolve(const FirBlock &p, std::span<const float> coefficients, std::span<
         output[frame] = value;
     }
 }
-} // namespace surface_audio
+}

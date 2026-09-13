@@ -101,7 +101,7 @@ void Fit(const std::filesystem::path &input, const std::filesystem::path &initia
             first[i] = .9 * first[i] + .1 * derivative;
             second[i] = .999 * second[i] + .001 * derivative * derivative;
             const double proposal = master[i] - learning_rate * scale * (first[i] / correction1) / (std::sqrt(second[i] / correction2) + 1e-8);
-            // Bounds constrain numerical inference, not the forward response equations.
+            // Bounds constrain numerical inference.
             const double lower = i < 10 ? 1 : decay ? 1e-5 :
                                                       -160;
             const double upper = i < 10 ? target.SampleRate * .5 - 1 : decay ? 20 :
@@ -148,7 +148,7 @@ void Sample(const std::filesystem::path &parameters_path, const std::filesystem:
     if (!output.parent_path().empty()) std::filesystem::create_directories(output.parent_path());
     WriteWave(output, 44100, 1, BufferSpan<float>(response.Output));
 }
-} // namespace
+}
 
 int main(int argc, char **argv) {
     try {

@@ -1,7 +1,7 @@
 # Penn Haptic Texture Toolkit
 
 Implements the texture renderer in [Culbertson et al. 2014](https://doi.org/10.1109/HAPTICS.2014.6775475).
-The [Penn release](https://repository.upenn.edu/items/c1b8168b-b8a7-4f22-9e38-6430c233a600) supplies all 100 original textures at 10 kHz and downsampled versions at 1 kHz.
+The [Penn release][release] supplies 100 original textures at 10 kHz and downsampled versions at 1 kHz.
 Outputs are tool acceleration in m/s²; listening to that signal is an audition of haptic vibration.
 Airborne radiation and haptic-device integration are outside this implementation.
 
@@ -17,7 +17,7 @@ The runner executes all 100 models at both rates and retains ten 10 kHz author/i
 Use `--keep-diagnostics` to retain every rendered texture, prepared input and coefficient trace.
 Source archives and their SHA-256 hashes are recorded in `repros/hatt/cases.json`.
 The original code is compiled with Homebrew Clang as a separate reference executable.
-Penn's data and original code carry a non-profit research license; their license remains with the downloaded inputs under `references/hatt/`.
+Penn's non-profit research license accompanies the downloaded data and source under `references/hatt/`.
 
 ## Model and API
 
@@ -45,13 +45,13 @@ A haptic caller can multiply texture acceleration by the paper's effective mass 
 `RenderGpu` interpolates controls and constructs ARMA coefficients in parallel on Metal, then filters independent voices with separate histories.
 Metal uses two float components for interpolation, polynomial construction and filter accumulation.
 The CPU path retains double precision as an independent reference.
-The GPU call includes buffer preparation, transfers, dispatch, synchronization and readback; it starts each voice from zero history.
+The GPU call starts each voice from zero history and includes preparation, transfers, dispatch, synchronization and readback.
 CPU `State` supports continuous block rendering.
 
 ## Verification and limits
 
 The reproduction compares every GPU sample with a separate NumPy implementation at both published rates.
-It also executes the original C++ interpolation routine for every trajectory sample at both rates and synthesizes its coefficients independently.
+The original C++ interpolation runs for every trajectory sample at both rates, with separate synthesis from its coefficients.
 The largest NumPy/GPU relative L2 error across 200 renders was 2.71e-8.
 At 1 kHz, the maximum difference from the executed author renderer was 1.26%; the aggregate coefficient difference was 0.0124%.
 Our double-precision real-polynomial calculation differs from its float complex-polynomial construction and float control arithmetic.
@@ -71,4 +71,6 @@ The runner records CPU interpolation, filtering, comparison and coefficient/WAV 
 The importer uses the original 10 kHz AR models and their downsampled 1 kHz ARMA counterparts.
 New Auto-PARM model identification and arbitrary-rate model conversion remain outside this renderer.
 The retained author MATLAB resampling source documents the release's zero-order-hold conversion, variance scaling and zero adjustments.
-The published model parameters retain their decimal precision; the original raw texture recordings are unnecessary for replaying these models.
+Replay uses published model parameters at their supplied decimal precision.
+
+[release]: https://repository.upenn.edu/items/c1b8168b-b8a7-4f22-9e38-6430c233a600

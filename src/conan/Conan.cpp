@@ -119,7 +119,7 @@ std::vector<Impact> ExtractImpacts(std::span<const float> force, double sample_r
         const double denominator = force[index - 1] - 2. * force[index] + force[index + 1];
         const double offset = denominator != 0 ? 0.5 * (force[index - 1] - force[index + 1]) / denominator : 0;
         const double amplitude = force[index] - 0.25 * (force[index - 1] - force[index + 1]) * offset;
-        // A neighboring minimum must not be crossed when measuring a single pulse's FWHM.
+        // Neighboring minima bound each pulse's FWHM search.
         const double half = amplitude * 0.5;
         size_t left = index, right = index;
         while (left && force[left] > half && force[left - 1] <= force[left]) --left;
@@ -193,4 +193,4 @@ Parameters Calibrate(std::span<const Impact> impacts, float sample_rate, bool em
     return parameters;
 }
 
-} // namespace surface_audio::conan
+}

@@ -17,10 +17,10 @@ The default GPU workload contains 128 trajectories with slightly different drive
 
 ## Sources and controls
 
-The publisher states that the manuscript has no associated data.
-Paper-specific author code and audio are unavailable; comparisons use independent equations and published figure constraints.
+Author code, data and audio are unavailable.
+Comparisons use independent equations and published figure constraints.
 [Reference.json](../repros/falaize/Reference.json) records the paper hash, controls, constraints and fixture hashes.
-The implementation copies no author code.
+The implementation is original C++23/Metal.
 
 Interaction examples use 96000 Hz, ten modes, twenty finite elements and contact position `0.3 L`.
 Physical and friction parameters follow Tables 1–3.
@@ -64,13 +64,12 @@ The separately labeled figure-inferred variant uses `k=13.8/0.015=920 N/m` in bo
 | Energy at 0.1 s | 0.002739 J | 0.013590 J | Approximately 0.0136 J |
 
 The 55/440 Hz variants retain the Figure 9 tension ratio of 64.
-The source implementation behind the force discrepancy remains unknown.
 
 ## Validation and timing
 
 The bow's late displacement peak is `6.0812e-5 m`, its period is `2.28125 ms`, and velocity spans `-0.1990` to `0.1114 m/s`.
 It reaches 90% sustained amplitude near `0.25 s`, within the approximate Figure 19 constraints.
-Those constraints reflect plot resolution and missing controls rather than waveform error bounds.
+Figure constraints are approximate because of plot resolution and missing controls.
 
 Independent NumPy/SciPy fixtures solve all ten modal midpoint velocities and the interaction rate with a numerical Jacobian.
 They cover 4096 consecutive samples of displacement, velocity, force and interaction state for bow and both hammer variants.

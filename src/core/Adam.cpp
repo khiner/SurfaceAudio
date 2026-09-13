@@ -27,4 +27,4 @@ uint64_t UpdateAdam(Adam &state, std::span<const float> gradient, std::span<floa
     ++state.Step;
     return bound_updates;
 }
-} // namespace surface_audio
+}

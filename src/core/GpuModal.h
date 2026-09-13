@@ -9,8 +9,7 @@ struct GpuModal {
     GpuKernel Synthesize;
     uint32_t Threads{};
 };
-// One lane per mode, padded to a power of two with at least 32 lanes.
-// Rejects banks exceeding 1024 lanes or the device kernel's threadgroup limit.
+// Requires a mode count whose power-of-two padding fits both 1024 lanes and the device threadgroup limit.
 GpuModal CreateGpuModal(Gpu &, const ModalBank &, uint32_t frames);
 void EncodeModal(Gpu &, const GpuModal &, GpuBuffer excitation);
-} // namespace surface_audio
+}

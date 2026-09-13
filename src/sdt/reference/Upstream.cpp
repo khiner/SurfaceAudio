@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
-// Numerical reference copied from SDT 0509de418e7bebc8b37866b3b4458e0acc8cf1f4. See ../NOTICE.md.
+// Numerical reference copied from SDT 0509de418e7bebc8b37866b3b4458e0acc8cf1f4; see ../NOTICE.md.
 #include "Upstream.h"
 
 namespace surface_audio::sdt::reference {

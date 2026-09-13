@@ -26,8 +26,8 @@ inline void Transform(threadgroup float2 *data, uint size, uint lane, float sign
     }
 }
 
-// Normalized (high, low) pairs reduce FFT cancellation near tonal bins' 1e-6 magnitude floor.
 inline float2 AddPrecise(float2 a, float2 b) {
+    // Normalized (high, low) pairs reduce FFT cancellation near tonal bins' 1e-6 magnitude floor.
     const float sum = a.x + b.x, virtual_b = sum - a.x;
     const float error = ((a.x - (sum - virtual_b)) + (b.x - virtual_b)) + a.y + b.y;
     const float high = sum + error;

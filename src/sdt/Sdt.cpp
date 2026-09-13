@@ -17,7 +17,7 @@ std::pair<double, double> NextState(const Body &body, size_t mode, double force)
     return {position, velocity};
 }
 
-} // namespace
+}
 
 ContactEnergyT<double> ContactEnergy(const Body &body) {
     ContactEnergyT<double> energy;
@@ -46,7 +46,7 @@ ContactSample Advance(Body &body0, Body &body1, ContactState &state, double forc
     StepBody(body1);
     return {force, Position(body0), Position(body1), Velocity(body0), Velocity(body1), Output(body0), Output(body1)};
 }
-} // namespace
+}
 
 Body MakeBody(std::span<const ModeParameters> modes, double sample_rate, double fragment_size) {
     if (modes.empty() || !std::isfinite(sample_rate) || sample_rate <= 0 || !std::isfinite(fragment_size) || fragment_size <= 0 || fragment_size > 1) throw std::invalid_argument("Invalid SDT body dimensions or sample rate");
@@ -146,4 +146,4 @@ ContactSample StepFriction(Body &body0, Body &body1, ContactState &state, Fricti
     state.Energy = 0;
     return Advance(body0, body1, state, FrictionForce(parameters, state.Friction, Velocity(body1) - Velocity(body0), noise_sample, 1 / body0.SampleRate));
 }
-} // namespace surface_audio::sdt
+}

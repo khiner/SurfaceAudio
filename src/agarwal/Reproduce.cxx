@@ -482,7 +482,7 @@ void Render(const std::filesystem::path &directory, const std::filesystem::path 
     WriteWave(prefix.string() + "-force.wav", p.SampleRate, 1, force);
     std::cout << "Rendered " << prefix << " modes=" << modes.size() << " frames=" << output.size() << '\n';
 }
-} // namespace
+}
 
 int main(int argc, char **argv) {
     try {

@@ -1,7 +1,8 @@
 # SDT attribution
 
-The SDT contact, body, and controller algorithms in this directory are adapted from commit `0509de418e7bebc8b37866b3b4458e0acc8cf1f4` of https://github.com/SkAT-VG/SDT.
-The adaptations were made September 8, 2026 and include C++ data structures, shared C++/Metal scalar stepping, an explicitly named unilateral impact extension, an analytic solution of the source contact-energy inequality, and compensated GPU state-coordinate evaluation.
+The contact, body and controller algorithms are adapted from [SDT][source], commit `0509de418e7bebc8b37866b3b4458e0acc8cf1f4`.
+Adaptations made September 8, 2026 include C++ data structures, shared C++/Metal stepping and a named unilateral-impact extension.
+They include an analytic contact-energy bound and compensated GPU state updates.
 The following upstream license notice and author list are retained verbatim.
 The complete GNU GPL version 3 is available in the repository root `LICENSE`.
 
@@ -98,3 +99,5 @@ LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING
 IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
 THE POSSIBILITY OF SUCH DAMAGE.
 ```
+
+[source]: https://github.com/SkAT-VG/SDT

@@ -89,7 +89,7 @@ def main():
         manifest.append(fetch(RAW+'add_ons/py_impact/material_data/'+material+'.json',material_path))
         manifest.append(fetch('https://mcdermottlab.mit.edu/scraping_rolling/'+audio,reference_path))
         profile=np.load(profile_path).astype('<f8').ravel(); fs,reference=wave(reference_path)
-        # One measured 4 cm patch limits the otherwise unspecified integration domain. No resampling.
+        # A 4 cm patch bounds the unspecified integration domain at the supplied sampling.
         if name!='scrape' and not args.full_profile: profile=profile[:int(.04/SPACING)+1]
         n=len(reference); t=np.arange(n)/fs; duration=n/fs; train=n if args.whole_record else int(.75*n)
         tag=name+suffix+('-whole' if args.whole_record else '')
@@ -101,7 +101,6 @@ def main():
         (directory/'coordinates.json').write_text(json.dumps(coordinate_metadata,indent=2)+'\n')
         profile.tofile(directory/'profile.f64')
         length=(len(profile)-1)*SPACING
-        # These are reconstruction choices, not recovered publication motion records.
         if name=='scrape':
             frequency=.9;phase=0.;amplitude=min(.025,.35*length)
             x=length/2-amplitude*np.cos(2*np.pi*frequency*t+phase)
@@ -129,7 +128,7 @@ def main():
         modes=np.column_stack([md['cf'],np.array(md['rt'])/np.log(1000),10**(np.array(md['op'])/20),10**(np.array(md['op'])/20)])
         np.savetxt(directory/'modes.txt',modes)
         baseline=out/(tag+'-baseline');run(args.binary,'render',directory,baseline)
-        # A single scalar sets listening level from the training interval; timbre/motion remain unfitted.
+        # Set listening gain from the training interval.
         _,y=wave(baseline.with_suffix('.wav'));p[13]=np.sqrt(np.mean(reference[:train]**2)/np.mean(y[:train]**2))
         parameters(directory,p);run(args.binary,'render',directory,baseline)
         _,y=wave(baseline.with_suffix('.wav'))
@@ -157,7 +156,7 @@ def main():
                 np.column_stack([x,velocity,normal,x/length]).astype('<f8').tofile(directory/'motion.f64')
                 run(args.binary,'prepare',directory)
                 record['motion_fit']={'frequency_hz':float(frequency),'phase_radians':float(phase),'proxy_residual_rms':float(np.sqrt(np.mean(motion_fit.fun**2)))}
-            # Estimate missing resonances from training PSD. Audio samples never become excitation or IR.
+            # Estimate missing resonances from the training PSD.
             force=np.fromfile(directory/'scrape.f32',dtype='<f4').astype(float)+k*np.fromfile(directory/'elastic.f32',dtype='<f4')+lam*np.fromfile(directory/'damping.f32',dtype='<f4')
             f,target=signal.welch(reference[:train]-reference[:train].mean(),fs,nperseg=8192)
             _,source=signal.welch(force[:train]-force[:train].mean(),fs,nperseg=8192)
@@ -168,7 +167,6 @@ def main():
             frequencies=f[peaks];decays=np.clip(1/(np.pi*widths),.002,.08)
             mask=(f>80)&(f<14000);ff=f[mask];z=np.exp(-2j*np.pi*ff/fs)
             poles=np.exp(-1/(fs*decays)+2j*np.pi*frequencies/fs)
-            # Transfer functions of finite exp-sin modes, matching the C++/Metal renderer.
             h=np.empty((len(ff),len(peaks)),complex)
             for j,pole in enumerate(poles):
                 h[:,j]=((1-(pole*z)**p[3])/(1-pole*z)-(1-(pole.conjugate()*z)**p[3])/(1-pole.conjugate()*z))/(2j)
@@ -183,8 +181,7 @@ def main():
             p[13]=1.;parameters(directory,p)
             calibrated=out/(tag+'-calibrated')
             if name!='scrape':
-                # The paper explicitly sets beta1/k/lambda by ear. Estimate beta1 and k
-                # from training envelope and DC fraction, preserving non-tensile rolling contact.
+                # Infer beta1 and k from the training envelope and DC fraction within the non-tensile contact domain.
                 audible_filter=signal.butter(3,80,fs=fs,btype='highpass',output='sos')
                 target=signal.sosfilt(audible_filter,reference[:train]);target_rms=np.sqrt(np.mean(target*target))
                 target_env=envelope(target,fs)/target_rms
@@ -206,7 +203,6 @@ def main():
                             objective=growth_fit.fun
                             if best is None or objective<best[0]:best=(float(objective),beta_candidate,k_candidate,lambda_candidate,float(growth_fit.x))
                 _,p[7],p[11],p[12],growth=best;parameters(directory,p);run(args.binary,'prepare',directory)
-                # Alternate once: refit modal amplitudes to the selected physical force mixture.
                 force=np.fromfile(directory/'scrape.f32',dtype='<f4').astype(float)+p[11]*np.fromfile(directory/'elastic.f32',dtype='<f4')+p[12]*np.fromfile(directory/'damping.f32',dtype='<f4')
                 _,source=signal.welch(force[:train]-force[:train].mean(),fs,nperseg=8192)
                 excitation=np.maximum(source[mask],source.max()*1e-10)
@@ -215,8 +211,7 @@ def main():
                 np.savetxt(directory/'modes.txt',np.column_stack([frequencies,decays,amplitudes,amplitudes*np.exp(growth)]))
                 record['force_fit']={'beta1':p[7],'stiffness':p[11],'dissipation':p[12],'log_amplitude_endpoint_ratio':growth,'audible_envelope_objective':best[0]}
                 global_modes=np.column_stack([frequencies,decays,amplitudes,amplitudes*np.exp(growth)])
-                # Fit spatial spectral change from two training subintervals. Endpoints
-                # are inferred from their force-energy-weighted mean locations.
+                # Endpoint locations are force-energy-weighted means over two training subintervals.
                 regional=[]
                 for start,end in [(0,train//2),(train//2,train)]:
                     _,regional_source=signal.welch(force[start:end]-force[start:end].mean(),fs,nperseg=8192)
@@ -246,8 +241,7 @@ def main():
                 selected=min(candidates,key=lambda candidate:candidate[0]);np.savetxt(directory/'modes.txt',selected[2])
                 record['spatial_fit']['selected']=selected[1]
                 record['spatial_fit']['rendered_training_candidates']=[{'name':c[1],'score':c[0],'audible_envelope_mse':c[3],'power_weighted_spectral_mse_db2':c[4]} for c in candidates]
-                # Stationary force-PSD multiplication misses modal onset and amplitude
-                # modulation. Fit the actual finite-convolution basis cross spectra.
+                # Finite-convolution cross spectra include modal onset and amplitude modulation.
                 chosen=selected[2];basis=[]
                 for frequency_value,decay_value,a0,a1 in chosen:
                     pole=np.exp(-1/(fs*decay_value)+2j*np.pi*frequency_value/fs)

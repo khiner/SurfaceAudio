@@ -1,5 +1,4 @@
-# Finite supplied coefficients can still overflow the recurrence. The comparison
-# must reject that output instead of accepting a NaN relative error.
+# Finite coefficients can overflow the recurrence and produce a nonfinite comparison.
 file(MAKE_DIRECTORY "${OUTPUT}")
 file(WRITE "${OUTPUT}/parameters.txt" "overflow 0.4 3e38 -0.95 0.1 0.004 0.0003 -0.95 0.1 0.001\n")
 execute_process(COMMAND "${RENDERER}" "${OUTPUT}" --parameters "${OUTPUT}/parameters.txt"

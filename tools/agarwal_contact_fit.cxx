@@ -144,7 +144,7 @@ void Fit(const std::filesystem::path &force_path, const std::filesystem::path &m
              << ",\n  \"scope\": \"Fixed finite exponential-sine contact IR; supplied force and frequencies fixed; target supplies loss only\"\n}\n";
     if (!metadata || !trace) throw std::runtime_error("Cannot write contact fitting metadata");
 }
-} // namespace
+}
 
 int main(int argc, char **argv) {
     try {

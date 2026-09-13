@@ -29,7 +29,7 @@ void Validate(std::span<const double> parameters, uint32_t frames, double sample
     for (uint32_t band = 0; band < bands; ++band)
         if (parameters[30 + bands + band] <= 0) throw std::invalid_argument("Invalid response noise RT60");
 }
-} // namespace
+}
 
 std::vector<float> CreateResponseNoise(Gpu &gpu, uint32_t frames, double sample_rate, const ResponseNoiseSettings &settings, uint32_t bands) {
     return CreateErbNoise(gpu, bands, frames, sample_rate, settings);
@@ -126,4 +126,4 @@ void EvaluateResponseGradient(std::span<const double> parameters, uint32_t frame
         }
     }
 }
-} // namespace surface_audio::agarwal
+}

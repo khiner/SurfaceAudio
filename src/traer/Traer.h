@@ -39,6 +39,6 @@ double ScrapeForce(double slope, double curvature, double velocity, double mass,
 std::vector<float> ScrapeExcitation(std::span<const double> profile, double spacing, std::span<const double> position, std::span<const double> velocity, double mass, double shear_gain, double gamma);
 // Rows are contiguous measured profiles; overlap samples are blended between selected rows.
 std::vector<double> QuiltProfile(std::span<const double> rows, uint32_t columns, uint32_t samples, uint32_t overlap, RandomState &);
-// Responses are node-major; output-time position selects the IR mixture and the tail holds the final position.
+// Requires node-major responses and uses output-time position for the IR mixture, repeating the final position through the tail.
 std::vector<float> ConvolveSpatialGpu(Gpu &, std::span<const float> excitation, std::span<const float> responses, uint32_t taps, std::span<const float> nodes, std::span<const float> positions);
 }

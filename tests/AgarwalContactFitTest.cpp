@@ -179,7 +179,7 @@ void SpectralChainTest(Gpu &gpu) {
     }
     Require(decreased, "Full-time spectral loss decreases along contact analytic gradient");
 }
-} // namespace
+}
 
 int main() {
     try {

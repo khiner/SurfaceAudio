@@ -98,4 +98,4 @@ void WriteWave(const std::filesystem::path &path, uint32_t sample_rate, uint16_t
     file.write(reinterpret_cast<const char *>(samples.data()), std::streamsize(samples.size_bytes()));
     if (!file) throw std::runtime_error("WAV write failed: " + path.string());
 }
-} // namespace surface_audio
+}

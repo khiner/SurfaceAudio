@@ -272,7 +272,7 @@ void TestSpectralChain(Gpu &gpu) {
     Require(descended, "Composed gradient decreases off-target synthetic spectral loss");
     std::cout << "Composed spectral derivative maximum error " << maximum_error << '\n';
 }
-} // namespace
+}
 
 int main() {
     try {

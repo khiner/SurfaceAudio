@@ -19,14 +19,11 @@ struct GpuPooledSpectral {
     GpuKernel ReduceEnergy{}, Compare{}, Differentiate{}, Add{};
 };
 
-// Optional inference objective, absent from the paper. Unnormalized one-sided spectral RMS, with equal bin weights.
-// Bands are [LowerHz, UpperHz), including at Nyquist. Frame centers in [0, EventSamples) form integer sample spans.
-// Empty spans are omitted; centered windows may overlap the tail.
-// R=sqrt(mean|X|^2+epsilon^2), T likewise; epsilon=MagnitudeFloor. Add Weight*mean_pools(.5*((R-T)/D)^2).
-// Fixed D=max(target whole-event band RMS, RelativeFloor*maximum target band RMS, epsilon), weighting each frame/bin equally.
-// Zero weight allocates/encodes nothing. Positive weight requires linear base loss, including its complete-tail penalty.
+// Returns an optional pooled-RMS loss workspace over [LowerHz, UpperHz) and frame centers in [0, EventSamples).
+// Positive weight requires linear base loss with complete-tail coverage; zero weight disables allocation and encoding.
+// Centered windows may overlap the tail.
 GpuPooledSpectral CreatePooledSpectral(Gpu &, const SpectralLossGpu &, std::span<const SpectralPoolBand>, SpectralPoolOptions);
-// After EncodeSpectralLoss in the same batch: add to spectral.Gradient/Loss[0], preserving the four base losses.
-// pool.Loss contains the weighted total followed by cell terms.
+// Encode after EncodeSpectralLoss in the same batch to add the adjoint and total loss while preserving base resolution losses.
+// pool.Loss stores the weighted total followed by cell losses.
 void EncodePooledSpectral(Gpu &, const SpectralLossGpu &, const GpuPooledSpectral &);
-} // namespace surface_audio
+}

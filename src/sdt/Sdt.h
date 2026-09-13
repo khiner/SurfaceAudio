@@ -18,7 +18,7 @@ struct ModeParameters {
     double Frequency{}, Decay{}, Mass{1}, ContactGain{1}, OutputGain{1};
 };
 
-// One contact pickup and one independent listening pickup per body. Zero frequency is an inertial mode.
+// Each body has separate contact and listening pickups; zero frequency denotes an inertial mode.
 struct Body {
     std::vector<double> Mass, Stiffness, B1, A1, A2, B0V, B1V, ContactGain, OutputGain, ForceGain;
     std::vector<double> PFromP, PFromV, VFromP, VFromV;
@@ -47,4 +47,4 @@ ContactEnergyT<double> ContactEnergy(const Body &body);
 void StepBody(Body &body);
 ContactSample StepImpact(Body &body0, Body &body1, ContactState &state, ImpactParameters parameters, double external0 = 0, double external1 = 0);
 ContactSample StepFriction(Body &body0, Body &body1, ContactState &state, FrictionParameters parameters, double noise_sample, double external0 = 0, double external1 = 0);
-} // namespace surface_audio::sdt
+}

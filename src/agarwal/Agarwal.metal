@@ -12,7 +12,7 @@ float AgarwalLogMix(float a, float b, float morph) {
     return exp(mix(log(a), log(b), morph));
 }
 
-// Dispatch FrameCount * TapCount threads. Each output IR belongs to the current location.
+// Dispatch FrameCount * TapCount threads for output-location IRs.
 kernel void AgarwalBuildImpulseResponses(
     constant AgarwalImpulseParameters &params [[buffer(0)]],
     device const float *frequencies [[buffer(1)]],
@@ -87,7 +87,7 @@ float3 AgarwalSampleAxis(device const float *heights, device const float *bounda
     return float3(0);
 }
 
-// One independent trajectory and force per thread. Trajectory output is five SoA planes.
+// Dispatch one thread per trajectory sample; output uses five SoA planes.
 kernel void AgarwalPrepareForces(
     constant AgarwalTrajectoryParameters &params [[buffer(0)]],
     device const float *heights [[buffer(1)]],

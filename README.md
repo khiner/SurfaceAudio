@@ -49,29 +49,12 @@ The workflow requires Python, NumPy, SciPy, Matplotlib, FFmpeg and network acces
 Use `--offline` with cached inputs and `--method NAME [NAME ...]` to select methods.
 The `--help` output lists the available method names.
 Outputs include WAVs, a listening page and run/case manifests.
-Temporary force and basis arrays are deleted after use.
-Per-method pages record author inputs, inferred settings, differences and texture/spectral comparisons.
-Matusiak 2025 compares executed author code, while Poirot and Conan CMJ compare author media using inferred parameters.
-Matusiak 2024 compares published force traces, Falaize–Roze compares figures, and Traer compares later TDW author code.
-Willemsen reproduces published figure traces and the corresponding author MATLAB source.
-Lagrange and Lee use identified FoleyAutomatic recordings, with their own published synthesis examples still unavailable.
-HaTT executes the author interpolation source with common innovations and retains ten texture comparisons.
-Nakatsuka compares reconstructed scenes with excerpts from the author’s 2016 predecessor demo under disclosed missing-input choices.
-Each method records the limits of those comparisons.
-The [Matusiak listening reference](outputs/reproduction/matusiak2024/listening/index.html) uses archived numerical conventions.
 The [combined listening page](outputs/reproduction/listening/index.html) contains the methods selected by the latest reproduction run.
-Regenerate Lagrange, Lee and Willemsen with:
+Each comparison identifies its reference: executed author code, published audio or figure traces, or a reconstruction with inferred inputs.
+Per-method documentation records the comparison scope and remaining differences.
+Willemsen's `--author-oracle` comparison requires Octave and pinned MATLAB sources.
 
-```sh
-python3 tools/Reproduce.py --method lagrange lee willemsen --author-oracle --offline
-```
-
-Willemsen's author comparison requires Octave and the cached pinned MATLAB sources.
-Lagrange and Lee use identified FoleyAutomatic input recordings; Lee retains failed audio reconstruction diagnostics.
-Lagrange uses uncompressed sources and preserves causal modal decay after the input ends.
-Per-method documentation and manifests record reconstruction limits and numerical diagnostics.
-
-The committed Agarwal input packages replay four retained rolling reconstructions and twenty fitted object responses without optimization:
+Replay the fitted Agarwal inputs for four rolling reconstructions and twenty object responses:
 
 ```sh
 python3 tools/agarwal_reproduce.py --retained
@@ -79,13 +62,12 @@ python3 tools/agarwal_response_reproduce.py --retained --output outputs/reproduc
 ```
 
 The [object-response workflow](docs/AgarwalResponseReproduction.md) covers fitting, material cohorts and rendering with measured/fitted resonators.
-Original author audio and source inputs remain under `references/`, with hashes in `docs/ReferenceInputs.json`.
+Author audio and source inputs are stored under `references/`, with hashes in `docs/ReferenceInputs.json`.
 HaTT inputs retain Penn’s non-profit research license; their terms are separate from this library’s license.
 Reproduction fixtures and inferred calibration inputs are stored under `repros/`.
 Generated outputs are Git-ignored.
-The Lagrange, Lee, Willemsen, and Conan runners discard intermediate audio and trajectories after successful checks.
-Use `python3 tools/Reproduce.py --method lagrange lee willemsen conan --keep-diagnostics --offline` to retain them.
-Failed checks preserve diagnostics; main WAVs, fitted parameters, provenance, and metrics remain available.
+Successful runs retain main WAVs, fitted parameters, provenance and metrics.
+Use `--keep-diagnostics` to retain intermediate audio and trajectories; failed checks preserve them automatically.
 Listening pages link to canonical raw WAVs and share identical level-matched audio under `outputs/playback/`.
 Rebuilding a page removes playback files that ordinary pages no longer reference.
 Use `BuildListeningReport.py --freeze` for a self-contained review snapshot.
@@ -93,7 +75,6 @@ Use `BuildListeningReport.py --freeze` for a self-contained review snapshot.
 ## Performance and scope
 
 [Timings and numerical limits](docs/Validation.md) gives the measured workloads, errors and verification commands.
-[ContactAudioMethodRanking.md](ContactAudioMethodRanking.md) records the remaining paper queue.
 The shared core provides Metal execution, FFT/FIR convolution, resampling, modal filtering, ESPRIT/LPC analysis, random streams and WAV I/O.
 Real-time deadlines, arbitrary-material accuracy and perceptual equivalence remain unverified.
 Raw WAVs retain gain and can exceed [-1, 1].

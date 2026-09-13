@@ -114,8 +114,7 @@ static void TestSpatial(Gpu &gpu) {
         long_fixture.Amplitude1[lag] = .03 * decay * (1 + .3 * std::cos(.0019 * lag));
         long_fixture.ObjectAmplitude[lag] = .01 * decay * (1 + .1 * std::sin(.0033 * lag));
     }
-    // At 12.4 kHz and a quarter-second lag, float phase arguments reach 19,476
-    // radians. Keep a separate 0.2% relative bound for this long-lag precision check.
+    // The 19,476-radian FP32 phase argument requires a separate 0.2% relative error bound.
     CheckOracle(ConvolveSpatialGpu(gpu, impulse, location, long_fixture.Responses(), 256), Oracle(impulse, location, long_fixture.Responses(), 1), 1e-4, .002);
     const auto single = MakeFixture(1, 2, 1);
     const auto zero = ConvolveSpatialGpu(gpu, force, morph, single.Responses(), 37);

@@ -158,8 +158,7 @@ void SpectralChainTest(Gpu &gpu, SpectralMagnitudeScale scale) {
     };
     const double initial_loss = evaluate();
     const std::vector<float> gradient(BufferSpan<float>(state.Gradient).begin(), BufferSpan<float>(state.Gradient).end());
-    // Larger perturbations cross a near-zero real Nyquist bin in the log losses;
-    // smaller ones lose precision when subtracting float loss values.
+    // This perturbation resolves float loss differences while preserving the sign of the near-zero Nyquist bin.
     const auto steps = scale == SpectralMagnitudeScale::Linear ? std::array{.003, .001} : std::array{.0005, .0003};
     double worst_difference = 0;
     for (uint32_t endpoint = 0; endpoint < 2; ++endpoint) {
@@ -207,7 +206,7 @@ void AdamTest() {
     Require(state.Master == saved && state.Step == 1, "Invalid Adam update does not partially change state");
     Reject([&] { CreateAdam(initial, std::array{std::array{.1, 1.}, std::array{-1., 1.}}); }, "Reject Adam initial value outside bounds");
 }
-} // namespace
+}
 
 int main() {
     try {

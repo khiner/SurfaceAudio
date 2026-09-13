@@ -72,7 +72,6 @@ void TestTrajectory() {
     } catch (const std::invalid_argument &) { rejected = true; }
     Check(rejected, "Out-of-grid path must be rejected");
 
-    // A discrete curvature impulse has an independently known normalized Gaussian response.
     std::vector<double> impulse_heights(33 * 3, 0.);
     constexpr uint32_t center = 16;
     for (uint32_t row = 0; row < 3; ++row) {
@@ -247,7 +246,7 @@ void TestGpuTrajectory() {
     }
     std::ranges::fill(heights, -0.02);
     const auto invalid = run(PrepareGpuTrajectoryData(surface, std::span(motion).first(1), {}, scraping, &rolling));
-    // The first frame is released, so negative penetration does not produce contact force.
+    // Zero normal load releases contact before penetration is evaluated.
     ValidateGpuTrajectoryStatus(invalid.Status);
     motion[0].NormalForce = 1;
     const auto tensile = run(PrepareGpuTrajectoryData(surface, std::span(motion).first(1), {}, scraping, &rolling));
@@ -550,8 +549,7 @@ void TestOversampledVertical() {
     };
     for (double sigma_ratio : {.4, .2}) {
         const double sigma = sigma_ratio * width;
-        // Independent continuous truncated-Gaussian quadrature. The production sum
-        // includes ceil(width * factor), so its support converges from outside.
+        // The discrete support rounds outward and converges to this continuous truncated-Gaussian integral.
         double integral{0}, normalization{0};
         constexpr uint32_t intervals{20000};
         for (uint32_t i = 0; i <= intervals; ++i) {
@@ -788,8 +786,7 @@ void TestForceBeforeDecimation() {
     for (uint32_t n = 0; n < frames; ++n) {
         Near(BufferSpan<float>(retained)[n], BufferSpan<float>(filtered)[n * factor], 0, "Retained physical Gaussian trajectory keeps exact output grid");
         if (n > 64 && n + 64 < frames) {
-            // Squaring velocity creates .7 cycles/output-frame, above output Nyquist.
-            // Correct dense-force filtering retains its DC term and removes the alias.
+            // Squaring velocity produces DC and .7 cycles/output-frame; decimation must remove the latter.
             Near(BufferSpan<float>(output)[n], .5, 3e-6, "Nonlinear velocity-squared force precedes antialias filtering");
             const double sampled_velocity = std::cos(2 * std::numbers::pi * .35 * n);
             wrong_order_difference = std::max(wrong_order_difference, std::abs(BufferSpan<float>(output)[n] - sampled_velocity * sampled_velocity));
@@ -797,7 +794,7 @@ void TestForceBeforeDecimation() {
     }
     Check(wrong_order_difference > .4, "Filtering curvature before base-rate force evaluation cannot replace force decimation");
 }
-} // namespace
+}
 
 int main() {
     try {

@@ -19,11 +19,10 @@ struct ContactFitGpu {
     GpuKernel Synthesize, Differentiate, Reduce;
 };
 
-// Fixed finite impulse response h[k] = sum A exp(-k/(rate*tau)) sin(2*pi*f*k/rate).
-// Parameters: log amplitudes then log decay seconds; frequencies/force stay fixed. Full forceFrames+taps-1 output, unnormalized.
+// Parameters contain log amplitudes followed by log decay seconds, with fixed frequencies and force.
+// Returns a workspace for forceFrames+taps-1 unscaled output samples.
 ContactFitGpu CreateContactFitGpu(Gpu &, std::span<const float> force, std::span<const ContactFitMode>, uint32_t sample_rate, uint32_t taps);
-// Parameters must stay finite and within the named amplitude/decay bounds.
-// Caller owns Begin/Submit/Wait. Encoding reuses all buffers and never waits.
+// Requires finite, bounded parameters and a caller-managed GPU batch; encoding is allocation-free.
 void EncodeContactFit(Gpu &, const ContactFitGpu &);
 void EncodeContactFitGradient(Gpu &, const ContactFitGpu &, GpuBuffer sample_adjoint);
-} // namespace surface_audio::agarwal
+}

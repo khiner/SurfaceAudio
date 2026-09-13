@@ -3,7 +3,7 @@
 #include <metal_stdlib>
 
 namespace surface_audio {
-// Two float components preserve cancellation in high-order recursive filters on Metal.
+// Inputs and output are normalized (high, low) float pairs.
 inline metal::float2 AddExtended(metal::float2 a, metal::float2 b) {
     const float sum = a.x + b.x, remainder = sum - a.x;
     const float error = (a.x - (sum - remainder)) + (b.x - remainder) + a.y + b.y;

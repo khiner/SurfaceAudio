@@ -80,8 +80,7 @@ def main():
         reference = load(OUTPUT / f'{key}-holdout.wav')
         record = {'training': event_statistics(train), 'holdout': event_statistics(holdout),
                   'training_holdout_distance': compare_events(holdout, train), 'holdout_signal': signal_statistics(reference), 'variants': {}}
-        # The pulse-shape diagnostic uses measured held-out peak times/amplitudes,
-        # but only the training duration law. It is not a new stochastic synthesis.
+        # This diagnostic combines held-out peak times/amplitudes with the training duration law.
         model = parameters['cases'][key + '-gaussian']
         reconstructed = np.zeros(len(reference))
         for time, amplitude, _ in holdout:

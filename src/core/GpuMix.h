@@ -13,4 +13,4 @@ struct GpuMix {
 };
 GpuMix CreateGpuMix(Gpu &, MixBlock);
 void EncodeMix(Gpu &, const GpuMix &, GpuBuffer input);
-} // namespace surface_audio
+}

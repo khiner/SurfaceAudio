@@ -77,7 +77,7 @@ void Run(uint32_t voices) {
     }
     std::cout << voices << ',' << frames << ',' << modes.size() << ',' << Quantile(cpu_times, .5) << ',' << Quantile(cpu_times, .99) << ',' << Quantile(gpu_times, .5) << ',' << Quantile(gpu_times, .99) << ',' << checksum << '\n';
 }
-} // namespace
+}
 int main() {
     try {
         std::cout << "Conan + modal + mono mix, 48 kHz; allocation/compilation excluded, GPU submit/wait/readback included\nvoices,frames,modes,cpu_p50_ms,cpu_p99_ms,gpu_p50_ms,gpu_p99_ms,checksum\n";

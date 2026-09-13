@@ -181,7 +181,7 @@ void Fit(const std::filesystem::path &basis_path, const std::filesystem::path &l
     metadata << "\n}\n";
     if (!metadata || !trace) throw std::runtime_error("Cannot write endpoint fitting metadata");
 }
-} // namespace
+}
 
 int main(int argc, char **argv) {
     try {

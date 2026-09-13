@@ -1,8 +1,7 @@
 # Conan continuous interactions
 
-This method implements Conan et al., [“An Intuitive Synthesizer of Continuous-Interaction Sounds: Rubbing, Scratching, and Rolling”][paper].
+Implements Conan et al., [“An Intuitive Synthesizer of Continuous-Interaction Sounds: Rubbing, Scratching, and Rolling”][paper].
 The paper appeared in Computer Music Journal 38(4), 24–37, 2014.
-It covers rubbing, scratching, rolling, and continuous transitions through their probability distributions.
 It shares rolling calibration and stochastic primitives with the separate [TASLP rolling model](Conan.md).
 
 ```sh
@@ -49,7 +48,7 @@ Cutoff zero bypasses filtering, and velocity zero mutes force while retaining st
 The object uses the shared exponentially decaying sinusoidal modal bank described on page 32.
 Source, filter, and resonator states persist across controls and blocks.
 At the requested end, the renderer discards pending source pulses and retains modal decay to 60 dB attenuation.
-CPU and Metal share the source recurrence, with sequential time steps per voice and independent voices parallelized on Metal.
+CPU and Metal share the source recurrence; Metal processes independent voices in parallel.
 
 ## Author inputs and inferred settings
 
@@ -79,8 +78,7 @@ Its audio is held out from calibration.
 
 `ContinuousTest` checks mixture CDFs, 150000-event statistics, ARMA variance, an FP64 signed-pulse reference, filter response, and invalid controls.
 It also checks exact CPU block partitioning and retained CPU/Metal state through action transitions.
-The 4-voice, 40-block, 127-frame comparison had relative L2 error 2.94481e-5 and maximum error 7.31409e-4.
-The respective limits are 0.003 and 0.025.
+The 4-voice, 40-block, 127-frame CPU/Metal comparison has relative L2 error 2.94e-5 and maximum error 7.31e-4.
 
 The following comparisons use new stochastic realizations at 44100 Hz.
 PSD error uses normalized Welch spectra from 80 to 12000 Hz with a reference-relative floor of -60 dB.
@@ -100,8 +98,6 @@ Scratching is too intermittent, with local envelope fluctuation 0.880 versus 0.5
 Rolling has less broadband energy and a higher median per-frame top-three-bin fraction, 0.420 versus 0.350.
 Rubbing has higher spectral flatness despite similar envelope CV.
 Texture metrics record these differences, and perceptual equivalence remains unestablished.
-Selected clips have zero duration clamps, with 146/5968 short intervals clamped for scratching and 174/10245 for transition.
-The A/B page retains raw examples and labels listening gain.
 
 ## Performance
 
@@ -117,7 +113,6 @@ Three fresh-process M5 Max Release runs with Homebrew Clang 23.1.0 measured thes
 | 1 | 0.345–0.363 ms | 6.487–20.135 ms | 9.94e-4 | 0.00356 |
 | 64 | 29.780–32.282 ms | 39.014–90.572 ms | 1.75e-4 | 0.01573 |
 
-All runs passed the 0.003 relative and 0.025 absolute waveform limits.
 CPU execution was faster at both workloads.
 Modal filtering, live audio transport, and block scheduling are outside this timing scope.
 Measurements are retained in `outputs/reproduction/continuous/benchmark.json`.

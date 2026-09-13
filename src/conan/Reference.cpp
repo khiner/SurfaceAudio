@@ -146,4 +146,4 @@ ContactMeasurement MeasureContact(const ReferenceParameters &parameters, double 
     throw std::runtime_error("Contact did not separate within ten seconds");
 }
 
-} // namespace surface_audio::conan
+}

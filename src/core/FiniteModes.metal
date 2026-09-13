@@ -5,8 +5,8 @@ struct FiniteModalBlock {
     uint Frames, ForceFrames, Modes, Taps;
 };
 
-// Subtracting p^Taps times the delayed input truncates each exponential-sine response exactly.
 kernel void FiniteModalConvolve(constant FiniteModalBlock &p [[buffer(0)]], device const float *coefficients [[buffer(1)]], device const float *force [[buffer(2)]], device const float *morph [[buffer(3)]], device float *output [[buffer(4)]], uint mode [[thread_position_in_grid]]) {
+    // Subtracting p^Taps times the delayed input truncates each exponential-sine response exactly.
     if (mode >= p.Modes) return;
     const float pr = coefficients[mode], pi = coefficients[p.Modes + mode], kr = coefficients[2 * p.Modes + mode], ki = coefficients[3 * p.Modes + mode];
     const float a0 = coefficients[4 * p.Modes + mode], a1 = coefficients[5 * p.Modes + mode];

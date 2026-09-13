@@ -54,7 +54,6 @@ def comparison(reference, output):
         kwargs = dict(fs=rate, window=("kaiser", 5), nperseg=2048, noverlap=1800, boundary=None)
         ma, mb = np.abs(stft(a, **kwargs)[2]), np.abs(stft(b, **kwargs)[2])
         result["windows"][name] = {"waveform_relative_error": float(np.linalg.norm(a - b) / max(np.linalg.norm(a), 1e-30)), "spectrogram_relative_error": float(np.linalg.norm(ma - mb) / max(np.linalg.norm(ma), 1e-30)), "author_texture": texture_metrics(rate, a[:, None]), "ours_texture": texture_metrics(rate, b[:, None])}
-    # Measure first-mode sidebands separately from aggregate spectral error.
     result["first_mode_peaks_hz"] = []
     for begin in [.51, .6, .8]:
         peaks = []

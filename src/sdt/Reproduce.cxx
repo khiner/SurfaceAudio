@@ -46,7 +46,7 @@ struct Signals {
 
 Signals Inputs(const Preset &preset, size_t frames, double rate) {
     Signals inputs{std::vector<float>(frames), std::vector<float>(frames), std::vector<float>(frames)};
-    // Pd 0.55-2 noise~ and lop~ scalar equations. First noise~ instance seed.
+    // Pd 0.55-2 noise~ and lop~ use the first-instance noise seed.
     uint32_t random = 307U * 1319U, sdt_random = 42;
     float last = 0, coefficient = 20 * static_cast<float>(2 * 3.14159 / rate);
     const float feedback = 1 - coefficient;
@@ -256,7 +256,7 @@ void Compare(std::ostream &json, std::span<const Trace> reference_trace, std::sp
     metric(&Trace::External);
     json << ",\"terminal_velocity0\":" << trace.back().Velocity0 << '}';
 }
-} // namespace
+}
 
 int main(int argc, char **argv) try {
     if (argc < 3 || argc > 5) throw std::invalid_argument("usage: sdtReproduce <upstream-dylib> <output-directory> [seconds=6] [sample-rate=44100]");
@@ -287,7 +287,7 @@ int main(int argc, char **argv) try {
         for (double *value : {&r.Grain, &r.Depth, &r.Mass, &r.Velocity}) pd_float(*value);
         auto &s = preset.Scrape;
         for (double *value : {&s.Grain, &s.Force, &s.Velocity}) pd_float(*value);
-        // Stribeck is not messaged by this help patch: retain the C default .1.
+        // The help patch uses the C default Stribeck value .1.
         preset.Friction.StribeckVelocity = .1;
     }
     auto gpu = CreateGpu();

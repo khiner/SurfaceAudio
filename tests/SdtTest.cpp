@@ -725,7 +725,7 @@ void PredictionDomain() {
     Check(std::memcmp(mode_states.Data, initial_modes.data(), initial_modes.size() * sizeof(GpuModeState)) == 0, "Invalid GPU contact preserves body motion state");
     for (const auto &output : BufferSpan<GpuOutput>(outputs)) Check(output.Force == 0 && output.Output0 == 0 && output.Output1 == 0, "Invalid GPU contact output is zero through the block");
 }
-} // namespace
+}
 
 int main() {
     try {

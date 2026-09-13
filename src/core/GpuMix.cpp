@@ -13,4 +13,4 @@ void EncodeMix(Gpu &gpu, const GpuMix &mix, GpuBuffer input) {
     const std::array bindings{GpuBinding{mix.Parameters, 0}, GpuBinding{input, 1}, GpuBinding{mix.Output, 2}};
     DispatchGpu(gpu, mix.Kernel, bindings, {mix.Block.Frames});
 }
-} // namespace surface_audio
+}

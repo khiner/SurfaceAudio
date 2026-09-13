@@ -1,6 +1,6 @@
 # Timings and numerical limits
 
-Verified September 10, 2026 on Apple M5 Max, macOS 26.5.2, Homebrew Clang 23.1.0 and Metal 4.
+Benchmark environment: Apple M5 Max, macOS 26.5.2, Homebrew Clang 23.1.0 and Metal 4, September 2026.
 Release uses C++23, `-O3 -mcpu=native` and Metal `-fno-fast-math`.
 Measurements cover offline workloads, with audio-device deadlines unverified.
 
@@ -21,8 +21,7 @@ cmake --build build-sanitize -j8
 UBSAN_OPTIONS=halt_on_error=1 ctest --test-dir build-sanitize --output-on-failure
 ```
 
-All 30 tests passed in Release and with host AddressSanitizer/UndefinedBehaviorSanitizer.
-They cover independent equations, gradients, statistical moments, source traces, finite tails, CPU/GPU agreement and streaming state.
+The tests cover independent equations, gradients, statistical moments, source traces, finite tails, CPU/GPU agreement and streaming state.
 Tests require a Metal device and shaders, with sanitizer coverage limited to host code.
 Run paper reproductions with `python3 tools/Reproduce.py --offline`.
 See [object-response reproduction](AgarwalResponseReproduction.md) for fitting and replay commands.
@@ -75,26 +74,12 @@ The test source contains the exact fixtures and acceptance limits.
 | Shared ESPRIT, three planted complex modes | Full-record maximum error 2.49e-14 |
 
 Independent gradient checks cover response synthesis, contact fitting, endpoint interpolation and both spectral objectives.
-The pooled spectral objective is an optional loss introduced here for inference.
 A fitted contact-interface example differs from ideal FP64 by 0.00523%.
 
-## Additional paper reproductions
+## Paper reproductions
 
-[Matusiak](Matusiak.md) records author-code comparisons, energy checks and CPU/Metal timings.
-[Poirot](Poirot.md) records equation corrections, calibrated stimuli, held-out errors and CPU/Metal timings.
-[Conan CMJ](Continuous.md) records inferred controls/responses, held-out texture comparisons and CPU/Metal timings.
-[Matusiak 2024](Matusiak2024.md) records recovered paper traces, numerical conventions and remaining waveform differences.
-Its archived-convention GPU check covers the full circle transient; the printed convention retains a 60 ms check and full-record precision failure.
-[Falaize–Roze](Falaize.md) records independent dense solves, figure constraints, inferred hammer stiffness and matched CPU/Metal workloads.
-[Traer](Traer.md) records later TDW code comparisons, independent spatial-scrape checks and matched CPU/Metal workloads.
-[Willemsen](Willemsen.md) records exact paper-era source execution, published EPS comparisons and complete CPU/Metal trajectory checks.
-[Lagrange](Lagrange.md) records independent modal/trigger equations, source recovery, causal decay and shared FFT convolution timings.
-[Lee](Lee.md) records independent notch/LPC/QMF checks, full GPU analysis/synthesis timings and contact-detection failure cases.
-These method timings were measured on September 10.
-[HaTT](Hatt.md) records all 100 published texture models at both sample rates and executed author interpolation comparisons.
-[Nakatsuka](Nakatsuka.md) records microrectangle/PBD equation checks, reconstructed scenes and missing author parameters.
-Their reproduction timings were measured on September 12.
-Texture metrics cover narrowband concentration, modulation, envelope fluctuation and amplitude statistics.
+The [method documentation](../README.md) records source comparisons, numerical errors and per-method CPU/Metal timings.
+Reproduction manifests retain complete measurements and texture metrics.
 
 ## Scope
 

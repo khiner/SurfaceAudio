@@ -3,7 +3,8 @@
 Implements modal analysis, sampled impact estimation, uncompressed contact resynthesis, and a moving comb with supplied motion.
 The [paper](https://doi.org/10.1109/TASL.2009.2038670) and [author manuscript](https://hal.science/hal-01106568/document) define the source/filter model.
 [Settings](../repros/lagrange/cases.json) and [source hashes](../repros/lagrange/sources.json) pin the reproduction inputs.
-The FoleyAutomatic corpus named in section VI-B supplies the recordings; original CIQS settings, author code, and Lagrange synthesis WAVs remain unavailable.
+The FoleyAutomatic corpus in section VI-B supplies the recordings.
+Original CIQS settings, author code and Lagrange synthesis WAVs are unavailable.
 The first two materials use a joint excitation/audio estimator that extends the paper and preserves changing spectral structure.
 Statistical trigger compression is outside the implemented scope.
 
@@ -53,7 +54,7 @@ Section III-A assigns amplitude and phase to the source and frequency and dampin
 Reproduction gains and representative impact intervals are calibrated on each input.
 Causal magnitudes use `a * exp(-d*n/fs) * sin(theta*(n+1))`, where `theta = 2*pi*f/fs`.
 This follows the available JASS 1.25 modal-filter phase convention, with its radius factor absorbed into amplitude.
-The SDK establishes a convention rather than the exact 2001 demonstration settings.
+The exact 2001 demonstration settings are unavailable.
 
 Incremental phase implements [Lagrange, Whetsell and Depalle, DAFx 2008](https://www.dafx.de/paper-archive/2008/papers/dafx08_10.pdf).
 It preserves frequencies, damping, and gain magnitudes and puts adjacent one-pole responses in quadrature at equal-magnitude crossings.
@@ -65,26 +66,19 @@ The regularized envelope estimator uses `conj(W)/(abs(W)^2+lambda^2)`, with `lam
 Equation 9 detects peaks with attack 0.999 and release 0.3; nonnegative least squares fits amplitudes including overlap and recording truncation.
 The CPU SIMD solver uses relative KKT tolerance `1e-7` and at most 1,500 FISTA iterations.
 
-The published two-pass estimator in section V-C instead inverts the decay forward and the reversed attack backward, with zero boundary states.
+The section V-C two-pass estimator inverts decay forward and reversed attack backward, starting from zero boundary states.
 Their cascade inverts the product of the sections, which differs from the concatenated Meixner window.
 The impact origin is shifted by `peak_index-1` samples.
 Iterative detection removes dominant peaks between adjacent positive local minima because the paper omits the removal boundaries.
 Each pass precedes the stopping check; original peak amplitudes are retained once.
-This configuration passes equation checks but fails rolling reconstruction quality gates:
+The published estimator passes equation checks but fails rolling reconstruction quality gates.
+Use `--audit` to collect all quality failures; the command exits unsuccessfully when any check fails.
 
-```sh
-python3 tools/lagrange_reproduce.py --offline --case trough_pass1 --case trough_pass2 \
-  --modal-gains incremental_phase --trigger-fit split_envelope --no-center-impact \
-  --audit --output /tmp/lagrange-published-audit
-```
-
-`--audit` records every quality failure and exits unsuccessfully; equation failures remain immediate errors.
-
-Overlapping oscillatory impacts can cancel, so the observed envelope differs from a sum of individual envelopes.
+Cancellation between overlapping impacts makes the observed envelope differ from a sum of individual envelopes.
 The waveform extension minimizes `0.5*||I*d-e||² + lambda*sum(d)` subject to `d>=0`.
 `I` convolves the sampled impact with coefficients, and `e` is the inverse-filtered excitation.
 The target is zero beyond the recording; the penalty is `0.001*max(I.T*e)` and the solver runs 1,200 iterations.
-Impact centering avoids accumulation of its DC component and is an explicit preprocessing extension.
+Impact centering is a preprocessing extension that prevents DC accumulation.
 Coefficients are source basis weights, with physical contact identification unverified.
 
 The joint extension fits one vector to excitation and audio:
@@ -119,11 +113,13 @@ Motion measures compare time-centered log spectra and cepstra, with separate tes
 Both cases limit post-input peak 10 ms RMS to 1% of reference RMS and tail energy to `0.0001` of output energy.
 Material 2 also limits excess power around 2,998.45 Hz to 3 dB after energy normalization.
 [Case settings](../repros/lagrange/cases.json) contain all acceptance thresholds.
-These checks establish bounded reconstruction errors; perceptual equivalence and recovered physical contacts remain unverified.
+Reconstruction errors are bounded by these checks.
+Perceptual equivalence and physical contact recovery are unverified.
 The remaining materials retain audible reconstruction differences.
 
 The three rolling crops span video seconds 17–20, 20.5–23.5, and 24.25–27.5.
 The recorded and simulated wok crops span 56–64 and 72–84 seconds.
-All retain the 44.1 kHz mono MP2 decode without resampling or gain changes; the recorded wok has silence at both ends.
+Crops preserve the 44.1 kHz mono MP2 decode and its gain.
+The recorded wok includes silence at both ends.
 No lossless source, exact CIQS excerpt, empirical parameter distributions, or impact database was recovered.
 The paper's thousand-trial table and listening study remain unreproduced.

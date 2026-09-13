@@ -23,11 +23,10 @@ struct SpectralLossGpu {
     GpuKernel Forward, FinishForward, CompareAdjoint, Overlap, Reduce;
 };
 
-// FFT sizes 4096, 1024, 256, 64 follow Agarwal section 2.2.2. Unspecified conventions: periodic Hann,
-// centered zero padding, unnormalized one-sided FFT, sqrt(power+floor^2), and summed per-resolution mean Huber loss.
-// Loss contains total then four resolution losses; Gradient is the full sample adjoint. Silence has finite loss/zero gradient.
+// Returns a workspace for four mean Huber spectral losses with centered periodic-Hann windows and unnormalized one-sided FFTs.
+// Loss stores the total followed by resolution losses; Gradient stores the full sample adjoint.
 SpectralLossGpu CreateSpectralLossGpu(Gpu &, std::span<const float> target, uint32_t sample_rate, SpectralLossOptions = {});
-// Encode after BeginGpu. Read Loss and Gradient only after SubmitGpu/WaitGpu.
-// Target transforms and allocations happen only in Create.
+// Requires an active GPU batch; read Loss and Gradient after SubmitGpu/WaitGpu.
+// Encoding reuses the allocated workspace and target transforms.
 void EncodeSpectralLoss(Gpu &, const SpectralLossGpu &, GpuBuffer waveform);
-} // namespace surface_audio
+}

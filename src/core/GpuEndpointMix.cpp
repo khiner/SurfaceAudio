@@ -8,7 +8,7 @@ namespace {
 struct EndpointMixBlock {
     uint32_t Modes, Frames, Groups;
 };
-} // namespace
+}
 
 GpuEndpointMix CreateGpuEndpointMix(Gpu &gpu, std::span<const float> basis, std::span<const float> location, std::span<const float> log_parameters) {
     if (location.empty() || location.size() > (1u << 22) || log_parameters.empty() || log_parameters.size() % 2 || log_parameters.size() > 200 || basis.size() != location.size() * (log_parameters.size() / 2)) throw std::invalid_argument("Invalid endpoint mix dimensions");
@@ -34,4 +34,4 @@ void EncodeEndpointMixGradient(Gpu &gpu, const GpuEndpointMix &state, GpuBuffer 
     const std::array reduce{GpuBinding{state.Block, 0}, GpuBinding{state.PartialGradient, 1}, GpuBinding{state.Gradient, 2}};
     DispatchGroupsGpu(gpu, state.Reduce, reduce, {state.Modes}, {256});
 }
-} // namespace surface_audio
+}

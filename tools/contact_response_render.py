@@ -36,8 +36,7 @@ def read_float(path):
 
 
 def activity(samples, frames):
-    # Exclude the gate transitions and response tail. Remove local DC so steady
-    # contact load cannot masquerade as sustained audible excitation.
+    # Measure interior AC energy to exclude ramps, response tails and steady contact load.
     block = 4410
     interior = samples[block:min(frames, len(samples)) - block].astype(np.float64)
     blocks = interior[:len(interior) // block * block].reshape(-1, block)
@@ -140,8 +139,7 @@ def main():
                 command = [str(binary), "filter", str(force_path), str(taps_path), str(destination), "44100"]
                 subprocess.run(command, check=True, cwd=ROOT)
                 rendered = read_float(destination)
-                # Independent full-record double-precision FFT oracle, including
-                # the entire response tail, validates the production GPU FIR.
+                # Independent FP64 convolution includes the complete response tail.
                 reference = fftconvolve(force.astype(np.float64), response.astype(np.float64))
                 if len(rendered) != len(reference):
                     raise RuntimeError(f"Incomplete convolution tail: {destination}")

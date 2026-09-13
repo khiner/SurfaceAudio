@@ -30,4 +30,4 @@ void WriteBinary(const std::filesystem::path &path, std::span<const T> data) {
     file.write(reinterpret_cast<const char *>(data.data()), std::streamsize(data.size_bytes()));
     if (!file) throw std::runtime_error("Cannot write " + path.string());
 }
-} // namespace surface_audio
+}
