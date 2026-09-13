@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SurfaceAudio · Listening comparisons</title>
+<style>
+:root{color-scheme:light;--ink:#26332f;--muted:#5e6d66;--line:#d5ddd6;--accent:#246753;--paper:#fff;--ground:#f5f6f2}
+*{box-sizing:border-box}
+body{margin:0;background:var(--ground);color:var(--ink);font:16px/1.55 system-ui,-apple-system,sans-serif}
+main{max-width:1080px;margin:auto;padding:40px 28px 80px}
+h1{font-size:32px;letter-spacing:-.8px;line-height:1.2;margin:0 0 14px}
+h2{font-size:13px;text-transform:uppercase;letter-spacing:.09em;color:var(--muted);margin:30px 0 10px}
+h3{font-size:17px;margin:26px 0 8px}
+h4{font-size:16px;margin:0 0 14px;font-weight:650}
+p{margin:8px 0 14px;max-width:85ch}
+a{color:var(--accent);text-underline-offset:3px}
+button,summary{cursor:pointer}
+button{font:inherit;font-size:13px;color:var(--ink);background:white;border:1px solid var(--line);border-radius:4px;padding:6px 12px}
+button:hover{background:var(--ground)}
+button:focus-visible,summary:focus-visible,a:focus-visible{outline:3px solid #508eb3;outline-offset:3px}
+.intro{color:var(--muted)}
+pre{overflow-x:auto;padding:16px;background:var(--paper);border:1px solid var(--line);border-radius:5px;font-size:14px}
+.toolbar{display:flex;flex-wrap:wrap;gap:12px 24px;align-items:center;margin:20px 0 10px;font-size:14px}
+.toolbar label{display:flex;gap:8px;align-items:center}
+.guide{font-size:14px;color:var(--muted)}
+.guide summary{width:fit-content}
+.guide p{margin-top:12px}
+.paper{border:1px solid var(--line);border-radius:5px;margin:8px 0;background:var(--paper);scroll-margin-top:12px}
+.paper>summary{list-style:none;display:flex;align-items:center;justify-content:space-between;gap:20px;padding:15px 20px;background:var(--paper);border-radius:5px}
+.paper>summary::-webkit-details-marker{display:none}
+.paper>summary:hover{background:#f0f4ee}
+.paper[open]>summary{position:sticky;top:0;z-index:10;border-bottom:1px solid var(--line);box-shadow:0 3px 8px #26332f0a}
+.paper-title{display:block;font-weight:650;font-size:17px;line-height:1.3}
+.subtitle{display:block;font-size:14px;color:var(--muted);margin-top:3px}
+.state{flex-shrink:0;text-align:right;font-size:13px;color:var(--muted)}
+.count{display:block;font-size:12px;margin-top:2px}
+.close-label,.paper[open] .open-label{display:none}
+.paper[open] .close-label{display:inline}
+.paper-body{padding:12px 22px 24px}
+.paper-intro{font-size:14px;color:var(--muted);margin:8px 0 20px}
+.links{display:flex;flex-wrap:wrap;gap:8px 20px;font-size:13px}
+.case{border-top:1px solid var(--line);padding:22px 0;scroll-margin-top:110px}
+.case:last-child{padding-bottom:0}
+.case-note{font-size:14px;color:var(--muted)}
+.players,.cohorts{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.player{min-width:0}
+.player-label{font-size:13px;display:block;min-height:2em}
+audio{display:block;width:100%;height:40px;margin:6px 0}
+.download{font-size:12px;color:var(--muted)}
+.actions{display:flex;flex-wrap:wrap;gap:12px;align-items:start;margin-top:14px}
+.analysis{flex:1;min-width:160px;font-size:13px;padding-top:5px}
+.analysis[open]{flex-basis:100%}
+.analysis img{display:block;width:100%;height:auto;margin-top:16px}
+.analysis table{border-collapse:collapse;font-variant-numeric:tabular-nums;font-size:12px;margin:14px 0;width:100%}
+th,td{text-align:left;padding:6px 10px;border-bottom:1px solid var(--line)}
+.cohorts .player{margin-bottom:20px}
+.cohort-audio{margin-top:16px;font-size:14px}
+.status{font-size:13px;color:#973c2d;margin-top:10px}
+footer{color:var(--muted);font-size:13px;margin-top:30px}
+@media(max-width:600px){main{padding:24px 14px 50px}h1{font-size:27px}.paper>summary{padding:13px 12px;gap:12px}.paper-title{font-size:15px}.subtitle{font-size:12px}.paper-body{padding:10px 14px 20px}.players,.cohorts{grid-template-columns:1fr;gap:16px}.player-label{min-height:0}.state{font-size:12px}.count{max-width:70px}.analysis table{font-size:11px}th,td{padding:5px}.links{gap:8px 14px}}
+</style>
+</head>
+<body><main>
+<section id="setup">
+<h1>SurfaceAudio · Listening comparisons</h1>
+<p>Generate the audio and listening page from the repository root.</p>
+<button id="copy-command" type="button">Copy generation command</button>
+<pre><code id="generation-command">python3 tools/Reproduce.py</code></pre>
+<p><a href="../outputs/reproduction/listening/index.html">Open the generated listening page</a></p>
+</section>
+<div id="report" hidden>
+<h1>{{TITLE}}</h1>
+<p class="intro">Explore published recordings, executed author code, and local model comparisons.</p>
+<div class="toolbar">
+<label><input id="level" type="checkbox" checked> Match playback level</label>
+<button id="collapse-all" type="button">Collapse all papers</button>
+<span>{{COUNTS}}</span>
+</div>
+<details class="guide"><summary>Playback and analysis</summary>
+<p>Playback removes each channel’s constant DC offset and uses one gain per file to target RMS 0.1, with a 0.89 peak ceiling.
+Uncheck “Match playback level” to hear the original gain and DC offset.
+Signals below 8 kHz are resampled to 48 kHz for browser playback, preserving pitch and duration.
+Raw WAV downloads preserve the original samples and sample rates.</p>
+<p>Switch A/B continues at the same elapsed time, clamped to the shorter signal’s duration.
+Independent stochastic outputs and generated cohorts have no samplewise correspondence.
+Plots normalize level; texture descriptors describe signal differences and do not establish perceptual equivalence.</p>
+</details>
+{{CONTENT}}
+<footer><a href="Metrics.json">Signal measurements</a> · <a href="Cases.json">Comparison catalog</a></footer>
+</div>
+</main>
+<script>
+document.querySelector('#copy-command')?.addEventListener('click', async event => {
+  const button = event.currentTarget, command = document.querySelector('#generation-command');
+  try {
+    await navigator.clipboard.writeText(command.textContent);
+    button.textContent = 'Copied';
+  } catch {
+    const range = document.createRange();
+    range.selectNodeContents(command);
+    window.getSelection().removeAllRanges();
+    window.getSelection().addRange(range);
+    button.textContent = 'Command selected — copy manually';
+  }
+});
+const players = [...document.querySelectorAll('audio')];
+const papers = [...document.querySelectorAll('details.paper')];
+const requests = new WeakMap();
+function stop(player) { requests.delete(player); player.pause(); }
+const metadata = new IntersectionObserver(entries => entries.forEach(entry => {
+  if (entry.isIntersecting) {
+    entry.target.preload = 'metadata';
+    if (!entry.target.readyState && entry.target.paused) entry.target.load();
+    metadata.unobserve(entry.target);
+  }
+}), {rootMargin:'200px'});
+players.forEach(player => metadata.observe(player));
+function message(player, text) {
+  const status = player.closest('.case').querySelector('.status');
+  status.textContent = text;
+}
+function seekAndPlay(player, time, play) {
+  const request = {};
+  requests.set(player, request);
+  const start = () => {
+    if (requests.get(player) !== request) return;
+    player.currentTime = Math.min(time, Math.max(0, player.duration - .01));
+    if (play) player.play().catch(error => {
+      if (requests.get(player) === request) message(player, `Playback failed: ${error.message}`);
+    });
+  };
+  if (player.readyState >= 1) start();
+  else { player.addEventListener('loadedmetadata', start, {once:true}); player.load(); }
+}
+players.forEach(player => {
+  player.addEventListener('play', () => {
+    players.forEach(other => { if (other !== player) stop(other); });
+    const section = player.closest('.case');
+    section.dataset.active = player.id;
+    message(player, '');
+  });
+  player.addEventListener('error', () => message(player, 'Audio could not be loaded. Rebuild the listening page from the retained WAVs.'));
+});
+document.querySelector('#level').addEventListener('change', event => {
+  players.forEach(player => {
+    const time = player.currentTime, playing = !player.paused;
+    stop(player);
+    player.src = event.target.checked ? player.dataset.level : player.dataset.raw;
+    if (time || playing) seekAndPlay(player, time, playing);
+  });
+});
+document.querySelectorAll('.switch').forEach(button => button.addEventListener('click', () => {
+  const section = button.closest('.case'), pair = [...section.querySelectorAll('audio')];
+  const from = pair.find(player => !player.paused) || pair.find(player => player.id === section.dataset.active) || pair[0];
+  const to = pair[(pair.indexOf(from) + 1) % pair.length], time = from.currentTime;
+  stop(from);
+  seekAndPlay(to, time, true);
+}));
+function closePaper(paper) {
+  const top = paper.getBoundingClientRect().top;
+  paper.querySelectorAll('audio').forEach(stop);
+  paper.open = false;
+  if (top < 0) paper.scrollIntoView({block:'start'});
+}
+papers.forEach(paper => paper.querySelector('summary').addEventListener('click', event => {
+  if (paper.open) { event.preventDefault(); closePaper(paper); }
+}));
+document.querySelector('#collapse-all').addEventListener('click', () => {
+  papers.forEach(closePaper);
+  window.scrollTo(0, 0);
+});
+function openAnchor() {
+  const target = document.getElementById(decodeURIComponent(location.hash.slice(1)));
+  const paper = target?.closest('.paper');
+  if (paper) { paper.open = true; requestAnimationFrame(() => target.scrollIntoView({block:'start'})); }
+}
+window.addEventListener('hashchange', openAnchor);
+openAnchor();
+</script>
+</body></html>

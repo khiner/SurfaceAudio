@@ -142,7 +142,6 @@ def main():
             shutil.rmtree(directory / 'reference')
             for pattern in ('*.f32', '*.f64', 'force.wav', 'excitation.wav'):
                 for path in directory.glob(pattern): path.unlink(missing_ok=True)
-    print(output / 'listening/index.html')
 
 
 if __name__ == '__main__':

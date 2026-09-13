@@ -280,7 +280,7 @@ def main():
     (output/'cases.json').write_text(json.dumps({'method':'matusiak2024','sample_rate':44100,'cases':listening},indent=2)+'\n')
     author_cases = [case for case in listening if '_author_' in Path(case['reference']).name]
     (output/'author-cases.json').write_text(json.dumps({'cases':author_cases},indent=2)+'\n')
-    subprocess.run([sys.executable,str(ROOT/'tools/BuildListeningReport.py'),str(output/'author-cases.json'),
+    subprocess.run([sys.executable,str(ROOT/'tools/BuildListeningReport.py'),str(output/'cases.json'),
                     '--output',str(output/'listening')],check=True,cwd=ROOT)
     if author_oracle and not author_oracle['accepted']:
         raise RuntimeError('Adapted author-source comparison failed; see manifest.json')

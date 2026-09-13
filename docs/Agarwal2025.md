@@ -10,7 +10,7 @@ After the normal CMake build:
 
 ```sh
 python3 tools/Reproduce.py --method agarwal2025 --offline
-open outputs/reproduction/agarwal2025/listening/index.html
+open outputs/reproduction/listening/index.html
 ```
 
 The workflow requires the pinned TDW surface profiles and 2023 author response recordings already used by the Agarwal reproductions.

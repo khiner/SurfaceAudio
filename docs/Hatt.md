@@ -9,7 +9,7 @@ Airborne radiation and haptic-device integration are outside this implementation
 
 ```sh
 python3 tools/Reproduce.py --method hatt
-open outputs/reproduction/hatt/listening/index.html
+open outputs/reproduction/listening/index.html
 ```
 
 Use `--offline` after the first download.

@@ -25,7 +25,7 @@ python3 tests/RenderMetricsTest.py
 ```
 
 The renderer requires mono audio and writes raw float WAVs, fitted modes, contact coefficients, and timings.
-The [listening page](../outputs/reproduction/listening/index.html) compares identified input recordings with contact reconstructions.
+The [listening page](Listen.html) compares identified input recordings with contact reconstructions.
 Inverse-filter round trips are separate numerical diagnostics and retain information such as speech from the input.
 The [manifest](../outputs/reproduction/lagrange/manifest.json) records complete-render timings, equation checks, and reconstruction metrics.
 Timings include allocations and transfers and exclude device creation and WAV I/O.

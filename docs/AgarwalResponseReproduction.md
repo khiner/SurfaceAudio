@@ -12,7 +12,7 @@ After building, replay the twenty fitted responses:
 
 ```sh
 python3 tools/agarwal_response_reproduce.py --retained --output outputs/reproduction/retained-responses
-open outputs/reproduction/retained-responses/listening/index.html
+open outputs/reproduction/listening/index.html
 ```
 
 `repros/agarwal-response/parameters.json` contains our fitted parameters, noise seeds, recording alignment and expected causal-WAV hashes.
@@ -26,7 +26,7 @@ python3 tools/agarwal_response_reproduce.py --binary build/agarwalResponseFit \
   --steps 5000 --learning-rate .001 --parameter-scale-mode log-decay \
   --loss-scale linear --align-onset --skip-loo \
   --output outputs/reproduction/agarwal-response-aligned
-open outputs/reproduction/agarwal-response-aligned/listening/index.html
+open outputs/reproduction/listening/index.html
 ```
 
 Omit `--skip-loo` for five leave-one-out folds per material, each using four training records and twenty generated samples.
@@ -34,7 +34,7 @@ Use `--case Wood_1` for one fit or `--prepare-only` for input preparation.
 Use `--sample-only` to reuse successful fits or `--analyze-only` to rebuild cohort reports.
 The latter operations verify source/preprocessing/parameter provenance before reuse.
 Initialization WAVs are regenerated from pinned parameters and checked against their original hashes when needed.
-Use `--keep-diagnostics` to retain initialization audio and its listening players.
+Use `--keep-diagnostics` to retain initialization audio.
 `--self-test` checks joint covariance, deterministic sampling, held-out exclusion and recording alignment.
 
 Use the published learning rate and physical parameter coordinates with `--steps 140000 --learning-rate 2e-6 --parameter-scale-mode physical`.
@@ -97,7 +97,7 @@ After the main paper repros and the aligned response fits above:
 
 ```sh
 python3 tools/contact_response_render.py
-open outputs/reproduction/contact-responses/listening/index.html
+open outputs/reproduction/listening/index.html
 ```
 
 The example drives measured and fitted responses with four seconds of Agarwal scraping or Conan rolling excitation.

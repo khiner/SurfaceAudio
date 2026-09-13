@@ -49,7 +49,11 @@ The workflow requires Python, NumPy, SciPy, Matplotlib, FFmpeg and network acces
 Use `--offline` with cached inputs and `--method NAME [NAME ...]` to select methods.
 The `--help` output lists the available method names.
 Outputs include WAVs, a listening page and run/case manifests.
-The [combined listening page](outputs/reproduction/listening/index.html) contains the methods selected by the latest reproduction run.
+The [listening page](docs/Listen.html) provides generation instructions and links to the combined comparisons.
+Comparisons are grouped by paper and research lineage.
+Papers open collapsed; each expanded paper has a sticky collapse control.
+`--method` selects synthesis work; the page always includes all available papers.
+Rebuild the page without synthesis with `python3 tools/BuildListeningReport.py`.
 Each comparison identifies its reference: executed author code, published audio or figure traces, or a reconstruction with inferred inputs.
 Per-method documentation records the comparison scope and remaining differences.
 Willemsen's `--author-oracle` comparison requires Octave and pinned MATLAB sources.
@@ -68,9 +72,10 @@ Reproduction fixtures and inferred calibration inputs are stored under `repros/`
 Generated outputs are Git-ignored.
 Successful runs retain main WAVs, fitted parameters, provenance and metrics.
 Use `--keep-diagnostics` to retain intermediate audio and trajectories; failed checks preserve them automatically.
-Listening pages link to canonical raw WAVs and share identical level-matched audio under `outputs/playback/`.
-Rebuilding a page removes playback files that ordinary pages no longer reference.
-Use `BuildListeningReport.py --freeze` for a self-contained review snapshot.
+The listening page links to canonical raw WAVs and shares identical level-matched audio under `outputs/playback/`.
+Rebuilding the page removes unreferenced playback copies.
+Use `python3 tools/BuildListeningReport.py --freeze --output PATH` for a new self-contained audio review snapshot.
+Supply a case manifest and a custom `--output PATH` to build a standalone comparison.
 
 ## Performance and scope
 

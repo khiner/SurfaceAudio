@@ -2,16 +2,13 @@
 """Reproduce Agarwal 2023 response fitting and joint material distributions."""
 import argparse
 import hashlib
-import html
 import json
-import os
 import pathlib
 import platform
 import shutil
 import subprocess
 import sys
 import urllib.request
-from urllib.parse import quote
 
 import numpy as np
 import scipy
@@ -270,72 +267,14 @@ def sample_cohort(binary, directory, parameters, seed, analyze_only):
     return records
 
 
-def listening_report(output, result, cases, keep_diagnostics=False):
-    import matplotlib
-    matplotlib.use('Agg')
-    import matplotlib.pyplot as plt
+def listening_report(output, result, cases):
+    from BuildListeningReport import write_report
+    from ListeningCatalog import causal_case, cohort_cases, curate
 
-    report = output / 'listening'
-    report.mkdir(exist_ok=True)
-    assets = report / 'audio'
-    assets.mkdir(exist_ok=True)
-
-    def player(path, label, name):
-        x = read_wave(path)
-        ac = x - x.mean()
-        rms, peak = np.sqrt(np.mean(ac ** 2)), np.max(np.abs(ac))
-        gain = min(.1 / rms if rms else 1., .89 / peak if peak else 1.)
-        raw_url = quote(os.path.relpath(path.resolve(), report.resolve()), safe='/')
-        wavfile.write(assets / f'{name}-level.wav', RATE, (ac * gain).astype(np.float32))
-        return f'<div>{html.escape(label)}<audio controls preload="none" src="audio/{name}-level.wav" data-level="audio/{name}-level.wav" data-raw="{raw_url}"></audio><a href="{raw_url}">Raw WAV</a></div>'
-
-    sections = []
-    for case in cases:
-        name = case['name']
-        panels = [player(pathlib.Path(case[field]), label, f'{name}-{field}') for field, label in
-                  [('reference', 'Author measured IR'), *([('initial', 'Initialization')] if keep_diagnostics else []),
-                   ('synthesis', 'Fitted on this recording')]]
-        causal = [player(pathlib.Path(case[field]), label, f'{name}-{field}') for field, label in
-                  [('prepared_reference', 'Prepared causal reference'), *([('initial_response', 'Initial causal response')] if keep_diagnostics else []),
-                   ('fitted_response', 'Fitted causal response')]]
-        offset = case['preprocessing']['onset_seconds']
-        dc = case['preprocessing']['dc_offset']
-        sections.append(f'<section><h2>{name}: calibrated reconstruction</h2><p>Full-record players restore delay {offset:.6f} seconds and DC {dc:.8f}. The raw author recording is unchanged.</p><div class="players">{"".join(panels)}</div><details><summary>Causal reference and responses</summary><div class="players">{"".join(causal)}</div></details></section>')
-    for material, data in result.get('materials', {}).items():
-        fig, axes = plt.subplots(1, 2, figsize=(11, 3.5), constrained_layout=True)
-        for key, label, color in [('author', 'Author generated', '#355e91'), ('generated', 'Our generated', '#b45309')]:
-            cohort = data[key]
-            bands = np.asarray([r['normalized_band_power'] for r in cohort])
-            db = 10 * np.log10(np.maximum(bands, 1e-12))
-            x = np.sqrt(BAND_EDGES[:-1] * BAND_EDGES[1:])
-            axes[0].semilogx(x, np.median(db, axis=0), label=label, color=color)
-            axes[0].fill_between(x, *np.quantile(db, [.1, .9], axis=0), color=color, alpha=.15)
-            times = np.sort([r['features']['t90_seconds'] for r in cohort])
-            axes[1].step(times, np.arange(1, len(times) + 1) / len(times), where='post', label=label, color=color)
-        axes[0].set(xlabel='Frequency (Hz)', ylabel='Normalized band power (dB)')
-        axes[1].set(xlabel='Time to 90% energy (seconds)', ylabel='Empirical cumulative fraction')
-        for ax in axes:
-            ax.grid(alpha=.2)
-            ax.legend()
-        fig.savefig(report / f'{material}.png', dpi=130)
-        plt.close(fig)
-        columns = []
-        for key, label in [('author', 'Author generated cohort'), ('generated', 'Our independent generated cohort')]:
-            panels = [player(pathlib.Path(row['wav']), f'{label} {i + 1}', f'{material}-{key}-{i + 1}')
-                      for i, row in enumerate(data[key])]
-            columns.append(f'<div><h3>{label}</h3>{"".join(panels)}</div>')
-        distance = data['comparison']['pooled_normalized_band_total_variation']
-        sections.append(f'<section><h2>{material}: material distribution</h2><p>Pooled spectral total variation {distance:.3f}. Curves show median and 10–90% range. Samples have independent seeds and no one-to-one correspondence.</p><img src="{material}.png" alt="Cohort spectral and decay distributions"><details><summary>Listen to all 40 cohort samples</summary><div class="cohorts">{"".join(columns)}</div></details></section>')
-    page = '''<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Agarwal 2023 response reproduction</title><style>body{font:16px/1.5 system-ui;max-width:1150px;margin:30px auto;padding:0 20px;background:#fafafa;color:#202a35}section{background:white;border:1px solid #ddd;padding:20px;margin:20px 0}audio{display:block;width:100%}.players{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}.cohorts{display:grid;grid-template-columns:1fr 1fr;gap:30px}img{width:100%}@media(max-width:650px){.players,.cohorts{grid-template-columns:1fr}}</style><h1>Agarwal 2023 response reproduction</h1><p>Measured examples are fitted directly: these are calibrated reconstructions. New material samples use joint Gaussian parameter distributions. Author and new generated samples are unpaired cohorts. Leave-one-out metrics in <a href="../metrics.json">metrics.json</a> exclude the evaluated recording from distribution fitting. They are exploratory with five examples per material, not perceptual validation.</p><p><label><input id="level" type="checkbox" checked>Match playback level and remove DC</label>. Playback copies target AC RMS 0.1 with peak ceiling 0.89. Raw audio retains recorded or synthesized gain. Cohort metrics use a common one-second crop or zero padding, including truncation of long metal recordings. Optional onset alignment subtracts median DC and trims less than 0.1% centered energy before fitting. Full-record comparisons restore the removed delay and median DC. Causal players preserve the fitted response and full remaining tail. Author measured peaks are approximately 0.9 and generated peaks approximately 0.8, consistent with separate peak normalization. Original normalization code and random seeds are unpublished. Raw RMS is descriptive; level-invariant spectrum and decay comparisons are primary.</p>'''
-    page += '\n'.join(sections)
-    page += '''<script>document.querySelectorAll('audio').forEach(a=>a.addEventListener('play',()=>document.querySelectorAll('audio').forEach(b=>{if(a!==b)b.pause()})));document.querySelector('#level').addEventListener('change',e=>document.querySelectorAll('audio').forEach(a=>{a.pause();a.src=e.target.checked?a.dataset.level:a.dataset.raw}));</script></html>'''
-    (report / 'index.html').write_text(page)
-    for path in assets.glob('*-raw.wav'):
-        path.unlink()
-    if not keep_diagnostics:
-        for pattern in ('*-initial-level.wav', '*-initial_response-level.wav'):
-            for path in assets.glob(pattern):
-                path.unlink()
+    comparisons = [curate(case, 'agarwal2023') for case in cases]
+    comparisons += [causal_case(case) for case in comparisons if 'prepared_reference' in case]
+    write_report(output / 'listening', {'title': 'Agarwal 2023 · Object responses',
+                                       'cases': comparisons + cohort_cases(result)})
 
 
 def self_test():
@@ -408,7 +347,7 @@ def main():
     parser.add_argument('--learning-rate', type=float, default=2e-6)
     parser.add_argument('--parameter-scale-mode', choices=('physical', 'scaled', 'log-decay'), default='physical',
                         help='Physical parameters, frequency/amplitude scaling, or scaling with log RT60 optimization')
-    parser.add_argument("--keep-diagnostics", action="store_true", help="Retain initialization WAVs and their listening players")
+    parser.add_argument("--keep-diagnostics", action="store_true", help="Retain initialization WAVs")
     args = parser.parse_args()
     if args.retained:
         render_retained(args.binary.resolve(), args.output.resolve())
@@ -541,13 +480,12 @@ def main():
             print(f'Analyzed {material}: pooled spectral TV {data["comparison"]["pooled_normalized_band_total_variation"]:.4f}', flush=True)
     save_json(args.output / 'metrics.json', result)
     save_json(args.output / 'cases.json', {'cases': cases})
-    listening_report(args.output, result, cases, args.keep_diagnostics)
+    listening_report(args.output, result, cases)
     if not args.keep_diagnostics:
         for case in cases:
             for field in ("initial", "initial_response"):
                 pathlib.Path(case.pop(field)).unlink(missing_ok=True)
         save_json(args.output / "cases.json", {"cases": cases})
-    print(f'Wrote {args.output / "listening/index.html"}')
 
 
 if __name__ == '__main__':

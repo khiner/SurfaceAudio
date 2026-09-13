@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build an offline audio comparison from an explicitly labeled JSON case manifest."""
+"""Build the offline paper catalog, or a standalone comparison from a JSON manifest."""
 import argparse
 import fcntl
 import hashlib
@@ -8,180 +8,283 @@ import io
 import json
 import math
 import os
-import re
 from pathlib import Path
-import subprocess
+import re
+import shutil
+from types import SimpleNamespace
 from urllib.parse import quote, unquote
 
 import matplotlib
-matplotlib.use("Agg")
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import numpy as np
 from scipy.io import wavfile
 from scipy.signal import resample_poly, welch, stft
 
 from AnalyzeRenders import metrics, read_wave, texture_metrics
+from ListeningCatalog import ROOT, OUTPUTS, PAPERS, catalog
 
 
-def spectrum(rate, samples):
-    mono = samples.mean(axis=1)
-    frequency, power = welch(mono - mono.mean(), rate, nperseg=min(8192, len(mono)))
-    return frequency, power
+def url(path, output):
+    return quote(os.path.relpath(Path(path).resolve(), output.resolve()), safe='/')
 
 
 def audio_links(root):
-    return {(page.parent / unquote(html.unescape(url))).resolve()
-            for page in root.rglob("*.html")
-            for url in re.findall(r'data-(?:raw|level)="([^"]+)"', page.read_text())}
+    return {(page.parent / unquote(html.unescape(link))).resolve()
+            for page in root.rglob('*.html')
+            for link in re.findall(r'data-(?:raw|level)="([^"]+)"', page.read_text())}
 
 
-def playback_url(rate, samples, output, cache, name):
+def playback_url(rate, samples, output, cache):
     encoded = io.BytesIO()
     wavfile.write(encoded, rate, samples.astype(np.float32))
     payload = encoded.getvalue()
-    path = cache / (hashlib.sha256(payload).hexdigest() + '.wav') if cache else output / 'audio' / name
-    if not path.exists() or path.read_bytes() != payload:
+    path = cache / (hashlib.sha256(payload).hexdigest() + '.wav')
+    if not path.exists():
         temporary = path.with_suffix('.tmp')
         temporary.write_bytes(payload)
         temporary.replace(path)
-    return quote(os.path.relpath(path.resolve(), output.resolve()), safe='/')
+    return url(path, output)
 
 
-def build_report(args, cache=None):
-    manifest = json.loads(args.manifest.read_text())
-    cases = manifest["cases"]
-    generated_wavs = {(args.output / 'audio' / f'{index:02d}-{field}-{kind}.wav').resolve()
-                      for index in range(len(cases)) for field in ('reference', 'synthesis') for kind in ('raw', 'audition', 'unscaled')}
-    if any(Path(case[field]).resolve() in generated_wavs for case in cases for field in ('reference', 'synthesis')):
-        raise ValueError('Report destinations overlap source WAVs; choose a different --output directory')
+def comparison_plot(signals, output, time_frequency):
+    key = json.dumps([(s['sha256'], label) for label, s in signals]) + str(time_frequency)
+    name = 'comparison-' + hashlib.sha256(key.encode()).hexdigest()[:20] + '.png'
+    path = output / name
+    if path.exists():
+        return name
+    fig, axes = plt.subplots(4 if time_frequency else 2, 1, figsize=(9, 9 if time_frequency else 4.5), constrained_layout=True)
+    for index, (label, data) in enumerate(signals):
+        rate, samples = read_wave(ROOT / data['source'])
+        mono = samples.mean(axis=1)
+        mono -= mono.mean()
+        rms = float(np.sqrt(np.mean(mono ** 2)))
+        window = max(1, rate // 100)
+        count = len(mono) // window
+        envelope = np.sqrt(np.mean(mono[:count * window].reshape(count, window) ** 2, axis=1))
+        color = ['#355e91', '#b45309'][index]
+        axes[0].plot((np.arange(count) + .5) * window / rate, envelope / max(rms, 1e-30), label=label, color=color, linewidth=.8)
+        frequency, power = welch(mono, rate, nperseg=min(8192, len(mono)))
+        power /= max(float(np.trapezoid(power, frequency)), 1e-30)
+        axes[1].semilogx(frequency[1:], 10 * np.log10(np.maximum(power[1:], 1e-16)), label=label, color=color, linewidth=.9)
+        if time_frequency:
+            frequencies, times, transform = stft(mono / max(rms, 1e-30), rate, nperseg=min(4096, len(mono)))
+            axes[index + 2].pcolormesh(times, frequencies, 20 * np.log10(np.maximum(abs(transform), 1e-6)),
+                                      vmin=-60, vmax=0, shading='auto', cmap='magma')
+            axes[index + 2].set(title=label, xlabel='Time (s)', ylabel='Frequency (Hz)', ylim=(40, min(10000, rate / 2)), yscale='log')
+    axes[0].set(xlabel='Time (s)', ylabel='10 ms RMS / record RMS')
+    axes[1].set(xlabel='Frequency (Hz)', ylabel='Normalized PSD (dB/Hz)', xlim=(20, 20000))
+    for axis in axes[:2]:
+        axis.grid(alpha=.2)
+        axis.legend(fontsize=7)
+    fig.savefig(path, dpi=130)
+    plt.close(fig)
+    return name
+
+
+def cohort_plot(case, output):
+    key = json.dumps([case['cohort'], case['band_edges_hz']], sort_keys=True)
+    name = 'cohort-' + hashlib.sha256(key.encode()).hexdigest()[:20] + '.png'
+    if (output / name).exists():
+        return name
+    fig, axes = plt.subplots(1, 2, figsize=(9, 3.5), constrained_layout=True)
+    edges = np.asarray(case['band_edges_hz'])
+    for key, label, color in [('author', 'Author generated', '#355e91'), ('generated', 'Our generated', '#b45309')]:
+        rows = case['cohort'][key]
+        db = 10 * np.log10(np.maximum([row['normalized_band_power'] for row in rows], 1e-12))
+        centers = np.sqrt(edges[:-1] * edges[1:])
+        axes[0].semilogx(centers, np.median(db, axis=0), label=label, color=color)
+        axes[0].fill_between(centers, *np.quantile(db, [.1, .9], axis=0), color=color, alpha=.15)
+        times = np.sort([row['features']['t90_seconds'] for row in rows])
+        axes[1].step(times, np.arange(1, len(times) + 1) / len(times), where='post', label=label, color=color)
+    axes[0].set(xlabel='Frequency (Hz)', ylabel='Normalized band power (dB)')
+    axes[1].set(xlabel='Time to 90% energy (s)', ylabel='Cumulative fraction')
+    for axis in axes:
+        axis.grid(alpha=.2)
+        axis.legend(fontsize=8)
+    fig.savefig(output / name, dpi=130)
+    plt.close(fig)
+    return name
+
+
+def build_report(args, cache, manifest):
+    papers = manifest.get('papers', [{'id': 'comparisons', 'title': manifest.get('title', 'Audio comparisons'),
+                                      'subtitle': '', 'description': manifest.get('description', ''),
+                                      'lineage': '', 'cases': manifest.get('cases', [])}])
     args.output.mkdir(parents=True, exist_ok=True)
-    assets = args.output / "audio"
-    if args.freeze:
-        assets.mkdir(exist_ok=True)
-    records, sections = [], []
-    for index, case in enumerate(cases):
-        group = case.get("group")
-        if group and (index == 0 or group != cases[index - 1].get("group")):
-            sections.append(f'<h2>{html.escape(group)}</h2>')
-        record = {"title": case["title"], "notes": case["notes"], "signals": {}}
-        time_frequency = case.get("time_frequency", False)
-        fig, axes = plt.subplots(4 if time_frequency else 2, 1, figsize=(9, 9 if time_frequency else 4.5), constrained_layout=True)
-        players = []
-        for field, label, color in [("reference", "Author / upstream reference", "#355e91"), ("synthesis", "Our synthesis", "#b45309")]:
-            label = case.get(field + "_label", label)
-            path = Path(case[field])
+    signals, records, sections, figures = {}, [], [], set()
+    previous = args.output / 'Metrics.json'
+    previous = json.loads(previous.read_text()) if previous.exists() else {}
+    previous = previous.get('signals', {}) if isinstance(previous, dict) else {}
+    player_count = 0
+
+    def player(source, label):
+        nonlocal player_count
+        path = (ROOT / source).resolve()
+        source = os.path.relpath(path, ROOT)
+        if source not in signals:
             rate, samples = read_wave(path)
-            data = {**metrics(rate, samples), "texture": texture_metrics(rate, samples)}
-            mono = samples.mean(axis=1)
-            ac = samples - samples.mean(axis=0)
-            rms = float(np.sqrt(np.mean(ac ** 2)))
-            name = f"{index:02d}-{field}"
-            raw_name = name + "-raw.wav"
+            digest = hashlib.sha256(path.read_bytes()).hexdigest()
+            old = previous.get(source, {})
+            data = old if old.get('sha256') == digest else {**metrics(rate, samples), 'texture': texture_metrics(rate, samples)}
+            raw = path
             if args.freeze:
-                subprocess.run(['/bin/cp', '-c', str(path), str(assets / raw_name)], check=True)
-                raw_url = 'audio/' + raw_name
-            else:
-                raw_url = quote(os.path.relpath(path.resolve(), args.output.resolve()), safe='/')
-            playback_rate, playback, unscaled_url = rate, samples, raw_url
+                raw = cache / (digest + '-raw.wav')
+                if not raw.exists():
+                    shutil.copyfile(path, raw)
+            raw_url = url(raw, args.output)
+            playback_rate, playback = rate, samples
             if rate < 8000:
                 playback_rate = 48000
                 divisor = math.gcd(rate, playback_rate)
                 playback = resample_poly(samples, playback_rate // divisor, rate // divisor, axis=0)
-                unscaled_url = playback_url(playback_rate, playback, args.output, cache, name + '-unscaled.wav')
-            playback_ac = playback - playback.mean(axis=0)
-            playback_rms, peak = float(np.sqrt(np.mean(playback_ac ** 2))), float(np.max(np.abs(playback_ac)))
-            gain = min(.1 / playback_rms if playback_rms else 1, .89 / peak if peak else 1)
-            level_url = playback_url(playback_rate, playback_ac * gain, args.output, cache, name + '-audition.wav')
-            data.update(source=str(path), audition_gain=gain, playback_sample_rate=playback_rate)
-            record["signals"][field] = data
-            players.append(f'<div><strong>{html.escape(label)}</strong><audio controls preload="metadata" data-raw="{unscaled_url}" data-level="{level_url}" src="{level_url}"></audio><a download href="{raw_url}">Raw WAV</a></div>')
-            window = max(1, rate // 100)
-            count = len(mono) // window
-            envelope = np.sqrt(np.mean((mono[:count * window].reshape(count, window) - mono.mean()) ** 2, axis=1))
-            axes[0].plot((np.arange(count) + .5) * window / rate, envelope / rms if rms else envelope, label=label, color=color, linewidth=.8)
-            frequency, power = spectrum(rate, samples)
-            power /= max(float(np.trapezoid(power, frequency)), 1e-30)
-            axes[1].semilogx(frequency[1:], 10 * np.log10(np.maximum(power[1:], 1e-16)), label=label, color=color, linewidth=.9)
-            if time_frequency:
-                frequencies, times, transform = stft(mono / max(rms, 1e-30), rate, nperseg=min(4096, len(mono)))
-                level = 20 * np.log10(np.maximum(abs(transform), 1e-6))
-                axis = axes[2 if field == "reference" else 3]
-                axis.pcolormesh(times, frequencies, level, vmin=-60, vmax=0, shading="auto", cmap="magma")
-                axis.set(title=label + " — spectrum over time", xlabel="Time (s)", ylabel="Frequency (Hz)",
-                         ylim=(40, min(10000, rate / 2)), yscale="log")
-        axes[0].set(xlabel="Time (s)", ylabel="10 ms RMS / record RMS")
-        axes[1].set(xlabel="Frequency (Hz)", ylabel="Normalized PSD (dB/Hz)", xlim=(20, 20000))
-        if time_frequency:
-            for axis in axes[2:]:
-                axis.set_xlim(0, max(item["duration_seconds"] for item in record["signals"].values()))
-        for axis in axes[:2]:
-            axis.grid(alpha=.2)
-            axis.legend(fontsize=8)
-        figure_name = f"{index:02d}-comparison.png"
-        fig.savefig(args.output / figure_name, dpi=130)
-        plt.close(fig)
-        source = case.get("source_url", "")
-        source_link = f'<a href="{html.escape(source, quote=True)}">Source</a>' if source else ""
-        sections.append(f'<section id="case-{index}"><h2>{html.escape(case["title"])}</h2><p>{html.escape(case["notes"])} {source_link}</p><div class="players">{"".join(players)}</div><button class="switch">Switch A/B at current time</button><img loading="lazy" src="{figure_name}" alt="Relative amplitude envelope and normalized spectral comparisons"></section>')
-        descriptors = [('frame_top3_bin_fraction_median', 'Narrowband concentration'), ('amplitude_kurtosis', 'Amplitude kurtosis'), ('envelope_cv', 'Envelope variation'), ('local_envelope_rms', 'Local envelope fluctuation')]
-        rows = []
-        for key, label in descriptors:
-            values = [record['signals'][field]['texture'][key] for field in ['reference', 'synthesis']]
-            cells = ''.join('<td>' + (f'{value:.4g}' if value is not None else 'n/a') + '</td>' for value in values)
-            rows.append(f'<tr><td>{label}</td>{cells}</tr>')
-        sections[-1] = sections[-1].replace('</section>', '<details><summary>Texture measures</summary><p>Computed over each complete case WAV using channel power, without stereo phase cancellation. Diagnostic differences, not perceptual equivalence scores.</p><table><tr><th>Descriptor</th><th>Reference</th><th>Ours</th></tr>' + ''.join(rows) + '</table></details></section>')
-        records.append(record)
-    (args.output / "Metrics.json").write_text(json.dumps(records, indent=2, allow_nan=False) + "\n")
-    page = '''<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>SurfaceAudio sound comparisons</title>
-<style>body{font:16px/1.5 system-ui;max-width:1050px;margin:32px auto;padding:0 20px;color:#202a35;background:#fafafa}section{background:white;border:1px solid #ddd;border-radius:8px;padding:22px;margin:24px 0}h1{font-size:28px}h2{font-size:21px}audio{display:block;width:100%;margin:8px 0}.players{display:grid;grid-template-columns:1fr 1fr;gap:24px}img{width:100%;height:auto}button{margin:12px 0;padding:8px}a{color:#355e91}@media(max-width:600px){.players{grid-template-columns:1fr}}</style>
-<h1>SurfaceAudio sound comparisons</h1><p>Each case identifies its reference as an input recording, a published author example, or executed author code. Shared input recordings are evaluation material, not author-generated outputs of the methods being compared.</p>
-<p><label><input id="level" type="checkbox" checked> Match playback level and remove each channel's constant DC offset</label><br>Playback copies target AC RMS 0.1 with a 0.89 peak ceiling using one constant gain and DC offset per file. Signals below 8 kHz are resampled to 48 kHz for browser playback, preserving duration and pitch. Raw WAV downloads retain the original samples and rates; case notes identify any earlier reference extraction or gain conversion. Plots normalize level for comparison; they are not perceptual equivalence scores. Spectrograms use each record's AC RMS and a common −60 to 0 dB color scale.</p>'''
-    if "title" in manifest:
-        page = page.replace("SurfaceAudio sound comparisons", html.escape(manifest["title"]))
-    if "description" in manifest:
-        page = page.replace("Each case identifies its reference as an input recording, a published author example, or executed author code. Shared input recordings are evaluation material, not author-generated outputs of the methods being compared.", html.escape(manifest["description"]))
-    page += '<details><summary>All comparisons</summary><ol>' + ''.join(f'<li><a href="#case-{index}">{html.escape(case["title"])}</a></li>' for index, case in enumerate(cases)) + '</ol></details>'
-    page += "\n".join(sections)
-    page += '''<script>
-document.querySelectorAll('audio').forEach(a=>a.addEventListener('play',()=>document.querySelectorAll('audio').forEach(b=>{if(b!==a)b.pause()})));
-document.querySelector('#level').addEventListener('change',e=>document.querySelectorAll('audio').forEach(a=>{a.pause();a.src=e.target.checked?a.dataset.level:a.dataset.raw}));
-document.querySelectorAll('.switch').forEach(button=>button.addEventListener('click',()=>{const players=button.closest('section').querySelectorAll('audio');const from=players[0].paused?players[1]:players[0],to=from===players[0]?players[1]:players[0];const t=from.currentTime;from.pause();const start=()=>{to.currentTime=Number.isFinite(to.duration)?Math.min(t,Math.max(0,to.duration-.01)):t;to.play().catch(()=>{})};if(to.readyState>=1)start();else{to.addEventListener('loadedmetadata',start,{once:true});to.load()}}));
-</script></html>'''
-    temporary_page = args.output / "index.tmp"
-    temporary_page.write_text(page)
-    temporary_page.replace(args.output / "index.html")
-    if not args.freeze:
-        sources = {Path(case[field]).resolve() for case in cases for field in ("reference", "synthesis")}
-        retained = audio_links(cache.parent) | sources
-        for path in (*assets.glob("*.wav"), *cache.glob("*.wav")):
-            if path.resolve() not in retained:
-                path.unlink()
+            unscaled = playback_url(playback_rate, playback, args.output, cache) if rate < 8000 else raw_url
+            ac = playback - playback.mean(axis=0)
+            rms, peak = float(np.sqrt(np.mean(ac ** 2))), float(np.max(np.abs(ac)))
+            gain = min(.1 / rms if rms else 1, .89 / peak if peak else 1)
+            matched = playback_url(playback_rate, ac * gain, args.output, cache)
+            signals[source] = {**data, 'source': source, 'sha256': digest, 'audition_gain': gain,
+                               'playback_sample_rate': playback_rate, 'raw_url': raw_url, 'unscaled_url': unscaled, 'matched_url': matched}
+        data = signals[source]
+        player_count += 1
+        panel = (f'<div class="player"><label class="player-label" for="audio-{player_count}">{html.escape(label)}</label>'
+                 f'<audio id="audio-{player_count}" controls preload="none" data-raw="{data["unscaled_url"]}" '
+                 f'data-level="{data["matched_url"]}" src="{data["matched_url"]}"></audio>'
+                 f'<a class="download" download href="{data["raw_url"]}">Raw WAV · {data["duration_seconds"]:.2f} s · {data["sample_rate"]:,} Hz</a></div>')
+        return panel, data
+
+    lineage = None
+    for paper in papers:
+        if paper['lineage'] != lineage:
+            lineage = paper['lineage']
+            if lineage:
+                sections.append(f'<h2>{html.escape(lineage)}</h2>')
+        links = []
+        source = paper.get('source_url', '')
+        references = list(dict.fromkeys(case['source_url'] for case in paper['cases'] if case.get('source_url') and case['source_url'] != source))
+        references = paper.get('reference_urls') or (references if len(references) <= 2 else [])
+        targets = [('Source code' if 'github.com' in source else 'Paper', source)]
+        targets += [('Reference material' + (f' {index + 1}' if len(references) > 1 else ''), target) for index, target in enumerate(references)]
+        if not args.freeze:
+            targets.append(('Method and reproduction instructions', paper.get('doc')))
+        for label, target in targets:
+            if target:
+                href = target if target.startswith(('https://', 'http://')) else url(ROOT / target, args.output)
+                links.append(f'<a href="{html.escape(href, quote=True)}">{label}</a>')
+        body = [f'<div class="paper-intro"><p>{html.escape(paper["description"])}</p><div class="links">{"".join(links)}</div></div>']
+        group = None
+        for index, case in enumerate(paper['cases']):
+            if case.get('group') != group:
+                group = case.get('group')
+                if group and group != 'Comparisons':
+                    body.append(f'<h3>{html.escape(group)}</h3>')
+            case_id = f'{paper["id"]}-{index + 1}'
+            record = {'paper': paper['id'], 'id': case_id, 'title': case['title'], 'signals': []}
+            body.append(f'<section class="case" id="{case_id}"><h4>{html.escape(case["title"])}</h4>')
+            if case.get('notes'):
+                body.append(f'<p class="case-note">{html.escape(case["notes"])}</p>')
+            if 'cohort' in case:
+                columns = []
+                for key, label in [('author', 'Author generated'), ('generated', 'Our generated')]:
+                    panels = []
+                    for number, row in enumerate(case['cohort'][key], 1):
+                        panel, data = player(row['wav'], f'{label} · {number}')
+                        panels.append(panel)
+                        record['signals'].append({'label': f'{label} · {number}', 'source': data['source']})
+                    columns.append('<div><h4>' + label + '</h4>' + ''.join(panels) + '</div>')
+                figure = cohort_plot(case, args.output)
+                body.append('<details class="cohort-audio"><summary>Listen to both collections</summary><div class="cohorts">' + ''.join(columns) + '</div></details>')
+                analysis = '<p>Spectra show the median and 10–90% range. Energy-decay distributions use a common one-second analysis window.</p>'
+                switch = ''
+            else:
+                panels, comparison = [], []
+                for field, default in [('reference', 'Reference'), ('synthesis', 'Our synthesis')]:
+                    label = case.get(field + '_label', default)
+                    panel, data = player(case[field], label)
+                    panels.append(panel)
+                    comparison.append((label, data))
+                    record['signals'].append({'label': label, 'source': data['source']})
+                body.append('<div class="players">' + ''.join(panels) + '</div>')
+                figure = comparison_plot(comparison, args.output, case.get('time_frequency', False))
+                descriptors = [('frame_top3_bin_fraction_median', 'Narrowband concentration'), ('amplitude_kurtosis', 'Amplitude kurtosis'),
+                               ('envelope_cv', 'Envelope variation'), ('local_envelope_rms', 'Local envelope fluctuation')]
+                rows = []
+                for key, label in descriptors:
+                    cells = ''.join('<td>' + (f'{data["texture"][key]:.4g}' if data['texture'][key] is not None else 'n/a') + '</td>' for _, data in comparison)
+                    rows.append(f'<tr><td>{label}</td>{cells}</tr>')
+                analysis = '<table><thead><tr><th>Texture descriptor</th>' + ''.join(f'<th>{html.escape(label)}</th>' for label, _ in comparison)
+                analysis += '</tr></thead><tbody>' + ''.join(rows) + '</tbody></table>'
+                analysis += '<p>Descriptors use the complete WAV and channel power. Envelope and spectral plots use the channel mean.</p>'
+                if case.get('time_frequency'):
+                    analysis += '<p>Spectrograms use AC RMS normalization and a shared −60 to 0 dB scale.</p>'
+                switch = '<button class="switch" type="button">Switch A/B at current time</button>'
+            figures.add(figure)
+            body.append(f'<div class="actions">{switch}<details class="analysis"><summary>Signal analysis</summary>'
+                        f'<img loading="lazy" src="{figure}" alt="{html.escape(case["title"], quote=True)}: spectral and temporal comparison">'
+                        f'{analysis}</details></div><p class="status" role="status"></p></section>')
+            records.append(record)
+        count = len(paper['cases'])
+        if not count:
+            body.append('<p>No retained audio is available. See the reproduction instructions to generate this paper’s examples.</p>')
+        noun = 'example' if count == 1 else 'examples'
+        sections.append(f'<details class="paper" id="{paper["id"]}"><summary><span><span class="paper-title">{html.escape(paper["title"])}</span>'
+                        f'<span class="subtitle">{html.escape(paper["subtitle"])}</span></span><span class="state"><span class="open-label">Expand +</span>'
+                        f'<span class="close-label">Collapse −</span><span class="count">{count} {noun}</span></span></summary>'
+                        f'<div class="paper-body">{"".join(body)}</div></details>')
+        print(f'{paper["title"]}: {count} examples', flush=True)
+    page = (ROOT / 'docs/Listen.html').read_text()
+    replacements = {'TITLE': html.escape(manifest.get('title', 'SurfaceAudio · Listening comparisons')),
+                    'COUNTS': f'{len(papers)} papers · {len(records)} examples', 'CONTENT': '\n'.join(sections)}
+    page = re.sub(r'\{\{(TITLE|COUNTS|CONTENT)\}\}', lambda match: replacements[match[1]], page)
+    page = re.sub(r'<title>.*?</title>', lambda _: '<title>' + replacements['TITLE'] + '</title>', page)
+    if records:
+        page = re.sub(r'<section id="setup">.*?</section>\n', '', page, flags=re.S)
+        page = page.replace('<div id="report" hidden>', '<div id="report">')
+    else:
+        page = page.replace('../outputs/reproduction/listening/index.html', url(OUTPUTS / 'listening/index.html', args.output))
+    (args.output / 'Metrics.json').write_text(json.dumps({'signals': signals, 'cases': records}, indent=2, allow_nan=False) + '\n')
+    (args.output / 'Cases.json').write_text(json.dumps(manifest, indent=2) + '\n')
+    temporary = args.output / 'index.tmp'
+    temporary.write_text(page)
+    temporary.replace(args.output / 'index.html')
+    for path in args.output.glob('*.png'):
+        if path.name not in figures:
+            path.unlink()
     if args.freeze:
         files = {str(path.relative_to(args.output)): hashlib.sha256(path.read_bytes()).hexdigest()
-                 for path in args.output.rglob("*") if path.is_file()}
-        (args.output / "Freeze.json").write_text(json.dumps({"manifest": manifest, "files_sha256": files}, indent=2) + "\n")
-    print(f"Wrote {len(records)} listening comparisons to {args.output / 'index.html'}")
+                 for path in args.output.rglob('*') if path.is_file()}
+        (args.output / 'Freeze.json').write_text(json.dumps({'manifest': manifest, 'files_sha256': files}, indent=2) + '\n')
+    else:
+        retained = audio_links(cache.parent) | {(ROOT / source).resolve() for source in signals}
+        for path in cache.glob('*.wav'):
+            if path.resolve() not in retained:
+                path.unlink()
+    print(f'Wrote {args.output / "index.html"} ({player_count} players, {len(signals)} source WAVs)')
+
+
+def write_report(output=OUTPUTS / 'listening', manifest=None, freeze=False):
+    args = SimpleNamespace(output=Path(output).resolve(), freeze=freeze)
+    canonical = {OUTPUTS / entry[0] / 'listening' for entry in PAPERS}
+    canonical |= {OUTPUTS / name / 'listening' for name in ('agarwal-response', 'agarwal-response-aligned', 'retained-responses', 'contact-responses')}
+    if not args.freeze and (args.output.resolve() in canonical or args.output.resolve() == OUTPUTS / 'listening'):
+        manifest, args.output = None, OUTPUTS / 'listening'
+    if (args.output / 'Freeze.json').exists() or (args.freeze and args.output.exists()):
+        raise ValueError('Review output already exists or is frozen; choose a new --output directory')
+    cache = args.output / 'audio' if args.freeze else (ROOT / 'outputs' if args.output.resolve().is_relative_to(ROOT / 'outputs') else args.output.resolve().parent) / 'playback'
+    cache.mkdir(parents=True, exist_ok=True)
+    with (cache / '.lock').open('a') as lock:
+        fcntl.flock(lock, fcntl.LOCK_EX)
+        build_report(args, cache, catalog() if manifest is None else manifest)
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("manifest", type=Path)
-    parser.add_argument("--output", type=Path, default=Path("outputs/reproduction/listening"))
-    parser.add_argument("--freeze", action="store_true", help="Create a new review snapshot that this tool will refuse to overwrite")
+    parser.add_argument('manifest', nargs='?', type=Path, help='Case manifest for an explicit standalone --output or --freeze')
+    parser.add_argument('--output', type=Path, default=OUTPUTS / 'listening')
+    parser.add_argument('--freeze', action='store_true', help='Create a self-contained snapshot in a new directory')
     args = parser.parse_args()
-    if (args.output / "Freeze.json").exists() or (args.freeze and args.output.exists()):
-        parser.error("Review output already exists or is frozen; choose a new --output directory")
-    if args.freeze:
-        build_report(args)
-    else:
-        outputs = Path(__file__).resolve().parents[1] / "outputs"
-        root = outputs if args.output.resolve().is_relative_to(outputs) else args.output.resolve().parent
-        cache = root / "playback"
-        cache.mkdir(parents=True, exist_ok=True)
-        with (cache / ".lock").open("a") as lock:
-            fcntl.flock(lock, fcntl.LOCK_EX)
-            build_report(args, cache)
+    write_report(args.output, json.loads(args.manifest.read_text()) if args.manifest else None, args.freeze)
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()

@@ -198,7 +198,6 @@ def main():
     if not args.keep_diagnostics:
         for pattern in ('fits/*/initial.wav', 'fits/*/initial.f32', 'fits/*/fitted.f32', 'fits/*/prepared.wav', 'fits/*/last.f32', 'fits/*/loss.csv', 'impacts/*/force.wav', 'materials/*/samples.f32', 'materials/*/sample-*.f32', 'materials/*/sample-*.wav', 'materials/*/records.f32'):
             for path in output.glob(pattern): path.unlink(missing_ok=True)
-    print(output / 'listening/index.html')
 
 
 if __name__ == '__main__':

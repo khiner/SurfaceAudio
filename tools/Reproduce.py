@@ -43,7 +43,7 @@ def main():
     if args.author_oracle and "willemsen" not in methods:
         parser.error("--author-oracle requires the willemsen method")
     if args.report_only:
-        build_report(methods)
+        build_report()
         return
     build = args.build.resolve()
     if args.offline:
@@ -90,7 +90,7 @@ def main():
             for case in ["roll", "roll-glass"]:
                 run(sys.executable, ROOT / "tools/agarwal_spatial_fit.py", "--binary", build / "agarwalSpatialReproduce", "--case", case, "--whole-record")
             run(sys.executable, ROOT / "tools/agarwal_reproduce.py", "--binary", build / "agarwalReproduce", "--retained")
-    build_report(methods)
+    build_report()
     for method in ([] if args.keep_diagnostics else methods):
         for extension in ("*.f32", "*.f64"):
             for path in (output / method).rglob(extension):
@@ -103,29 +103,8 @@ def main():
                 path.unlink()
 
 
-def build_report(methods):
-    cases = []
-    for method in methods:
-        manifest = ROOT / f"outputs/reproduction/{method}/cases.json"
-        cases.extend(json.loads(manifest.read_text())["cases"])
-        if method == "conan":
-            for variant in ["velocity", "velocity-eps-variance"]:
-                velocity_manifest = ROOT / "outputs/reproduction/conan" / variant / "cases.json"
-                if velocity_manifest.exists():
-                    cases.extend(json.loads(velocity_manifest.read_text())["cases"])
-    first = ["wood-cell.wav", "wood-pointwise.wav", "glass-cell.wav", "glass-pointwise.wav", "scraping_metal.wav", "rolling_metal.wav", "friction_metal.wav", "impact_metal.wav",
-             "physical-full-gaussian-ir1.wav", "physical-full-gaussian-ir2.wav",
-             "scrape-temporal-whole-calibrated.wav", "roll-temporal-whole-calibrated.wav", "roll-glass-temporal-whole-calibrated.wav",
-             "roll-temporal-spatial-whole.wav", "roll-glass-temporal-spatial-whole.wav",
-             "velocity-eps-variance/velocity10-seed0.wav", "velocity-eps-variance/velocity50-seed0.wav", "velocity-eps-variance/velocity100-seed0.wav"]
-    priority = {name: index for index, name in enumerate(first)}
-    def order(case):
-        path = Path(case["synthesis"])
-        return priority.get(path.parent.name + "/" + path.name, priority.get(path.name, len(first)))
-    cases.sort(key=order)
-    manifest = ROOT / "outputs/reproduction/cases.json"
-    manifest.write_text(json.dumps({"cases": cases}, indent=2) + "\n")
-    run(sys.executable, ROOT / "tools/BuildListeningReport.py", manifest, "--output", ROOT / "outputs/reproduction/listening")
+def build_report():
+    run(sys.executable, ROOT / "tools/BuildListeningReport.py")
 
 
 if __name__ == "__main__":

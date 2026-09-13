@@ -9,7 +9,7 @@ The [2016 predecessor supplement and demonstration][supplement] provide author a
 
 ```sh
 python3 tools/Reproduce.py --method nakatsuka
-open outputs/reproduction/nakatsuka/listening/index.html
+open outputs/reproduction/listening/index.html
 ```
 
 Use `--offline` after downloading the pinned supplement and video.

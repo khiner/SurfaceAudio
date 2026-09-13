@@ -11,7 +11,7 @@ After building, replay the fitted responses and generate impacts and statistical
 
 ```sh
 python3 tools/Reproduce.py --method agarwal2026 --offline
-open outputs/reproduction/agarwal2026/listening/index.html
+open outputs/reproduction/listening/index.html
 ```
 
 The workflow requires the pinned 2023 recordings under `references/agarwal/icml2023/`.
