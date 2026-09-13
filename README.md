@@ -20,6 +20,9 @@ C++23 contact-sound synthesis for Apple Silicon and Metal 4.
 | Lagrange 2010 | [Modal analysis, excitation extraction and uncompressed contact resynthesis](docs/Lagrange.md) |
 | Lee 2010 | [Contact detection, position-dependent notch/LPC analysis and rolling resynthesis](docs/Lee.md) |
 | HaTT 2014 | [Published texture models, force/speed interpolation and haptic vibration rendering](docs/Hatt.md) |
+| Grégoire 2021 | [Multi-asperity contact dynamics and measured local-force comparisons](docs/Gregoire.md) |
+| Dang 2013 | [Rough sliding between flexible beams](docs/Dang.md) |
+| Assemien 2023 | [Rough sliding on a plate](docs/Assemien.md) |
 | Nakatsuka 2017 | [Deformable contact, microrectangle vibration and point-source radiation](docs/Nakatsuka.md) |
 
 The library uses free functions, explicit state structs and contiguous arrays.
@@ -45,7 +48,8 @@ python3 tools/Reproduce.py
 open outputs/reproduction/listening/index.html
 ```
 
-The workflow requires Python, NumPy, SciPy, Matplotlib, FFmpeg and network access for the initial author-input downloads.
+The workflow requires Python, NumPy, SciPy, Matplotlib, Pillow, PyMuPDF, FFmpeg and network access for the initial author-input downloads.
+The runner checks required Python packages before building and reports installation commands for missing packages.
 Use `--offline` with cached inputs and `--method NAME [NAME ...]` to select methods.
 The `--help` output lists the available method names.
 Outputs include WAVs, a listening page and run/case manifests.

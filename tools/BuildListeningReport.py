@@ -196,6 +196,22 @@ def build_report(args, cache, manifest):
                 body.append('<details class="cohort-audio"><summary>Listen to both collections</summary><div class="cohorts">' + ''.join(columns) + '</div></details>')
                 analysis = '<p>Spectra show the median and 10–90% range. Energy-decay distributions use a common one-second analysis window.</p>'
                 switch = ''
+            elif 'figure' in case:
+                source = ROOT / case['figure']
+                payload = source.read_bytes()
+                figure = 'comparison-' + hashlib.sha256(payload).hexdigest()[:20] + source.suffix
+                (args.output / figure).write_bytes(payload)
+                panels = []
+                for field, default in [('reference', 'Reference'), ('synthesis', 'Our simulation')]:
+                    if field in case:
+                        label = case.get(field + '_label', default)
+                        panel, data = player(case[field], label)
+                        panels.append(panel)
+                        record['signals'].append({'label': label, 'source': data['source']})
+                if panels:
+                    body.append('<div class="players">' + ''.join(panels) + '</div>')
+                analysis = ''
+                switch = '<button class="switch" type="button">Switch A/B at current time</button>' if len(panels) == 2 else ''
             else:
                 panels, comparison = [], []
                 for field, default in [('reference', 'Reference'), ('synthesis', 'Our synthesis')]:
@@ -219,7 +235,8 @@ def build_report(args, cache, manifest):
                     analysis += '<p>Spectrograms use AC RMS normalization and a shared −60 to 0 dB scale.</p>'
                 switch = '<button class="switch" type="button">Switch A/B at current time</button>'
             figures.add(figure)
-            body.append(f'<div class="actions">{switch}<details class="analysis"><summary>Signal analysis</summary>'
+            analysis_title = 'Published comparison' if 'figure' in case else 'Signal analysis'
+            body.append(f'<div class="actions">{switch}<details class="analysis"><summary>{analysis_title}</summary>'
                         f'<img loading="lazy" src="{figure}" alt="{html.escape(case["title"], quote=True)}: spectral and temporal comparison">'
                         f'{analysis}</details></div><p class="status" role="status"></p></section>')
             records.append(record)

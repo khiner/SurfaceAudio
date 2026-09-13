@@ -1,5 +1,6 @@
 #include "core/SignalAnalysis.h"
 #include "core/GpuConvolution.h"
+#include "core/GpuDecimate.h"
 #include "core/GpuFft.h"
 #include "core/GpuResample.h"
 #include <algorithm>
@@ -138,6 +139,23 @@ void ConvolutionTest(Gpu &gpu) {
     Require(identity.size() == 1 && identity[0] == 6, "Scalar FFT convolution preserves gain");
     std::cout << "FFT convolution relative " << std::sqrt(error / energy) << " maximum " << maximum << '\n';
 }
+void AudioRateTest(Gpu &gpu) {
+    const auto coefficients = KaiserDecimateCoefficients(500);
+    std::vector<float> taps(coefficients.size()), input(5000);
+    for (size_t k = 0; k < taps.size(); ++k) taps[k] = float(441 * coefficients[k]);
+    const FirResampleJob job{0, 5000, 0, 4410, 0, unsigned(taps.size()), 441, 500, int(taps.size() / 2)};
+    for (double frequency : {1000., 10000., 19000., 24000.}) {
+        for (unsigned n = 0; n < input.size(); ++n) input[n] = float(std::sin(2 * std::numbers::pi * frequency * n / 50000));
+        const auto output = ResampleFirGpu(gpu, input, taps, std::span{&job, 1});
+        double maximum{};
+        for (unsigned n = 200; n < output.size() - 200; ++n) {
+            const double expected = frequency < 22050 ? std::sin(2 * std::numbers::pi * frequency * n / 44100) : 0;
+            maximum = std::max(maximum, std::abs(output[n] - expected));
+        }
+        std::cout << "44.1 kHz resampling frequency=" << frequency << " maximum error=" << maximum << '\n';
+        Require(maximum < 3e-5, "Audio resampling preserves passband phase and gain and rejects out-of-band input");
+    }
+}
 }
 int main() {
     try {
@@ -147,6 +165,7 @@ int main() {
         FourierTest(gpu);
         ResampleTest(gpu);
         ConvolutionTest(gpu);
+        AudioRateTest(gpu);
         std::cout << "Signal analysis passed\n";
     } catch (const std::exception &error) {
         std::cerr << error.what() << '\n';

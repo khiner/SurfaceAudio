@@ -11,7 +11,7 @@ struct GpuDecimatePlan {
     GpuKernel Kernel{};
 };
 
-// FP64, symmetric, unit-sum coefficients.
+// FP64, symmetric, unit-sum coefficients for factors 1 through 65536, including rational resampling filters.
 std::vector<double> KaiserDecimateCoefficients(uint32_t factor);
 GpuDecimatePlan CreateDecimatePlan(Gpu &, uint32_t input_frames, uint32_t channels, uint32_t factor);
 // Requires an active GPU batch, exact planar extents and disjoint GPU ranges, including views of one allocation.

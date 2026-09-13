@@ -1,0 +1,36 @@
+{
+  "paper": "Assemien 2023 thesis",
+  "url": "https://bibliotheque.ec-lyon.fr/documents/TH_2023ECDL0044.pdf",
+  "doi": "10.70675/83323ae7z679ez4a4dzaf63za765b707ee77",
+  "sha256": "ce65a0807946597920c117e4bfae071731402aa2cb746129901938f30acf4bd2",
+  "velocity_reference_m_s": 1e-9,
+  "measured_level_range_db": [126.11, 127.48],
+  "simulated_level_db": 127.19,
+  "reported_corner_hz": 1000,
+  "table3_9_mode_indices": [1, 2, 3, 198, 199, 200],
+  "table3_9_frequencies_hz": [89.07, 171.28, 308.31, 13181.76, 13332.56, 13510.62],
+  "level_sources": "Section 3.1.5 and Table 3.5; 100 mm/s, 20 x 20 x 10 mm slider, Rq 17 micrometres.",
+  "extraction": "Blue pixels in original embedded JPEGs; per-column median and vertical range; logarithmic frequency calibration.",
+  "figures": [
+    {
+      "label": "Published measurement, Figure 3.7",
+      "page_index": 100,
+      "image_index": 0,
+      "image_sha256": "9c7357afbcca5b967624470be556700d91b06820a30a04c2342859e23c08919b",
+      "axes_pixels": [91, 633, 40, 450],
+      "frequency_hz": [10, 100000],
+      "ordinate_db": [0, 80],
+      "columns": 370
+    },
+    {
+      "label": "Published simulation, Figure 3.13",
+      "page_index": 107,
+      "image_index": 3,
+      "image_sha256": "eb8bd1b7b0b25bd3ef2736774fb3c35e76d8d19ab55e3b070de6389c34714228",
+      "axes_pixels": [130, 1113, 45, 700],
+      "frequency_hz": [10, 100000],
+      "ordinate_db": [-20, 80],
+      "columns": 669
+    }
+  ]
+}

@@ -1,0 +1,379 @@
+{
+  "paper": "Dang et al. 2013",
+  "doi": "10.1007/s00466-013-0870-7",
+  "equation_source": {
+    "edition": "Published journal version; Equation 35 differs from the accepted TeX.",
+    "url": "http://perso.ec-lyon.fr/scheibert.julien/pdfs/Dang-PerretLiaudet-Scheibert-LeBot-ComputMech-2013.pdf",
+    "sha256": "f267071da01764423716ab4bfc630957738a9c336c4fa03a74b42e0e16ce6eea"
+  },
+  "configuration_status": "Local comparison fixture; the complete published run configuration is unverified.",
+  "configuration_limits": [
+    "Slider mode count, width, disabled resonator gravity and initial offset come from the separate thesis Figure 4.2 example.",
+    "Initial clearance, random seeds and the 0.45-second recording window are local choices.",
+    "Table 8 describes generated surface statistics; using them as generator targets does not recover the original inputs.",
+    "Modal equations include documented algebraic corrections; contact projection uses a local conservation-preserving endpoint discretization."
+  ],
+  "archive_url": "https://arxiv.org/src/1310.5252v1",
+  "archive_sha256": "feb3e38dc22379d77611c84b56716c8c2e39ae30b8188daedeb9e1bd6aad20e0",
+  "member": "figure14.eps",
+  "member_sha256": "8e2fd313c8a78b49d33be3e151f22ef0998945dcfa6dff9bd18c04414f7ea9b0",
+  "path_count": 49,
+  "marker_start": 8,
+  "roughness_labels_um": [
+    3,
+    5,
+    10,
+    20,
+    30
+  ],
+  "speeds_m_s": [
+    0.02,
+    0.04,
+    0.06,
+    0.1,
+    0.2,
+    0.3,
+    0.7
+  ],
+  "speed_axis": [
+    60.117,
+    0.02,
+    192.871,
+    0.7
+  ],
+  "level_axis": [
+    187.305,
+    130,
+    64.48,
+    160
+  ],
+  "speed_exponents": [
+    0.52,
+    0.63,
+    0.58,
+    0.55,
+    0.54
+  ],
+  "roughness_exponent_range": [
+    0.63,
+    0.67
+  ],
+  "extraction": "Original EPS marker centers with logarithmic speed and linear level calibration; no level fitting.",
+  "modal_figure": {
+    "member": "figure13.eps",
+    "member_sha256": "526da29276c279dcefa6a83fea0e12df504bbd3921d9f603b5550efe22dd20d2",
+    "path_count": 68,
+    "marker_path_range": [
+      63,
+      68
+    ],
+    "mode_indices": [
+      4,
+      7,
+      12,
+      15,
+      18
+    ],
+    "frequency_axis": [
+      36.582,
+      0,
+      199.113,
+      10000
+    ],
+    "beam_lengths_m": [
+      0.45,
+      0.4
+    ],
+    "young_pa": 210000000000,
+    "density_kg_m3": 7800,
+    "thickness_m": 0.002,
+    "table7_periods_s": [
+      0.034,
+      2.12e-05
+    ],
+    "table7_mode_indices": [
+      1,
+      40
+    ],
+    "extraction": "Vertical theoretical resonance markers in the original EPS; figure coordinates retain plotting precision."
+  },
+  "profile_figure": {
+    "member": "figure10.eps",
+    "member_sha256": "eddffd546e014ded4435e855525658deb95a361d28773320a94df7966a108a9b",
+    "path_count": 160,
+    "profile_path_range": [
+      148,
+      160
+    ],
+    "vertices": 3548,
+    "distinct_x": 1774,
+    "x_axis": [
+      38.641,
+      0,
+      188.219,
+      2000
+    ],
+    "table_correlation_um": 450,
+    "extraction": "Original EPS profile polyline under the printed 0–2 mm axis; plotted coordinates are not original surface samples."
+  },
+  "thesis_source": {
+    "url": "https://bibliotheque.ec-lyon.fr/documents/TH_T2349_vdang.pdf",
+    "sha256": "ee185ef7c6cda0f867b8b053157297fce7545751b1a9fd1c805ec36e32324a7d",
+    "input_example": {
+      "page": 99,
+      "figure": "4.2",
+      "status": "Scalar input example; referenced profile files are unavailable.",
+      "upper": {
+        "density_kg_m3": 7800,
+        "young_pa": 210000000000.0,
+        "damping": 0.01,
+        "length_m": 0.02,
+        "thickness_m": 0.005,
+        "width_m": 1,
+        "profile": "top.pro",
+        "edges": "FF",
+        "modes": 4,
+        "gravity": true
+      },
+      "lower": {
+        "density_kg_m3": 7800,
+        "young_pa": 210000000000.0,
+        "damping": 0.01,
+        "length_m": 0.4,
+        "thickness_m": 0.002,
+        "width_m": 1,
+        "profile": "bottom.pro",
+        "edges": "SS",
+        "modes": 20,
+        "gravity": false
+      },
+      "speed_m_s": 0.1,
+      "offset_m": 0.1,
+      "separation_m": 3.61e-05,
+      "duration_s": 1,
+      "time_step_s": 1e-07,
+      "sampling_hz": 40000,
+      "record": 40000,
+      "penalty_pa": 10000000000000.0,
+      "printed_contact": "enalty",
+      "limits": [
+        "Profile node counts, spatial steps and heights reside in the missing profile files.",
+        "The printed CONTACT token is enalty; its intended spelling is unverified."
+      ]
+    },
+    "printed_modal_result": {
+      "pages": [
+        100,
+        101
+      ],
+      "normalization": "Printed mode shapes use unit spatial norm.",
+      "limits": [
+        "The printed example is separate from Figure 4.2 and the journal rough-contact case.",
+        "Rounded grid spacing limits frequency and mode-shape comparisons; the full trajectory remains unverified."
+      ]
+    },
+    "printed_trajectory": {
+      "pages": [
+        101,
+        102
+      ],
+      "sampling_hz": 5,
+      "inferred_nonzero_snapshot_times_s": [
+        0.2,
+        0.4,
+        0.6,
+        0.8
+      ],
+      "coordinate_convention": "Upper displacement is positive downward; lower displacement is positive upward (Section 3.1.1).",
+      "force_storage": "One-based row offsets after the initial empty snapshot; printed indices identify material nodes.",
+      "comparison_status": "Linear density redistribution with the grid-step ratio and trapezoidal projection matches four displacement snapshots to 0.34 percent RMS.",
+      "limits": [
+        "The redistribution omits endpoint quadrature weight ratios and does not preserve action-reaction.",
+        "The force and projection conventions are inferred from printed outputs; author solver source is unavailable.",
+        "Recording phase within one integration step and the SOUND observation position remain unverified.",
+        "This coarse moving-mass example does not establish the cause of the rough-sliding level discrepancy."
+      ]
+    },
+    "rough_sliding_results": {
+      "pages": [
+        123,
+        124,
+        125,
+        130,
+        131,
+        132,
+        133,
+        134
+      ],
+      "status": "Separate Chapter 5 result set; unavailable profiles and inconsistent labels prevent a verified replay.",
+      "table5_9_loss_factor_eta": 0.0006,
+      "section5_3_1_eta_over_zeta": 2,
+      "implied_modal_damping_ratio": 0.0003,
+      "grid_step_m": 4e-06,
+      "time_step_s": 1e-07,
+      "resonator_modes": 30,
+      "table5_11": {
+        "roughness_labels_um": [
+          3,
+          5,
+          8,
+          10,
+          20,
+          30
+        ],
+        "ra_um": [
+          3.1,
+          4.8,
+          9.65,
+          9.8,
+          19.1,
+          29.2
+        ],
+        "correlation_um": [
+          500,
+          500,
+          500,
+          500,
+          500,
+          500
+        ]
+      },
+      "speed_exponent_range": [
+        0.71,
+        0.79
+      ],
+      "roughness_exponent_range": [
+        0.69,
+        0.84
+      ],
+      "reference_velocity_m_s": 1e-09,
+      "tabulated_levels": [
+        {
+          "source": "Page 134 prose",
+          "ra_label_um": 5,
+          "speed_m_s": 0.1,
+          "level_db": 123
+        },
+        {
+          "source": "Table 5.13",
+          "ra_label_um": 5,
+          "speed_m_s": 0.2,
+          "level_db": 126,
+          "standard_deviation_db": 0.45,
+          "realizations": 100
+        },
+        {
+          "source": "Table 5.13",
+          "ra_label_um": 5,
+          "speed_m_s": 1,
+          "level_db": 138,
+          "standard_deviation_db": 0.47,
+          "realizations": 100
+        }
+      ],
+      "damping_scan": {
+        "figure": "5.13",
+        "ra_label_um": 10,
+        "speed_m_s": 10,
+        "loss_factor_eta_range": [
+          0.0003,
+          0.9
+        ]
+      },
+      "limits": [
+        "Table 5.8 prose uses zeta; Table 5.9 labels the damping value eta.",
+        "Table 5.11 labels heights as Ra; Figure 5.8 captions use the same values as Gaussian sigma.",
+        "The stationary analysis interval has no specified endpoints.",
+        "Section 5.2 specifies equal travel distances and variable duration; Table 5.10 lists one second.",
+        "The original profile arrays and complete solver input files are unavailable."
+      ]
+    }
+  },
+  "level_figure_consistency": {
+    "additional_member_sha256": {
+      "figure15.eps": "1aa245aed71b12672c17ed9b81b09cd853aff8c07f914817628954ed443b2e4d",
+      "figure16.eps": "d0bbd600e4024b6a15e6fd8b33ef3e9d2c7ed6cc32bd7b392f39e312ff033c2c"
+    },
+    "extraction": "Original EPS marker centers for Figures 14–15 and the plotted polyline vertex for Figure 16; linear level calibration.",
+    "limit": "Plot coordinates retain drawing precision; the source does not establish identical surface realizations between the damping and scaling plots."
+  },
+  "receiver_figure": {
+    "member": "figure13.eps",
+    "member_sha256": "526da29276c279dcefa6a83fea0e12df504bbd3921d9f603b5550efe22dd20d2",
+    "receiver_m": 0.165,
+    "ra_label_um": 5,
+    "speed_m_s": 0.1,
+    "velocity": {
+      "path_indices": [
+        33,
+        32,
+        31,
+        30,
+        29,
+        28,
+        27,
+        26,
+        25,
+        24,
+        23,
+        22,
+        21,
+        20,
+        19,
+        18,
+        17,
+        16,
+        15,
+        14,
+        13,
+        12
+      ],
+      "vertices": 6558,
+      "distinct_time_coordinates": 2016,
+      "time_axis": [
+        73.738,
+        0.2,
+        178.078,
+        0.5
+      ],
+      "velocity_axis": [
+        -147.152,
+        -0.04,
+        -9.27,
+        0.04
+      ],
+      "visible_time_range_s": [
+        0.11392466935020128,
+        0.5889074180563543
+      ]
+    },
+    "spectrum": {
+      "path_indices": [
+        62,
+        61
+      ],
+      "vertices": 329,
+      "frequency_axis": [
+        36.582,
+        0,
+        199.113,
+        10000
+      ],
+      "log10_psd_axis": [
+        -291.48,
+        -10,
+        -234.242,
+        -8
+      ],
+      "psd_unit": "(m/s)^2/Hz",
+      "clipped_first_vertex": true
+    },
+    "limits": [
+      "Repeated time coordinates and path simplification prevent recovery of uniformly sampled source audio.",
+      "The plotted waveform cannot establish an unbiased RMS, modulation spectrum or crest factor.",
+      "The PSD estimator, averaging window and its relationship to the displayed time segment are unspecified.",
+      "The first PSD vertex touches the upper plot boundary; exclude the lowest band from normalized spectral comparisons.",
+      "Broad-band integrals approximate the drawn curve; unresolved peaks and plot quantization limit precision."
+    ]
+  }
+}

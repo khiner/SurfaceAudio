@@ -1,4 +1,5 @@
 #include "ErbNoise.h"
+#include "Random.h"
 #include <algorithm>
 #include <array>
 #include <cmath>
@@ -11,12 +12,7 @@ constexpr double Tau = 2 * std::numbers::pi;
 struct NoiseBlock {
     uint32_t Frames, Taps, Bands;
 };
-uint64_t Mix(uint64_t x) {
-    x = (x ^ (x >> 30)) * 0xbf58476d1ce4e5b9ULL;
-    x = (x ^ (x >> 27)) * 0x94d049bb133111ebULL;
-    return x ^ (x >> 31);
-}
-double Uniform(uint64_t x) { return (double(Mix(x) >> 11) + .5) * 0x1p-53; }
+double Uniform(uint64_t x) { return (double(MixRandom(x) >> 11) + .5) * 0x1p-53; }
 struct NoiseInputs {
     std::vector<float> White, Filters;
 };

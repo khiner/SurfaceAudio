@@ -21,8 +21,11 @@ cmake --build build-sanitize -j8
 UBSAN_OPTIONS=halt_on_error=1 ctest --test-dir build-sanitize --output-on-failure
 ```
 
+Release and ASan/UBSan checks passed on the benchmark machine.
 The tests cover independent equations, gradients, statistical moments, source traces, finite tails, CPU/GPU agreement and streaming state.
 Tests require a Metal device and shaders, with sanitizer coverage limited to host code.
+The rough-contact unit tests cover shared mechanics in `ContactMechanicsTest` and CPU/Metal assembly in `RoughContactTest`.
+Use small independent references for numerical contracts; keep paper-specific comparisons in the reproduction tools.
 Run paper reproductions with `python3 tools/Reproduce.py --offline`.
 See [object-response reproduction](AgarwalResponseReproduction.md) for fitting and replay commands.
 
@@ -72,6 +75,8 @@ The test source contains the exact fixtures and acceptance limits.
 | Shared complex GPU FFT, 262,144 samples | Relative L2 1.57e-7; inverse maximum 7.32e-7 |
 | Shared FFT convolution, complete 6,149-sample output | Relative L2 1.33e-7; maximum error 4.83e-6 |
 | Shared ESPRIT, three planted complex modes | Full-record maximum error 2.49e-14 |
+| Rough-contact GPU batch versus serial execution | Exact traces, modal states and per-body event statistics |
+| Rough-contact dense GPU equilibrium, 2,050 contact rows | Relative force error below 1e-6; all material nodes retained |
 
 Independent gradient checks cover response synthesis, contact fitting, endpoint interpolation and both spectral objectives.
 A fitted contact-interface example differs from ideal FP64 by 0.00523%.
@@ -88,4 +93,5 @@ Physical-input identification and perceptual equivalence require separate valida
 [SDT](Sdt.md) documents deliberate energy-limiter refinement, source chatter and sustained-impact timing sensitivity.
 [Conan](Conan.md) documents statistical approximations, positive-support bounds and missing author seeds.
 [Object responses](AgarwalResponseReproduction.md) documents filter, optimizer, alignment and distribution assumptions.
+[Rough beams](Dang.md), [rough plates](Assemien.md) and [the instrumented slider](Gregoire.md) distinguish numerical checks from published comparisons.
 WAV amplitudes use digital or pickup gains, with sound-pressure calibration unavailable.

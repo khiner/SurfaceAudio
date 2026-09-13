@@ -1110,6 +1110,21 @@
       "method": "nakatsuka",
       "path": "references/nakatsuka/demo.mp4",
       "sha256": "385c7ad6d1e986da4ea522ae02a88d3b96e408000d4c3b74ceb242357217113b"
+    },
+    {
+      "method": "rough",
+      "path": "references/rough/2009.07062.tar",
+      "sha256": "829c4dc3172f7e66736347dd25000967c277a39d0878fad096f521398be83bb2"
+    },
+    {
+      "method": "rough",
+      "path": "references/rough/assemien2023.pdf",
+      "sha256": "ce65a0807946597920c117e4bfae071731402aa2cb746129901938f30acf4bd2"
+    },
+    {
+      "method": "rough",
+      "path": "references/rough/1310.5252.tar",
+      "sha256": "feb3e38dc22379d77611c84b56716c8c2e39ae30b8188daedeb9e1bd6aad20e0"
     }
   ]
 }

@@ -9,6 +9,15 @@ OUTPUTS = ROOT / 'outputs/reproduction'
 
 # Each entry names the reference, the local result, and the limit of the comparison.
 PAPERS = [
+    ('dang', 'Rough-surface contact dynamics', 'Dang et al. · 2013', 'Coupled rough beams and contact-event statistics', 'Dang',
+     'The local fixture combines journal parameters, a separate thesis example and inferred settings. '
+     'Published event thresholds are compared with simulated beam contact; the exact author configuration and surface arrays are unavailable.'),
+    ('gregoire', 'Rough-surface contact dynamics', 'Grégoire et al. · 2021', 'Instrumented slider and local contact forces', 'Gregoire',
+     'Measured force transients are recovered from the authors’ vector figures and compared in newtons with static contact and sensor predictions. '
+     'The low-frequency sensor comparison produces force plots.'),
+    ('assemien', 'Rough-surface contact dynamics', 'Assemien · 2023', 'Rough slider on a vibrating plate', 'Assemien',
+     'The thesis configuration is compared with published measured and simulated spectra and vibration levels. '
+     'Contact coefficients follow the authors’ calibration. The numerical plate is simply supported; the measured plate is freely suspended.'),
     ('traer', 'Surface contact and object responses', 'Traer et al. · 2019', 'Statistical impacts and spatially varying responses', 'Traer',
      'Comparisons execute later TDW author code, which descends from this model. The scrape compares two local response models.'),
     ('agarwal', 'Surface contact and object responses', 'Agarwal et al. · 2021', 'Scraping and rolling from surface geometry', 'Agarwal',
@@ -64,7 +73,7 @@ def paper_links(doc):
     if not paper:
         paper = re.search(r'\]\((https://[^)]+)\)', text)
     if not paper:
-        paper = re.search(r'^\[source\]: (\S+)', text, re.M)
+        paper = re.search(r'^\[(?:source|thesis)\]: (\S+)', text, re.M)
     return paper[1] if paper else ''
 
 
@@ -72,7 +81,9 @@ def curate(case, paper, variant=''):
     title = case['title']
     labels = [case.get('reference_label', 'Published author example'), case.get('synthesis_label', 'Our synthesis')]
     group, notes = 'Comparisons', ''
-    if paper == 'agarwal':
+    if paper in {'dang', 'gregoire', 'assemien'}:
+        notes = case.get('notes', '')
+    elif paper == 'agarwal':
         group = 'Rolling reconstructions' if 'retained' in title else 'Response and excitation comparisons'
         title = title.removeprefix('Agarwal ').replace('author-profile/material baseline', 'TDW-profile material baseline')
         title = title.replace(' (whole-record fit)', '').replace(' (temporal Gaussian)', '')
@@ -160,7 +171,7 @@ def cohort_cases(data):
 def catalog():
     papers = []
     for key, lineage, title, subtitle, doc, description in PAPERS:
-        directories = [key]
+        directories = ['rough/' + key] if key in {'dang', 'gregoire', 'assemien'} else [key]
         if key == 'conan':
             directories += ['conan/velocity', 'conan/velocity-eps-variance']
         if key == 'agarwal2023':

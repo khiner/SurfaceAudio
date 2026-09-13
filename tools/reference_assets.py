@@ -1,10 +1,23 @@
 """Fetch pinned paper resources and extract selected toolkit files."""
 import hashlib
+import importlib.metadata
+import importlib.util
+import shlex
+import sys
 from pathlib import Path
 import urllib.request
 import zipfile
 
 ROOT = Path(__file__).resolve().parents[1]
+
+
+def require_packages(names):
+    modules = {'Pillow': 'PIL', 'PyMuPDF': 'pymupdf'}
+    missing = [name for name in names if importlib.util.find_spec(modules.get(name, name)) is None]
+    if missing:
+        command = ' '.join(map(shlex.quote, [sys.executable, '-m', 'pip', 'install', *missing]))
+        raise RuntimeError(f'Missing Python packages: {", ".join(missing)}. Install with: {command}')
+    return {name: importlib.metadata.version(name) for name in names}
 
 
 def fetch(path, url, digest, offline=False):

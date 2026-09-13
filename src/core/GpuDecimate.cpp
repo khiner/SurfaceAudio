@@ -27,7 +27,7 @@ void ValidateFactor(uint32_t factor) {
 
 std::vector<double> KaiserDecimateCoefficients(uint32_t factor) {
     // Cutoff .475/factor cycles/input sample and radius 64*factor use Kaiser beta 10.
-    ValidateFactor(factor);
+    if (!factor || factor > 65536) throw std::invalid_argument("Invalid Kaiser filter factor");
     if (factor == 1) return {1};
     const uint32_t radius{64 * factor};
     const double cutoff{.475 / factor}, bessel{BesselI0(10)};

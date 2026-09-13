@@ -2,14 +2,13 @@
 """Build and run published-result reproductions, then generate the A/B listening page."""
 import argparse
 import hashlib
-import importlib.metadata
 import json
 from pathlib import Path
 import platform
 import subprocess
 import sys
 
-ROOT = Path(__file__).resolve().parents[1]
+from reference_assets import ROOT, require_packages
 
 
 def run(*command):
@@ -31,7 +30,7 @@ def verify_inputs(methods):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    available = ["agarwal", "sdt", "conan", "matusiak", "poirot", "continuous", "matusiak2024", "falaize", "traer", "willemsen", "lagrange", "lee", "agarwal2026", "agarwal2025", "hatt", "nakatsuka"]
+    available = ["agarwal", "sdt", "conan", "matusiak", "poirot", "continuous", "matusiak2024", "falaize", "traer", "willemsen", "lagrange", "lee", "agarwal2026", "agarwal2025", "hatt", "nakatsuka", "rough"]
     parser.add_argument("--method", nargs="+", choices=["all", *available], default=["all"])
     parser.add_argument("--build", type=Path, default=ROOT / "build")
     parser.add_argument("--offline", action="store_true", help="Require cached reference inputs")
@@ -45,6 +44,7 @@ def main():
     if args.report_only:
         build_report()
         return
+    packages = require_packages(["numpy", "scipy", "matplotlib", *(["Pillow", "PyMuPDF"] if "rough" in methods else [])])
     build = args.build.resolve()
     if args.offline:
         verify_inputs(methods)
@@ -53,13 +53,18 @@ def main():
     output = ROOT / "outputs/reproduction"
     output.mkdir(parents=True, exist_ok=True)
     environment = {"platform": platform.platform(), "python": sys.version,
-                   "packages": {name: importlib.metadata.version(name) for name in ["numpy", "scipy", "matplotlib"]},
+                   "packages": packages,
                    "compiler": subprocess.check_output(["/opt/homebrew/opt/llvm/bin/clang++", "--version"], text=True),
                    "build": str(build), "methods": methods}
     (output / "environment.json").write_text(json.dumps(environment, indent=2) + "\n")
     diagnostics = ["--keep-diagnostics"] if args.keep_diagnostics else []
     for method in methods:
-        if method in ("agarwal2026", "agarwal2025"):
+        if method == "rough":
+            for name in ("gregoire", "rough"):
+                run(sys.executable, ROOT / f"tools/{name}_reproduce.py", "--binary", build / "roughReproduce",
+                    *(["--offline"] if args.offline else []), *diagnostics)
+            verify_inputs([method])
+        elif method in ("agarwal2026", "agarwal2025"):
             option, executable = ("--fit-binary", "agarwalResponseFit") if method == "agarwal2026" else ("--force-binary", "agarwalReproduce")
             run(sys.executable, ROOT / f"tools/{method}_reproduce.py", "--binary", build / "agarwalObjectReproduce",
                 option, build / executable, *(["--offline"] if args.offline else []), *diagnostics)

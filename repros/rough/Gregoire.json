@@ -1,0 +1,57 @@
+{
+  "paper": "Gr\u00e9goire et al. 2021",
+  "doi": "10.1016/j.sna.2020.112478",
+  "archive_url": "https://arxiv.org/src/2009.07062v2",
+  "archive_sha256": "829c4dc3172f7e66736347dd25000967c277a39d0878fad096f521398be83bb2",
+  "member": "reprise_pertecontact_4V.eps",
+  "member_sha256": "672fd701a64f37979dfd935e08eb1aec0666d8eae747186c84366a248d20a3eb",
+  "figure": 14,
+  "extraction": "Original EPS polyline vertices; affine axis calibration; no waveform alignment or gain fit.",
+  "axes": [
+    {
+      "x_zero": 102.973,
+      "x_two_seconds": 463.52,
+      "y_zero": -99.891,
+      "y_positive": -63.438,
+      "positive_force_n": 0.1
+    },
+    {
+      "x_zero": 102.973,
+      "x_two_seconds": 463.52,
+      "y_zero": -246.07,
+      "y_positive": -193.801,
+      "positive_force_n": 0.5
+    },
+    {
+      "x_zero": 102.547,
+      "x_two_seconds": 462.0,
+      "y_zero": -463.289,
+      "y_positive": -433.168,
+      "positive_force_n": 0.5
+    }
+  ],
+  "speeds_mm_s": [
+    0.5,
+    1,
+    2,
+    5
+  ],
+  "paths_per_panel": 5,
+  "source_vertex_counts": [
+    2985,
+    2998,
+    3012,
+    1741,
+    779,
+    3059,
+    3033,
+    3044,
+    1636,
+    889,
+    2803,
+    2782,
+    2822,
+    2794,
+    845
+  ]
+}
