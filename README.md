@@ -21,6 +21,8 @@ C++23 contact-sound synthesis for Apple Silicon and Metal 4.
 | Lee 2010 | [Contact detection, position-dependent notch/LPC analysis and rolling resynthesis](docs/Lee.md) |
 | HaTT 2014 | [Published texture models, force/speed interpolation and haptic vibration rendering](docs/Hatt.md) |
 | Grégoire 2021 | [Multi-asperity contact dynamics and measured local-force comparisons](docs/Gregoire.md) |
+| Ponthus 2019 | [Rigid rough-surface separation and extreme-value statistics](docs/Ponthus.md) |
+| Zouabi 2016 | [Correlated bouncing dynamics and published velocity distributions](docs/Zouabi.md) |
 | Dang 2013 | [Rough sliding between flexible beams](docs/Dang.md) |
 | Assemien 2023 | [Rough sliding on a plate](docs/Assemien.md) |
 | Nakatsuka 2017 | [Deformable contact, microrectangle vibration and point-source radiation](docs/Nakatsuka.md) |
@@ -61,6 +63,7 @@ Rebuild the page without synthesis with `python3 tools/BuildListeningReport.py`.
 Each comparison identifies its reference: executed author code, published audio or figure traces, or a reconstruction with inferred inputs.
 Per-method documentation records the comparison scope and remaining differences.
 Willemsen's `--author-oracle` comparison requires Octave and pinned MATLAB sources.
+Ponthus and Zouabi figure extraction requires Ghostscript (`brew install ghostscript`).
 
 Replay the fitted Agarwal inputs for four rolling reconstructions and twenty object responses:
 

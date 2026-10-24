@@ -68,3 +68,4 @@ foreach(method matusiak poirot continuous matusiak2024 falaize traer willemsen l
 endforeach()
 
 surface_audio_executable(roughReproduce tools/rough_reproduce.cxx)
+surface_audio_executable(contactStatistics tools/contact_statistics.cxx)

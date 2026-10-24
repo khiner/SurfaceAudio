@@ -75,6 +75,8 @@ The test source contains the exact fixtures and acceptance limits.
 | Shared complex GPU FFT, 262,144 samples | Relative L2 1.57e-7; inverse maximum 7.32e-7 |
 | Shared FFT convolution, complete 6,149-sample output | Relative L2 1.33e-7; maximum error 4.83e-6 |
 | Shared ESPRIT, three planted complex modes | Full-record maximum error 2.49e-14 |
+| Geometric contact and self-affine surfaces | Exhaustive overlap bounds and independent direct Fourier sums |
+| Correlated bouncing | Analytic impact impulse and timing; shared-innovation CPU/Metal trajectories |
 | Rough-contact GPU batch versus serial execution | Exact traces, modal states and per-body event statistics |
 | Rough-contact dense GPU equilibrium, 2,050 contact rows | Relative force error below 1e-6; all material nodes retained |
 
@@ -94,4 +96,5 @@ Physical-input identification and perceptual equivalence require separate valida
 [Conan](Conan.md) documents statistical approximations, positive-support bounds and missing author seeds.
 [Object responses](AgarwalResponseReproduction.md) documents filter, optimizer, alignment and distribution assumptions.
 [Rough beams](Dang.md), [rough plates](Assemien.md) and [the instrumented slider](Gregoire.md) distinguish numerical checks from published comparisons.
+[Geometric filtering](Ponthus.md) and [correlated bouncing](Zouabi.md) compare independent ensembles against recovered author figure data.
 WAV amplitudes use digital or pickup gains, with sound-pressure calibration unavailable.

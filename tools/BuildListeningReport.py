@@ -215,6 +215,8 @@ def build_report(args, cache, manifest):
             else:
                 panels, comparison = [], []
                 for field, default in [('reference', 'Reference'), ('synthesis', 'Our synthesis')]:
+                    if field not in case:
+                        continue
                     label = case.get(field + '_label', default)
                     panel, data = player(case[field], label)
                     panels.append(panel)
@@ -233,7 +235,7 @@ def build_report(args, cache, manifest):
                 analysis += '<p>Descriptors use the complete WAV and channel power. Envelope and spectral plots use the channel mean.</p>'
                 if case.get('time_frequency'):
                     analysis += '<p>Spectrograms use AC RMS normalization and a shared −60 to 0 dB scale.</p>'
-                switch = '<button class="switch" type="button">Switch A/B at current time</button>'
+                switch = '<button class="switch" type="button">Switch A/B at current time</button>' if len(panels) == 2 else ''
             figures.add(figure)
             analysis_title = 'Published comparison' if 'figure' in case else 'Signal analysis'
             body.append(f'<div class="actions">{switch}<details class="analysis"><summary>{analysis_title}</summary>'

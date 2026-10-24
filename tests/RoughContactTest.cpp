@@ -1,4 +1,6 @@
 #include "rough/Contact.h"
+#include "rough/GeometricContact.h"
+#include "rough/Bouncing.h"
 #include "rough/ContactGpu.h"
 #include "rough/PlateContact.h"
 #include "rough/PlateContactGpu.h"
@@ -6,6 +8,7 @@
 #include "core/Random.h"
 #include <algorithm>
 #include <cmath>
+#include <complex>
 #include <iostream>
 #include <numbers>
 #include <numeric>
@@ -387,6 +390,96 @@ void SurfaceConvolution(Gpu &gpu) {
         }
     Check(error < 1e-10 * norm, "Separable GPU surface matches direct thesis 2D circular convolution");
 }
+void GeometricContact(Gpu &gpu) {
+    const std::array track{1.f, -2.f, 3.f, .5f, 2.f, -1.f, 4.f, 0.f, -3.f, 1.f, 2.f, -2.f, 5.f, 1.f};
+    const std::array slider{.5f, 2.f, -1.f, 1.f, -2.f, 3.f};
+    const auto actual = SlidingSeparation(gpu, {track, 7, 2}, {slider, 3, 2});
+    Check(actual.size() == 5, "Geometric contact includes both endpoint offsets");
+    for (unsigned shift = 0; shift < actual.size(); ++shift) {
+        float expected = -INFINITY;
+        for (unsigned y = 0; y < 2; ++y)
+            for (unsigned x = 0; x < 3; ++x) expected = std::max(expected, track[7 * y + x + shift] - slider[3 * y + x]);
+        Check(actual[shift] == expected, "GPU separation equals exhaustive nonpenetration bound");
+    }
+    for (unsigned nx : {32u, 160u}) {
+        constexpr unsigned ny = 32;
+        constexpr double step = 1. / 12, low = .46, high = .97, exponent = 4;
+        const auto surface = SelfAffineSurface(gpu, nx, ny, step, {1, low, high, exponent, 0}, 731);
+        const double integral = std::numbers::pi * (low * low + low * low * (1 - low * low / (high * high)));
+        for (const auto point : {std::array{0u, 0u}, std::array{7u, 11u}, std::array{nx - 1, ny - 1}}) {
+            double expected{};
+            for (unsigned y = 0; y < ny; ++y)
+                for (unsigned x = 0; x < nx; ++x) {
+                    const double fx = (x <= nx / 2 ? int(x) : int(x) - int(nx)) / (nx * step);
+                    const double fy = (y <= ny / 2 ? int(y) : int(y) - int(ny)) / (ny * step), f = std::hypot(fx, fy);
+                    if (f == 0 || f >= high) continue;
+                    const unsigned index = y * nx + x, opposite = ((ny - y) % ny) * nx + (nx - x) % nx;
+                    auto random = MakeIndexedRandom(731, std::min(index, opposite));
+                    const double phase = (index < opposite ? 1 : -1) * 2 * std::numbers::pi * Uniform(random);
+                    const double amplitude = std::sqrt((f < low ? 1 : std::pow(f / low, -exponent)) / (nx * ny * step * step * integral));
+                    expected += amplitude * std::cos(phase + 2 * std::numbers::pi * (double(x) * point[0] / nx + double(y) * point[1] / ny));
+                }
+            Check(std::abs(surface[point[1] * nx + point[0]] - expected) < 2e-5, "Self-affine GPU synthesis matches direct Hermitian Fourier sum");
+        }
+    }
+    const auto single = ExtremeSeparation(1), pair = ExtremeSeparation(2);
+    Check(std::abs(single.Mean) < 1e-12 && std::abs(single.Deviation - 1) < 1e-12, "One-patch extreme distribution is Gaussian");
+    Check(std::abs(pair.Mean - 1 / std::sqrt(std::numbers::pi)) < 1e-12 &&
+          std::abs(pair.Deviation * pair.Deviation - (1 - 1 / std::numbers::pi)) < 1e-12, "Two-patch maximum has the analytical moments");
+}
+void BouncingContact(Gpu &gpu) {
+    for (double correlation : {1.11, 10.}) {
+        const auto filter = MakeCorrelatedPlate(correlation, .005);
+        const std::array frequencies{.1, 1., 10.};
+        std::array<std::complex<double>, 3> sums{}, phases{1., 1., 1.};
+        const std::array rotation{std::polar(1., -.005 * frequencies[0]), std::polar(1., -.005 * frequencies[1]), std::polar(1., -.005 * frequencies[2])};
+        std::array<double, 3> state{};
+        double dc{};
+        for (unsigned n = 0; n < 65536; ++n) {
+            const auto h = AdvancePlate(filter, state, n == 0).Height;
+            dc += h;
+            for (unsigned k = 0; k < 3; ++k) { sums[k] += h * phases[k]; phases[k] *= rotation[k]; }
+        }
+        for (unsigned k = 0; k < 3; ++k) {
+            const double w = frequencies[k], expected = 10 / std::hypot(10., w) / std::hypot(1 - w * w, 2 * w / correlation);
+            Check(std::abs(std::abs(sums[k]) / dc / expected - 1) < 2e-4, "RK4 impulse response matches the continuous two-stage filter magnitude");
+        }
+    }
+    BouncingState<double> ball{.Height = 1, .TakeoffHeight = 1, .Stuck = false};
+    unsigned impacts{};
+    for (unsigned step = 0; step < 110; ++step) {
+        const auto event = AdvanceBouncing(ball, PlateMotion<double>{}, PlateMotion<double>{}, .01, 2., .8, .1);
+        if (event.Completed) {
+            ++impacts;
+            Check(std::abs(event.Duration - 1) < 1e-12 && std::abs(event.Impulse - 3.6) < 1e-12, "Ballistic root and restitution match a stationary-plane drop");
+        }
+        Check(ball.Height >= -1e-12, "Bouncing state preserves nonpenetration");
+    }
+    Check(impacts == 1, "Drop records one completed flight");
+    BouncingState<double> stuck{};
+    AdvanceBouncing(stuck, {0., 0., -3.}, {-.00015, -.03, -3.}, .01, 2., .8, .1);
+    Check(!stuck.Stuck && std::abs(stuck.Height + .0001) < 1e-15, "Downward plate acceleration exceeding gravity releases contact");
+    const BounceSimulation settings{.Streams = 1, .Flights = 100, .Discard = 10, .TraceSamples = 4096, .MaxSteps = 4096};
+    const auto result = SimulateBouncing(gpu, settings);
+    const auto filter = MakeCorrelatedPlate(settings.CorrelationTime, settings.TimeStep);
+    auto random = MakeIndexedRandom(settings.Seed, 0);
+    std::array<double, 3> state{};
+    PlateMotion<double> previous{};
+    BouncingState<double> cpu{};
+    double error{}, norm{};
+    const double gravity = filter.VelocityDeviation * filter.VelocityDeviation / settings.Acceleration;
+    for (const auto sample : result.Trace) {
+        const auto plate = AdvancePlate(filter, state, Normal(random));
+        AdvanceBouncing(cpu, previous, plate, settings.TimeStep, gravity, settings.Restitution, settings.StickFactor * settings.TimeStep * gravity);
+        const std::array expected{plate.Height, plate.Velocity, cpu.Height, cpu.Velocity};
+        for (unsigned k = 0; k < 4; ++k) {
+            error += std::pow(sample[k] - expected[k], 2);
+            norm += expected[k] * expected[k];
+        }
+        previous = plate;
+    }
+    Check(error < 1e-7 * norm, "Metal filtered excitation and bouncing trajectory match FP64 with shared innovations");
+}
 }
 int main() {
     try {
@@ -398,6 +491,8 @@ int main() {
         for (auto method : {ContactMethod::Penalty, ContactMethod::Multiplier}) Impact(method, 2.5e-6, 1e7);
         PlateReactions();
         auto gpu = CreateGpu();
+        GeometricContact(gpu);
+        BouncingContact(gpu);
         BeamGpu(gpu);
         PlateGpu(gpu);
         DenseContact(gpu);

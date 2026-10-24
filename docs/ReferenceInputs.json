@@ -1125,6 +1125,18 @@
       "method": "rough",
       "path": "references/rough/1310.5252.tar",
       "sha256": "feb3e38dc22379d77611c84b56716c8c2e39ae30b8188daedeb9e1bd6aad20e0"
+    },
+    {
+      "method": "ponthus",
+      "path": "references/ponthus/source.tar",
+      "sha256": "ff0ecfe8ff2305c85d9044d8ac5c85d17307f90a561e346cd2412ac5e9fb810b",
+      "url": "https://arxiv.org/src/1904.12502v1"
+    },
+    {
+      "method": "zouabi",
+      "path": "references/zouabi/source.tar",
+      "sha256": "5fe76ce80a7aeff48ab5fd169308fc9d2c59d10efc19291dfd5f2e7c18913bde",
+      "url": "https://arxiv.org/src/1609.07313v2"
     }
   ]
 }

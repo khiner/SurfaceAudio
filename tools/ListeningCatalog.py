@@ -9,6 +9,12 @@ OUTPUTS = ROOT / 'outputs/reproduction'
 
 # Each entry names the reference, the local result, and the limit of the comparison.
 PAPERS = [
+    ('ponthus', 'Rough-surface contact dynamics', 'Ponthus et al. · 2019', 'Geometric separation and extreme-value statistics', 'Ponthus',
+     'Published figure data are compared with independent rough-surface ensembles. '
+     'The audio directly sonifies separation; the paper provides geometric statistics and no reference audio.'),
+    ('zouabi', 'Rough-surface contact dynamics', 'Zouabi, Scheibert & Perret-Liaudet · 2016', 'Bouncing under correlated random excitation', 'Zouabi',
+     'The excitation filter matches published curves; velocity distributions compare the letter and thesis sticking rules. '
+     'Substantial statistical differences remain. Audio compares our plate and ball velocities, with no author audio or radiation model.'),
     ('dang', 'Rough-surface contact dynamics', 'Dang et al. · 2013', 'Coupled rough beams and contact-event statistics', 'Dang',
      'The local fixture combines journal parameters, a separate thesis example and inferred settings. '
      'Published event thresholds are compared with simulated beam contact; the exact author configuration and surface arrays are unavailable.'),
@@ -81,7 +87,7 @@ def curate(case, paper, variant=''):
     title = case['title']
     labels = [case.get('reference_label', 'Published author example'), case.get('synthesis_label', 'Our synthesis')]
     group, notes = 'Comparisons', ''
-    if paper in {'dang', 'gregoire', 'assemien'}:
+    if paper in {'dang', 'gregoire', 'assemien', 'ponthus', 'zouabi'}:
         notes = case.get('notes', '')
     elif paper == 'agarwal':
         group = 'Rolling reconstructions' if 'retained' in title else 'Response and excitation comparisons'
