@@ -14,8 +14,8 @@ from scipy import signal, optimize
 from scipy.io import wavfile
 
 from AnalyzeRenders import read_wave, metrics, texture_metrics
+from reference_assets import ROOT, write_json
 
-ROOT = Path(__file__).resolve().parents[1]
 RATE = 44100
 URL = 'https://kronland.fr/wp-content/uploads/2015/05/ConanEtAlCMJ2014.mp4'
 PAGE = 'https://kronland.fr/publications/an-intuitive-synthesizer-of-continuous-interaction-sounds-rubbing-scratching-and-rolling/'
@@ -25,10 +25,6 @@ CASES = [('rubbing', 59, 65, 0), ('rolling', 68, 74, 4*np.pi/3), ('scratching', 
 
 def pin(path):
     return {'path': str(path.resolve()), 'sha256': hashlib.sha256(path.read_bytes()).hexdigest(), 'bytes': path.stat().st_size}
-
-
-def write_json(path, value):
-    path.write_text(json.dumps(value, indent=2, allow_nan=False) + '\n')
 
 
 def video_controls(video):

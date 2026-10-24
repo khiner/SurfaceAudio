@@ -1,3 +1,4 @@
+#include "Require.h"
 #include "core/GpuFullSpectrum.h"
 #include <algorithm>
 #include <array>
@@ -6,13 +7,9 @@
 #include <complex>
 #include <iostream>
 #include <numbers>
-#include <stdexcept>
 #include <vector>
 using namespace surface_audio;
 namespace {
-void Require(bool x, const char *message) {
-    if (!x) throw std::runtime_error(message);
-}
 struct Evaluation {
     double Loss{};
     std::vector<double> Gradient;

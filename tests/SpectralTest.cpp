@@ -1,3 +1,4 @@
+#include "Require.h"
 #include "core/GpuSpectral.h"
 #include "core/Random.h"
 
@@ -13,10 +14,6 @@
 
 using namespace surface_audio;
 namespace {
-void Require(bool condition, const char *message) {
-    if (!condition) throw std::runtime_error(message);
-}
-
 std::vector<double> Magnitudes(std::span<const double> waveform, uint32_t size, SpectralLossOptions options) {
     const uint32_t hop = size / options.HopDivisor, frames = 1 + uint32_t(waveform.size()) / hop, bins = size / 2 + 1;
     std::vector<double> result(size_t(frames) * bins);

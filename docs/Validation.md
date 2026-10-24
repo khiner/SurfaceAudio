@@ -26,6 +26,7 @@ The tests cover independent equations, gradients, statistical moments, source tr
 Tests require a Metal device and shaders, with sanitizer coverage limited to host code.
 The rough-contact unit tests cover shared mechanics in `ContactMechanicsTest` and CPU/Metal assembly in `RoughContactTest`.
 `PatchContactTest` checks the FP64 Andersson–Kropp contact solve, including 400 elements with 256 response taps. `python3 tests/AnderssonTest.py` checks geometry-derived springs against published punch data, the elastic-layer equations and the connected surface-to-force pipeline; published tread-block inputs remain unavailable.
+`RenTest` checks textured excitation, contact state and CPU/Metal agreement; `python3 tests/RenTest.py` checks the mesh spring model against independent coupled dynamics. The ten [Ren renders](Ren.md) have a maximum full-audio relative L2 error of 1.10e-4 against the double-precision equation reference and 9.84e-8 between native CPU and Metal paths (October 2026).
 Use small independent references for numerical contracts; keep paper-specific comparisons in the reproduction tools.
 Run paper reproductions with `python3 tools/Reproduce.py --offline`.
 See [object-response reproduction](AgarwalResponseReproduction.md) for fitting and replay commands.

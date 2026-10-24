@@ -1,4 +1,5 @@
 #include "lagrange/Lagrange.h"
+#include "Require.h"
 #include "core/SignalAnalysis.h"
 #include <algorithm>
 #include <array>
@@ -12,9 +13,6 @@
 using namespace surface_audio;
 using namespace surface_audio::lagrange;
 namespace {
-void Require(bool value, const char *message) {
-    if (!value) throw std::runtime_error(message);
-}
 void MeixnerEquation() {
     const auto window = Meixner();
     double norm = 0;

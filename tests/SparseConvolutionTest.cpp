@@ -1,3 +1,4 @@
+#include "Require.h"
 #include "core/GpuSparseConvolution.h"
 #include <algorithm>
 #include <array>
@@ -9,9 +10,6 @@
 
 using namespace surface_audio;
 namespace {
-void Require(bool condition, const char *message) {
-    if (!condition) throw std::runtime_error(message);
-}
 void DenseOracle(Gpu &gpu) {
     const std::array<float, 5> impulse{.2f, -.7f, 1, -.6f, .1f};
     const std::array<std::pair<uint32_t, double>, 5> events{{{0, .25}, {7, .75}, {9, .5}, {24, .3}, {31, .8}}};

@@ -13,14 +13,10 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 from andersson_model import layer_green, punch_factor, surface_springs
-from reference_assets import ROOT
+from reference_assets import ROOT, write_json
 
 DEFAULTS = {'elements': [20, 20], 'element_spacing': .001, 'thickness': .01, 'sample_rate': 51200,
             'taps': 256, 'spring_knots': 257, 'spring_fraction': .9}
-
-
-def write_json(path, data):
-    path.write_text(json.dumps(data, indent=2, allow_nan=False) + '\n')
 
 
 def listening_input(directory):

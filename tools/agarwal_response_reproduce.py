@@ -15,16 +15,13 @@ import scipy
 from scipy import signal, stats
 from scipy.io import wavfile
 
-ROOT = pathlib.Path(__file__).resolve().parents[1]
+from reference_assets import ROOT, write_json
+
 REFERENCES = ROOT / 'references/agarwal/icml2023'
 SOURCE = 'https://mcdermottlab.mit.edu/ICML2023/sound_website.html'
 MATERIALS = ('Wood', 'Plastic', 'Metal', 'Glass')
 RATE = 44100
 BAND_EDGES = np.geomspace(20, 20000, 33)
-
-
-def save_json(path, value):
-    path.write_text(json.dumps(value, indent=2, allow_nan=False) + '\n')
 
 
 def digest(path):
@@ -326,7 +323,7 @@ def render_retained(binary, output):
             wavfile.write(restored, RATE, restore_response(read_wave(destination), fit['preprocessing']))
             cases.append({'title': 'Agarwal 2023 ' + name, 'reference': str(REFERENCES / 'training' / (name + '.wav')),
                           'synthesis': str(restored), 'notes': record['scope'], 'source_url': SOURCE})
-    save_json(output / 'cases.json', {'cases': cases})
+    write_json(output / 'cases.json', {'cases': cases})
     subprocess.run([sys.executable, str(ROOT / 'tools/BuildListeningReport.py'), str(output / 'cases.json'), '--output', str(output / 'listening')], cwd=ROOT, check=True)
 
 def main():
@@ -342,7 +339,7 @@ def main():
     parser.add_argument('--analyze-only', action='store_true', help='Reuse fitted and sample WAVs; regenerate initialization and recompute distribution metrics')
     parser.add_argument('--self-test', action='store_true', help='Verify analytic joint covariance and leave-one-out exclusion without audio or executable')
     parser.add_argument('--skip-loo', action='store_true', help='Bounded run without leave-one-out sampling; report marks omitted validation')
-    parser.add_argument('--align-onset', action='store_true', help='Subtract median DC and trim before 0.1% cumulative energy; restore delay and DC for full-record comparisons')
+    parser.add_argument('--align-onset', action='store_true', help='Subtract median DC and trim before 0.1%% cumulative energy; restore delay and DC for full-record comparisons')
     parser.add_argument('--loss-scale', choices=('db', 'ln', 'linear'), default='db')
     parser.add_argument('--learning-rate', type=float, default=2e-6)
     parser.add_argument('--parameter-scale-mode', choices=('physical', 'scaled', 'log-decay'), default='physical',
@@ -395,14 +392,14 @@ def main():
                     raise ValueError(f'{name}: prepared audio differs from source preprocessing')
             else:
                 wavfile.write(prepared_path, RATE, prepared)
-                save_json(preprocessing_path, preprocessing)
+                write_json(preprocessing_path, preprocessing)
             params, metadata = initialize(prepared.astype(np.float64), args.seed + material_index * 5 + index)
             initial_path = directory / 'initial.f32'
             if (args.analyze_only or args.sample_only) and (not initial_path.exists() or initial_path.read_bytes() != params.tobytes()):
                 raise ValueError(f'{name}: cached initialization differs; use the original seed')
             if not (args.analyze_only or args.sample_only):
                 params.tofile(initial_path)
-                save_json(directory / 'initialization.json', metadata)
+                write_json(directory / 'initialization.json', metadata)
             if args.prepare_only:
                 print(f'Prepared {name}: RT60 {metadata["broadband_rt60"]["seconds"]:.4f}s', flush=True)
                 continue
@@ -430,7 +427,7 @@ def main():
                     'fit_configuration': {key: info[key] for key in ('steps', 'seed', 'learning_rate', 'parameter_scale_mode')},
                     'loss_scale': args.loss_scale, 'preprocessing': preprocessing,
                     'artifact_sha256': {name: digest(directory / name) for name in artifact_names}}
-                save_json(directory / 'provenance.json', provenance)
+                write_json(directory / 'provenance.json', provenance)
             result['fits'][name] = {'provenance': provenance, 'optimizer': info, 'initialization': metadata, 'preprocessing': preprocessing,
                 'prepared_reference': features(prepared.astype(np.float64), frames=None),
                 'initial_response': features(read_wave(directory / 'initial-response.wav'), frames=None),
@@ -443,7 +440,7 @@ def main():
                           'fitted_response': str(directory / 'fitted-response.wav'), 'preprocessing': preprocessing,
                           'notes': 'Same-record calibrated reconstruction with ten modes and ten ERB noise bands. Full-record comparison restores the recorded onset delay and median DC after optional alignment; causal response files are separate. Raw gain retained. Paper implementation details are partly unspecified.', 'source_url': SOURCE})
     result['actual_fit_configurations'] = {name: {**row['provenance']['fit_configuration'], 'loss_scale': row['provenance']['loss_scale'], 'fit_binary_sha256': row['provenance']['fit_binary_sha256'], 'metallib_sha256': row['provenance']['synthesis_artifacts']['metallib']['sha256']} for name, row in result['fits'].items()}
-    save_json(args.output / 'run.json', {k: v for k, v in result.items() if k not in ('fits', 'materials')})
+    write_json(args.output / 'run.json', {k: v for k, v in result.items() if k not in ('fits', 'materials')})
     if args.prepare_only:
         return
     if args.case == 'all':
@@ -453,7 +450,7 @@ def main():
             draws, model = material_parameters(parameters, 20, seed)
             directory = args.output / 'materials' / material
             generated = sample_cohort(args.binary, directory, draws, seed, args.analyze_only)
-            save_json(directory / 'distribution.json', model)
+            write_json(directory / 'distribution.json', model)
             author = []
             for i in range(1, 21):
                 path = REFERENCES / 'resynth' / material.lower() / f'{i}.wav'
@@ -466,7 +463,7 @@ def main():
                     loo_draws, loo_model = material_parameters(parameters, 20, loo_seed, heldout=heldout)
                     loo_dir = directory / f'leave-out-{heldout + 1}'
                     cohort = sample_cohort(args.binary, loo_dir, loo_draws, loo_seed, args.analyze_only)
-                    save_json(loo_dir / 'distribution.json', loo_model)
+                    write_json(loo_dir / 'distribution.json', loo_model)
                     heldout_prepared, heldout_preprocessing = preprocess(read_wave(REFERENCES / 'training' / f'{material}_{heldout + 1}.wav'), args.align_onset)
                     holdout = features(heldout_prepared.astype(np.float64))
                     data['leave_one_out'].append({'heldout': f'{material}_{heldout + 1}',
@@ -478,14 +475,14 @@ def main():
             data['leave_one_out_status'] = 'omitted by --skip-loo' if args.skip_loo else 'five folds; four calibration records per distribution; twenty new samples per fold'
             result['materials'][material] = data
             print(f'Analyzed {material}: pooled spectral TV {data["comparison"]["pooled_normalized_band_total_variation"]:.4f}', flush=True)
-    save_json(args.output / 'metrics.json', result)
-    save_json(args.output / 'cases.json', {'cases': cases})
+    write_json(args.output / 'metrics.json', result)
+    write_json(args.output / 'cases.json', {'cases': cases})
     listening_report(args.output, result, cases)
     if not args.keep_diagnostics:
         for case in cases:
             for field in ("initial", "initial_response"):
                 pathlib.Path(case.pop(field)).unlink(missing_ok=True)
-        save_json(args.output / "cases.json", {"cases": cases})
+        write_json(args.output / "cases.json", {"cases": cases})
 
 
 if __name__ == '__main__':

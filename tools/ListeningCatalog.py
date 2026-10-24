@@ -9,6 +9,10 @@ OUTPUTS = ROOT / 'outputs/reproduction'
 
 # Each entry names the reference, the local result, and the limit of the comparison.
 PAPERS = [
+    ('ren', 'Surface contact and object responses', 'Ren, Yeh & Lin · 2010', 'Contact sound from geometry, texture maps and microscopic roughness', 'Ren',
+     'Scrape brick, tile and wood textures with the three-level model, compare directions across wood grain, and hear impacts and rolling. '
+     'Each scrape pair shares the same motion, load, roughness and mesh-derived resonator; the second player adds normal-map impulses. '
+     'Meshes, textures and material settings are supplied with this port; the original demo assets are unavailable.'),
     ('andersson', 'Rough-surface contact dynamics', 'Andersson & Kropp · 2008', 'Surface-dependent contact stiffness and elastic-layer memory', 'Andersson',
      'The players audition computed normal forces for repeated presses and sustained vibrating contact, using a generated rough surface. '
      'The model includes surface-dependent springs and elastic-layer memory; playback adds no acoustic resonator. '
@@ -92,7 +96,7 @@ def curate(case, paper, variant=''):
     title = case['title']
     labels = [case.get('reference_label', 'Published author example'), case.get('synthesis_label', 'Our synthesis')]
     group, notes = 'Comparisons', ''
-    if paper in {'dang', 'gregoire', 'assemien', 'ponthus', 'zouabi', 'andersson'}:
+    if paper in {'dang', 'gregoire', 'assemien', 'ponthus', 'zouabi', 'andersson', 'ren'}:
         notes = case.get('notes', '')
     elif paper == 'agarwal':
         group = 'Rolling reconstructions' if 'retained' in title else 'Response and excitation comparisons'

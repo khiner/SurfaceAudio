@@ -1,3 +1,4 @@
+#include "Require.h"
 #include "agarwal/Impact.h"
 #include <algorithm>
 #include <array>
@@ -9,9 +10,6 @@
 using namespace surface_audio;
 using namespace surface_audio::agarwal;
 namespace {
-void Require(bool value, const char *message) {
-    if (!value) throw std::runtime_error(message);
-}
 void Near(double a, double b, double tolerance, const char *message) { Require(std::abs(a - b) <= tolerance, message); }
 void Equations() {
     Near(EquivalentStiffness(6, 3), 2, 1e-15, "Series stiffness");

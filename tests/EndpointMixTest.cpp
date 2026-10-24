@@ -1,3 +1,4 @@
+#include "Require.h"
 #include "core/Adam.h"
 #include "core/GpuEndpointMix.h"
 #include "core/GpuSpectral.h"
@@ -14,10 +15,6 @@
 
 using namespace surface_audio;
 namespace {
-void Require(bool condition, const char *message) {
-    if (!condition) throw std::runtime_error(message);
-}
-
 template<typename F> void Reject(F &&function, const char *message) {
     bool rejected = false;
     try {

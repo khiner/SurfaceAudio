@@ -1,4 +1,5 @@
 #include "lee/Lee.h"
+#include "Require.h"
 #include "core/SignalAnalysis.h"
 #include <algorithm>
 #include <cmath>
@@ -11,9 +12,6 @@
 using namespace surface_audio;
 using namespace surface_audio::lee;
 namespace {
-void Require(bool value, const char *message) {
-    if (!value) throw std::runtime_error(message);
-}
 double Relative(std::span<const float> a, std::span<const float> b) {
     Require(a.size() == b.size(), "Equal record dimensions");
     double error = 0, energy = 0;

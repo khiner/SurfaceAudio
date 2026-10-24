@@ -1,7 +1,8 @@
-"""Fetch pinned paper resources and extract selected toolkit files."""
+"""Shared reference inputs, dependency checks and reproduction metadata."""
 import hashlib
 import importlib.metadata
 import importlib.util
+import json
 import shlex
 import sys
 from pathlib import Path
@@ -9,6 +10,10 @@ import urllib.request
 import zipfile
 
 ROOT = Path(__file__).resolve().parents[1]
+
+
+def write_json(path, value):
+    path.write_text(json.dumps(value, indent=2, allow_nan=False) + '\n')
 
 
 def require_packages(names):

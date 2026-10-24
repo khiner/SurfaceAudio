@@ -1,3 +1,4 @@
+#include "Require.h"
 #include "core/GpuPooledSpectral.h"
 #include <algorithm>
 #include <cmath>
@@ -10,9 +11,6 @@
 
 using namespace surface_audio;
 namespace {
-void Require(bool condition, const char *message) {
-    if (!condition) throw std::runtime_error(message);
-}
 struct ReferenceCells {
     std::vector<double> Power;
     std::vector<uint32_t> Count;

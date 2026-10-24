@@ -4,6 +4,7 @@ C++23 contact-sound synthesis for Apple Silicon and Metal 4.
 
 | Method | Implementation and caveats |
 |---|---|
+| Ren–Yeh–Lin 2010 | [Three-level textured contact, mesh-derived modal responses, scraping, impacts and rolling](docs/Ren.md) |
 | Agarwal 2021 | [Constrained scraping/rolling forces and position-dependent surface/object responses](docs/Agarwal.md) |
 | SDT | [Coupled modal bodies, impact, elasto-plastic friction, rolling and scraping](docs/Sdt.md) |
 | Conan TASLP 2014 | [Correlated micro-impact rolling synthesis and physical reference](docs/Conan.md) |

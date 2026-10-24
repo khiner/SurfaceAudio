@@ -18,11 +18,7 @@ from PIL import Image
 from scipy.signal import correlate, welch
 
 from AnalyzeRenders import read_wave, texture_metrics
-from reference_assets import ROOT, fetch, require_packages
-
-
-def write_json(path, value):
-    path.write_text(json.dumps(value, indent=2, allow_nan=False) + '\n')
+from reference_assets import ROOT, fetch, require_packages, write_json
 
 
 def spectrum_trace(document, source):

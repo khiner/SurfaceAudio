@@ -1,4 +1,5 @@
 #include "traer/Traer.h"
+#include "Require.h"
 #include "core/ErbNoise.h"
 #include <algorithm>
 #include <array>
@@ -10,9 +11,6 @@
 using namespace surface_audio;
 using namespace surface_audio::traer;
 namespace {
-void Require(bool condition, const char *message) {
-    if (!condition) throw std::runtime_error(message);
-}
 void Equations() {
     std::array<Resonance, 1> mode{{{5, -6, 60}}};
     std::vector<double> output(1001);

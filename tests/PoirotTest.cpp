@@ -1,4 +1,5 @@
 #include "poirot/Poirot.h"
+#include "Require.h"
 #include <algorithm>
 #include <array>
 #include <cmath>
@@ -8,9 +9,6 @@
 #include <stdexcept>
 using namespace surface_audio;
 using namespace surface_audio::poirot;
-static void Require(bool ok, const char *message) {
-    if (!ok) throw std::runtime_error(message);
-}
 int main() {
     try {
         StringParameters string;

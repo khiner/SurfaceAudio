@@ -1,0 +1,20 @@
+{
+  "source": "Local deterministic mesh, textures and gestures for Ren–Yeh–Lin 2010; material presets are not recovered author settings",
+  "sample_rate": 44100,
+  "seed": 2010,
+  "mesh_size_m": [0.30, 0.20, 0.04],
+  "face_bulge_m": 0.006,
+  "shell_thickness_m": 0.003,
+  "slider_mass_kg": 0.008,
+  "normal_force_N": 0.3,
+  "roughness_gain": 0.12,
+  "roughness_spacing_m": 0.00002,
+  "roughness_samples": 65536,
+  "texture_resolution": 256,
+  "texture_extent_m": [0.10, 0.10],
+  "materials": {
+    "brick": {"young_Pa": 2000000000, "density_kg_m3": 1800, "gamma": 30, "eta": 0.0000008, "noise_exponent": 1.2},
+    "tile": {"young_Pa": 6000000000, "density_kg_m3": 2300, "gamma": 8, "eta": 0.0000001, "noise_exponent": 0.8},
+    "wood": {"young_Pa": 600000000, "density_kg_m3": 650, "gamma": 35, "eta": 0.0000015, "noise_exponent": 1.5}
+  }
+}

@@ -1,3 +1,4 @@
+#include "Require.h"
 #include "agarwal/SpatialConvolution.h"
 #include "core/Random.h"
 
@@ -12,10 +13,6 @@
 
 using namespace surface_audio;
 using namespace surface_audio::agarwal;
-
-static void Require(bool condition, const char *message) {
-    if (!condition) throw std::runtime_error(message);
-}
 
 struct Fixture {
     uint32_t Taps;

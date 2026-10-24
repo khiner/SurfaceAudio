@@ -1,4 +1,5 @@
 #include "agarwal/ResponseMaterial.h"
+#include "Require.h"
 
 #include <cmath>
 #include <iostream>
@@ -9,9 +10,6 @@ using namespace surface_audio;
 using namespace surface_audio::agarwal;
 
 namespace {
-void Require(bool condition, const char *message) {
-    if (!condition) throw std::runtime_error(message);
-}
 template<typename Function> void Invalid(Function function) {
     bool rejected = false;
     try {

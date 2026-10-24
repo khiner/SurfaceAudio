@@ -1,4 +1,5 @@
 #include "nakatsuka/Nakatsuka.h"
+#include "Require.h"
 #include <algorithm>
 #include <cmath>
 #include <iostream>
@@ -7,9 +8,6 @@
 
 using namespace surface_audio;
 namespace {
-void Require(bool value, const char *message) {
-    if (!value) throw std::runtime_error(message);
-}
 }
 int main() {
     try {

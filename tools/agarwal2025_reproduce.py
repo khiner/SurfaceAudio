@@ -11,7 +11,8 @@ from scipy import signal
 from scipy.io import wavfile
 
 from agarwal2026_reproduce import check_impact, digest, provenance, relative, run, RATE, ROOT
-from agarwal_response_reproduce import preprocess, read_wave, save_json
+from agarwal_response_reproduce import preprocess, read_wave
+from reference_assets import write_json
 from AnalyzeRenders import texture_metrics
 from Reproduce import verify_inputs
 
@@ -133,8 +134,8 @@ def main():
                   'Same excitation and responses isolate the finite micro-impact duration; no bouncing or restitution is simulated.'})
     if provenance(args.binary, args.force_binary) != build:
         raise ValueError('Executable or shaders changed during reproduction')
-    save_json(output / 'metrics.json', {'build_sha256': build, 'controls': controls, 'cases': metrics})
-    save_json(output / 'cases.json', {'cases': cases})
+    write_json(output / 'metrics.json', {'build_sha256': build, 'controls': controls, 'cases': metrics})
+    write_json(output / 'cases.json', {'cases': cases})
     run(sys.executable, ROOT / 'tools/BuildListeningReport.py', output / 'cases.json', '--output', output / 'listening')
     if not args.keep_diagnostics:
         for case in controls['cases']:

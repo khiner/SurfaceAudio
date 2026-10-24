@@ -1,4 +1,5 @@
 #include "continuous/Continuous.h"
+#include "Require.h"
 
 #include <algorithm>
 #include <cmath>
@@ -12,9 +13,6 @@
 using namespace surface_audio;
 using namespace surface_audio::continuous;
 namespace {
-void Require(bool condition, const char *message) {
-    if (!condition) throw std::runtime_error(message);
-}
 void Navigation() {
     constexpr double turn = 2 * std::numbers::pi;
     for (unsigned anchor = 0; anchor < 3; ++anchor) {

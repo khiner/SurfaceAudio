@@ -1,23 +1,20 @@
-#include "lagrange/Lagrange.h"
+#include "Require.h"
 #include "core/GpuConvolution.h"
 #include "core/GpuFft.h"
 #include "core/GpuSparseConvolution.h"
+#include "lagrange/Lagrange.h"
 #include <algorithm>
 #include <array>
 #include <cmath>
 #include <iomanip>
 #include <iostream>
 #include <numbers>
-#include <stdexcept>
 
 using namespace surface_audio;
 using namespace surface_audio::lagrange;
 namespace {
 constexpr uint32_t Rate = 44100, Frames = 2 * Rate;
 constexpr double Pi = std::numbers::pi;
-void Require(bool condition, const char *message) {
-    if (!condition) throw std::runtime_error(message);
-}
 double Error(std::span<const float> actual, std::span<const float> expected) {
     Require(actual.size() >= expected.size(), "Truncated recovery output");
     double error = 0, energy = 0;

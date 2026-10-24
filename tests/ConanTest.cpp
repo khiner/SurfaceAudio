@@ -1,4 +1,5 @@
 #include "conan/Conan.h"
+#include "Require.h"
 #include "conan/Reference.h"
 #include "core/Gpu.h"
 
@@ -15,9 +16,6 @@
 using namespace surface_audio;
 using namespace surface_audio::conan;
 
-static void Require(bool condition, const char *message) {
-    if (!condition) throw std::runtime_error(message);
-}
 static bool Near(double actual, double expected, double tolerance) { return std::abs(actual - expected) <= tolerance; }
 
 static void TestControls() {

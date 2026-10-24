@@ -1,4 +1,5 @@
 #include "core/SignalAnalysis.h"
+#include "Require.h"
 #include "core/GpuConvolution.h"
 #include "core/GpuDecimate.h"
 #include "core/GpuFft.h"
@@ -14,9 +15,6 @@
 using namespace surface_audio;
 namespace {
 using Complex = std::complex<double>;
-void Require(bool condition, const char *message) {
-    if (!condition) throw std::runtime_error(message);
-}
 void FourierTest(Gpu &gpu) {
     std::mt19937 random(72);
     std::uniform_real_distribution<float> distribution(-1, 1);

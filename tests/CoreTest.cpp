@@ -1,3 +1,4 @@
+#include "Require.h"
 #include "core/AudioFile.h"
 #include "core/Convolution.h"
 #include "core/ErbNoise.h"
@@ -23,10 +24,6 @@
 
 using namespace surface_audio;
 namespace {
-void Require(bool condition, const char *message) {
-    if (!condition) throw std::runtime_error(message);
-}
-
 void PivotedSolveTest() {
     std::array<double, 4> matrix{0, 2, 3, 4};
     std::array<double, 2> right{-2, 2};

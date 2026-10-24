@@ -9,7 +9,8 @@ import numpy as np
 from scipy import integrate, signal
 from scipy.io import wavfile
 
-from agarwal_response_reproduce import ROOT, RATE, MATERIALS, digest, initialize, preprocess, restore_response, read_wave, features, verify_inputs, save_json
+from agarwal_response_reproduce import ROOT, RATE, MATERIALS, digest, initialize, preprocess, restore_response, read_wave, features, verify_inputs
+from reference_assets import write_json
 from Reproduce import run, verify_inputs as verify_cached_inputs
 
 FIXTURE = ROOT / 'repros/agarwal2026/parameters.json'
@@ -191,9 +192,9 @@ def main():
         raise ValueError('Executable or shaders changed during reproduction')
     if args.fit:
         retained['build_sha256'] = build
-        save_json(FIXTURE, retained)
-    save_json(output / 'metrics.json', metrics)
-    save_json(output / 'cases.json', {'cases': cases})
+        write_json(FIXTURE, retained)
+    write_json(output / 'metrics.json', metrics)
+    write_json(output / 'cases.json', {'cases': cases})
     run(sys.executable, ROOT / 'tools/BuildListeningReport.py', output / 'cases.json', '--output', output / 'listening')
     if not args.keep_diagnostics:
         for pattern in ('fits/*/initial.wav', 'fits/*/initial.f32', 'fits/*/fitted.f32', 'fits/*/prepared.wav', 'fits/*/last.f32', 'fits/*/loss.csv', 'impacts/*/force.wav', 'materials/*/samples.f32', 'materials/*/sample-*.f32', 'materials/*/sample-*.wav', 'materials/*/records.f32'):

@@ -1,4 +1,5 @@
 #include "agarwal/ObjectResponse.h"
+#include "Require.h"
 #include <algorithm>
 #include <cmath>
 #include <iostream>
@@ -8,9 +9,6 @@
 using namespace surface_audio;
 using namespace surface_audio::agarwal;
 namespace {
-void Require(bool value, const char *message) {
-    if (!value) throw std::runtime_error(message);
-}
 ObjectResponseParameters Parameters() {
     ObjectResponseParameters p{};
     for (uint32_t i = 0; i < 10; ++i) {

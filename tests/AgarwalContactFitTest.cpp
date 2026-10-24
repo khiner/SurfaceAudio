@@ -1,3 +1,4 @@
+#include "Require.h"
 #include "agarwal/ContactFit.h"
 #include "core/GpuSpectral.h"
 #include "core/Random.h"
@@ -11,16 +12,11 @@
 #include <numeric>
 #include <ranges>
 #include <sstream>
-#include <stdexcept>
 #include <vector>
 
 using namespace surface_audio;
 using namespace surface_audio::agarwal;
 namespace {
-void Require(bool condition, const char *message) {
-    if (!condition) throw std::runtime_error(message);
-}
-
 void DecayEndpointRoundTripTest(Gpu &gpu) {
     constexpr uint32_t rate = 44100;
     const auto bounds = ContactFitLogDecayBounds();

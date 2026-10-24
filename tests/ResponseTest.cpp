@@ -1,4 +1,5 @@
 #include "agarwal/Response.h"
+#include "Require.h"
 #include "core/GpuSpectral.h"
 
 #include <algorithm>
@@ -12,9 +13,6 @@ using namespace surface_audio;
 using namespace surface_audio::agarwal;
 
 namespace {
-void Require(bool condition, const char *message) {
-    if (!condition) throw std::runtime_error(message);
-}
 std::array<double, ResponseParameterCount> Parameters() {
     std::array<double, ResponseParameterCount> result{};
     for (uint32_t mode = 0; mode < ResponseModeCount; ++mode) {
