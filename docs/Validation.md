@@ -25,6 +25,7 @@ Release and ASan/UBSan checks passed on the benchmark machine.
 The tests cover independent equations, gradients, statistical moments, source traces, finite tails, CPU/GPU agreement and streaming state.
 Tests require a Metal device and shaders, with sanitizer coverage limited to host code.
 The rough-contact unit tests cover shared mechanics in `ContactMechanicsTest` and CPU/Metal assembly in `RoughContactTest`.
+`PatchContactTest` checks the FP64 Andersson–Kropp contact solve, including 400 elements with 256 response taps. `python3 tests/AnderssonTest.py` checks geometry-derived springs against published punch data, the elastic-layer equations and the connected surface-to-force pipeline; published tread-block inputs remain unavailable.
 Use small independent references for numerical contracts; keep paper-specific comparisons in the reproduction tools.
 Run paper reproductions with `python3 tools/Reproduce.py --offline`.
 See [object-response reproduction](AgarwalResponseReproduction.md) for fitting and replay commands.
@@ -97,4 +98,5 @@ Physical-input identification and perceptual equivalence require separate valida
 [Object responses](AgarwalResponseReproduction.md) documents filter, optimizer, alignment and distribution assumptions.
 [Rough beams](Dang.md), [rough plates](Assemien.md) and [the instrumented slider](Gregoire.md) distinguish numerical checks from published comparisons.
 [Geometric filtering](Ponthus.md) and [correlated bouncing](Zouabi.md) compare independent ensembles against recovered author figure data.
+[Interfacial contact](Andersson.md) documents the surface-to-force pipeline, input schema, independent numerical validation and missing inputs preventing the published tread-block comparison.
 WAV amplitudes use digital or pickup gains, with sound-pressure calibration unavailable.

@@ -30,7 +30,7 @@ def verify_inputs(methods):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    available = ["agarwal", "sdt", "conan", "matusiak", "poirot", "continuous", "matusiak2024", "falaize", "traer", "willemsen", "lagrange", "lee", "agarwal2026", "agarwal2025", "hatt", "nakatsuka", "rough", "ponthus", "zouabi"]
+    available = ["agarwal", "sdt", "conan", "matusiak", "poirot", "continuous", "matusiak2024", "falaize", "traer", "willemsen", "lagrange", "lee", "agarwal2026", "agarwal2025", "hatt", "nakatsuka", "rough", "ponthus", "zouabi", "andersson"]
     parser.add_argument("--method", nargs="+", choices=["all", *available], default=["all"])
     parser.add_argument("--build", type=Path, default=ROOT / "build")
     parser.add_argument("--offline", action="store_true", help="Require cached reference inputs")
@@ -59,7 +59,10 @@ def main():
     (output / "environment.json").write_text(json.dumps(environment, indent=2) + "\n")
     diagnostics = ["--keep-diagnostics"] if args.keep_diagnostics else []
     for method in methods:
-        if method in ("ponthus", "zouabi"):
+        if method == "andersson":
+            for mode in ('validate', 'listening'):
+                run(sys.executable, ROOT / 'tools/andersson_reproduce.py', '--' + mode, '--binary', build / 'anderssonReproduce')
+        elif method in ("ponthus", "zouabi"):
             run(sys.executable, ROOT / "tools/contact_statistics.py", "--method", method, "--binary", build / "contactStatistics",
                 *(["--offline"] if args.offline else []), *diagnostics)
             verify_inputs([method])

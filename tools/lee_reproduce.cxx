@@ -1,3 +1,4 @@
+#include "core/BinaryFile.h"
 #include "core/AudioFile.h"
 #include "lee/Lee.h"
 #include "lee/LeeInternal.h"
@@ -107,8 +108,7 @@ int main(int argc, char **argv) {
         WriteWave(output / "half_speed.wav", source.SampleRate, 1, lee::Synthesize(analysis, .5));
         WriteWave(output / "reverse_trajectory.wav", source.SampleRate, 1, lee::Synthesize(analysis, 1, 1, true));
         Parameters(analysis, output / "parameters.json");
-        std::ofstream envelope(output / "envelope.f64", std::ios::binary);
-        envelope.write(reinterpret_cast<const char *>(analysis.Envelope.data()), analysis.Envelope.size() * sizeof(double));
+        WriteBinary<double>(output / "envelope.f64", analysis.Envelope);
         const auto bank = lee::MakeFilterBank();
         std::ofstream filters(output / "filters.json");
         filters << std::setprecision(17) << '[';

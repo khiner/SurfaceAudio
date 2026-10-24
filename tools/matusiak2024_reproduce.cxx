@@ -1,3 +1,4 @@
+#include "core/BinaryFile.h"
 #include "core/AudioFile.h"
 #include "matusiak2024/Matusiak2024.h"
 #include "matusiak2024/Matusiak2024Gpu.h"
@@ -113,8 +114,7 @@ int main(int argc, char **argv) {
         }
         const double seconds = std::chrono::duration<double>(std::chrono::steady_clock::now() - start).count();
         WriteWave(output / "bridge_force.wav", static_cast<uint32_t>(p.SampleRate), 1, wave);
-        std::ofstream raw(output / "trace.f64", std::ios::binary);
-        raw.write(reinterpret_cast<const char *>(trace.data()), trace.size() * sizeof(double));
+        WriteBinary<double>(output / "trace.f64", trace);
         std::ofstream json(output / "native.json");
         json << std::setprecision(17) << "{\"cpu_seconds\":" << seconds << ",\"frames\":" << frames << ",\"max_energy_error_j\":" << max_energy << ",\"max_residual\":" << max_residual << ",\"max_iterations\":" << max_iterations << ",\"branch_initializations\":" << branch_initializations << "}\n";
         if (argc > 8 && std::stoul(argv[8])) Benchmark(output, p, force, acceleration, frames, std::stoul(argv[8]));

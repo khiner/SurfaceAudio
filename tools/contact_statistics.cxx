@@ -1,5 +1,6 @@
 #include "rough/GeometricContact.h"
 #include "rough/Bouncing.h"
+#include "core/BinaryFile.h"
 #include <chrono>
 #include <cmath>
 #include <filesystem>
@@ -13,11 +14,6 @@ using namespace surface_audio;
 using namespace surface_audio::rough;
 namespace {
 namespace fs = std::filesystem;
-template<typename T> void Write(const fs::path &path, std::span<const T> values) {
-    std::ofstream out(path, std::ios::binary);
-    out.exceptions(std::ios::badbit | std::ios::failbit);
-    out.write(reinterpret_cast<const char *>(values.data()), std::streamsize(values.size_bytes()));
-}
 unsigned Number(const char *value) {
     const auto result = std::stoul(value);
     if (result > UINT32_MAX) throw std::invalid_argument("Integer argument exceeds range");
@@ -40,11 +36,11 @@ void Ponthus(const fs::path &output, unsigned nodes, unsigned draws, double expo
         const auto separation = SlidingSeparation(gpu, {track, 5 * nodes, nodes}, {slider, nodes, nodes});
         records.insert(records.end(), separation.begin(), separation.end());
         if (!draw) {
-            Write<float>(output / "track.f32", track);
-            Write<float>(output / "slider.f32", slider);
+            WriteBinary<float>(output / "track.f32", track);
+            WriteBinary<float>(output / "slider.f32", slider);
         }
     }
-    Write<float>(output / "separation.f32", records);
+    WriteBinary<float>(output / "separation.f32", records);
     const auto empirical = SeparationSpectrum(size, ratio, bandwidth);
     const double seconds = std::chrono::duration<double>(std::chrono::steady_clock::now() - start).count();
     std::ofstream out(output / "Run.json");
@@ -61,8 +57,8 @@ void Ponthus(const fs::path &output, unsigned nodes, unsigned draws, double expo
 void Zouabi(const fs::path &output, BounceSimulation settings) {
     auto gpu = CreateGpu();
     const auto result = SimulateBouncing(gpu, settings);
-    Write<BounceStatistics>(output / "statistics.bin", result.Statistics);
-    Write<std::array<float, 4>>(output / "trajectory.f32", result.Trace);
+    WriteBinary<BounceStatistics>(output / "statistics.bin", result.Statistics);
+    WriteBinary<std::array<float, 4>>(output / "trajectory.f32", result.Trace);
     const auto filter = MakeCorrelatedPlate(settings.CorrelationTime, settings.TimeStep);
     std::ofstream out(output / "Run.json");
     out.exceptions(std::ios::badbit | std::ios::failbit);

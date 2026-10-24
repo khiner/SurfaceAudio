@@ -23,6 +23,7 @@ C++23 contact-sound synthesis for Apple Silicon and Metal 4.
 | Grégoire 2021 | [Multi-asperity contact dynamics and measured local-force comparisons](docs/Gregoire.md) |
 | Ponthus 2019 | [Rigid rough-surface separation and extreme-value statistics](docs/Ponthus.md) |
 | Zouabi 2016 | [Correlated bouncing dynamics and published velocity distributions](docs/Zouabi.md) |
+| Andersson–Kropp 2008 | [Surface-derived springs, elastic-layer response and coupled contact; original tread-block inputs unavailable](docs/Andersson.md) |
 | Dang 2013 | [Rough sliding between flexible beams](docs/Dang.md) |
 | Assemien 2023 | [Rough sliding on a plate](docs/Assemien.md) |
 | Nakatsuka 2017 | [Deformable contact, microrectangle vibration and point-source radiation](docs/Nakatsuka.md) |

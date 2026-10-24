@@ -1,4 +1,5 @@
 #include "core/AudioFile.h"
+#include "core/BinaryFile.h"
 #include "core/ErbNoise.h"
 #include "core/GpuConvolution.h"
 #include "traer/Traer.h"
@@ -18,11 +19,6 @@ using namespace surface_audio::traer;
 namespace {
 using Clock = std::chrono::steady_clock;
 double Milliseconds(Clock::time_point start) { return std::chrono::duration<double, std::milli>(Clock::now() - start).count(); }
-void Save(const std::filesystem::path &path, std::span<const double> values) {
-    std::ofstream stream(path, std::ios::binary);
-    stream.write(reinterpret_cast<const char *>(values.data()), std::streamsize(values.size_bytes()));
-    if (!stream) throw std::runtime_error("Cannot write reference samples");
-}
 void Scrape(Gpu &gpu, const std::filesystem::path &config_path, const std::filesystem::path &profile_path, const std::filesystem::path &output) {
     std::ifstream config(config_path);
     uint32_t taps{}, rate{}, mode_count{}, force_frames{};
@@ -38,12 +34,7 @@ void Scrape(Gpu &gpu, const std::filesystem::path &config_path, const std::files
         std::copy_n(modes.begin(), mode_count, modes.begin() + region * mode_count);
         PerturbOnsets(std::span(modes).subspan(region * mode_count, mode_count), random);
     }
-    const auto bytes = std::filesystem::file_size(profile_path);
-    if (bytes % sizeof(double)) throw std::invalid_argument("Invalid surface binary size");
-    std::vector<double> profile(bytes / sizeof(double));
-    std::ifstream stream(profile_path, std::ios::binary);
-    stream.read(reinterpret_cast<char *>(profile.data()), std::streamsize(bytes));
-    if (!stream) throw std::invalid_argument("Cannot read surface profile");
+    const auto profile = ReadBinary<double>(profile_path);
     std::vector<double> position(force_frames), velocity(force_frames);
     std::vector<float> locations(force_frames);
     const double duration = double(force_frames - 1) / rate, omega = 2 * std::numbers::pi * cycles / duration;
@@ -67,8 +58,8 @@ void Scrape(Gpu &gpu, const std::filesystem::path &config_path, const std::files
     WriteWave(output / "varying.wav", rate, 1, varying);
     WriteWave(output / "constant.wav", rate, 1, constant);
     WriteWave(output / "force.wav", rate, 1, force);
-    Save(output / "position.f64", position);
-    Save(output / "velocity.f64", velocity);
+    WriteBinary<double>(output / "position.f64", position);
+    WriteBinary<double>(output / "velocity.f64", velocity);
     std::ofstream mode_stream(output / "modes.txt");
     mode_stream << std::setprecision(17);
     for (const auto &mode : modes) mode_stream << mode.Frequency << ' ' << mode.OnsetDb << ' ' << mode.DecayDbPerSecond << '\n';
@@ -160,7 +151,7 @@ int main(int argc, char **argv) {
         if (!std::isfinite(error) || error / std::max(energy, 1e-30) > 1e-6) throw std::runtime_error("GPU versus FP64 response mismatch");
         const auto output = std::filesystem::path(argv[3]);
         std::filesystem::create_directories(output);
-        Save(output / "response.f64", reference);
+        WriteBinary<double>(output / "response.f64", reference);
         WriteWave(output / "response.wav", rate, 1, actual);
         auto result = ConvolveFixedGpu(gpu, force.Samples, actual);
         WriteWave(output / "synthesis.wav", rate, 1, result);
