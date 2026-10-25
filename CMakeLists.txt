@@ -64,7 +64,7 @@ surface_audio_executable(agarwalObjectReproduce tools/agarwal_object_reproduce.c
 surface_audio_executable(agarwalContactFit tools/agarwal_contact_fit.cxx)
 surface_audio_executable(agarwalEndpointFit tools/agarwal_endpoint_fit.cxx)
 
-foreach(method matusiak poirot continuous matusiak2024 falaize traer willemsen lee lagrange hatt nakatsuka rough andersson ren)
+foreach(method matusiak poirot continuous matusiak2024 falaize traer willemsen lee lagrange hatt nakatsuka rough andersson ren vanwalstijn)
     surface_audio_executable(${method}Reproduce tools/${method}_reproduce.cxx)
 endforeach()
 surface_audio_executable(contactStatistics tools/contact_statistics.cxx)

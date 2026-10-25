@@ -9,6 +9,10 @@ OUTPUTS = ROOT / 'outputs/reproduction'
 
 # Each entry names the reference, the local result, and the limit of the comparison.
 PAPERS = [
+    ('vanwalstijn', 'Collisions and deformation', 'van Walstijn, Chatziioannou & Athanasopoulos · 2024', 'Energy-stable collisions, contact damping and dry friction', 'VanWalstijn',
+     'Hear repeated collisions and stick-slip motion from the explicit and implicit mass–barrier schemes. '
+     'Each pair compares executed author MATLAB with our Metal implementation, using identical forces and playback gain. '
+     'The audio is the sum of the two velocity components. Published displacement curves and convergence rates are checked separately.'),
     ('ren', 'Surface contact and object responses', 'Ren, Yeh & Lin · 2010', 'Contact sound from geometry, texture maps and microscopic roughness', 'Ren',
      'Scrape brick, tile and wood textures with the three-level model, compare directions across wood grain, and hear impacts and rolling. '
      'Each scrape pair shares the same motion, load, roughness and mesh-derived resonator; the second player adds normal-map impulses. '
@@ -96,7 +100,7 @@ def curate(case, paper, variant=''):
     title = case['title']
     labels = [case.get('reference_label', 'Published author example'), case.get('synthesis_label', 'Our synthesis')]
     group, notes = 'Comparisons', ''
-    if paper in {'dang', 'gregoire', 'assemien', 'ponthus', 'zouabi', 'andersson', 'ren'}:
+    if paper in {'dang', 'gregoire', 'assemien', 'ponthus', 'zouabi', 'andersson', 'ren', 'vanwalstijn'}:
         notes = case.get('notes', '')
     elif paper == 'agarwal':
         group = 'Rolling reconstructions' if 'retained' in title else 'Response and excitation comparisons'

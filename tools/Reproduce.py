@@ -30,7 +30,7 @@ def verify_inputs(methods):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    available = ["agarwal", "sdt", "conan", "matusiak", "poirot", "continuous", "matusiak2024", "falaize", "traer", "willemsen", "lagrange", "lee", "agarwal2026", "agarwal2025", "hatt", "nakatsuka", "rough", "ponthus", "zouabi", "andersson", "ren"]
+    available = ["agarwal", "sdt", "conan", "matusiak", "poirot", "continuous", "matusiak2024", "falaize", "traer", "willemsen", "lagrange", "lee", "agarwal2026", "agarwal2025", "hatt", "nakatsuka", "rough", "ponthus", "zouabi", "andersson", "ren", "vanwalstijn"]
     parser.add_argument("--method", nargs="+", choices=["all", *available], default=["all"])
     parser.add_argument("--build", type=Path, default=ROOT / "build")
     parser.add_argument("--offline", action="store_true", help="Require cached reference inputs")
@@ -44,7 +44,7 @@ def main():
     if args.report_only:
         build_report()
         return
-    packages = require_packages(["numpy", "scipy", "matplotlib", *(["Pillow", "PyMuPDF"] if {"rough", "ponthus", "zouabi"}.intersection(methods) else [])])
+    packages = require_packages(["numpy", "scipy", "matplotlib", *(["Pillow", "PyMuPDF"] if {"rough", "ponthus", "zouabi", "vanwalstijn"}.intersection(methods) else [])])
     build = args.build.resolve()
     if args.offline:
         verify_inputs(methods)
@@ -59,7 +59,12 @@ def main():
     (output / "environment.json").write_text(json.dumps(environment, indent=2) + "\n")
     diagnostics = ["--keep-diagnostics"] if args.keep_diagnostics else []
     for method in methods:
-        if method == "ren":
+        if method == "vanwalstijn":
+            run(build / 'BarrierTest')
+            run(sys.executable, ROOT / 'tools/vanwalstijn_reproduce.py', '--binary', build / 'vanwalstijnReproduce',
+                *(['--offline'] if args.offline else []))
+            verify_inputs([method])
+        elif method == "ren":
             run(build / 'RenTest')
             run(sys.executable, ROOT / 'tests/RenTest.py')
             run(sys.executable, ROOT / 'tools/ren_reproduce.py', '--binary', build / 'renReproduce')

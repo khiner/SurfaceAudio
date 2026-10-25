@@ -1,0 +1,8 @@
+{
+  "controls": {"rate": 44100, "mass": 0.001, "stiffness": 1000, "damping": 0.002, "barrier": 0, "kappa": 10000000, "exponent": 1.25, "restitution": 0.1, "max_velocity": 0.5, "regularization": 10000000, "friction": 1, "cap": 1, "modal": 1, "implicit": 0},
+  "figure3": {"duration": 0.02, "drive": "resonance", "amplitude": 0.1},
+  "figure4": {"duration": 0.025, "drive": "stiction", "normal_force": 3, "amplitude": 0.25, "frequency": 100, "controls": {"barrier": 0.00002, "friction": 0.07}, "provenance": "The caption prints barrier 2e-5 mm; the plotted x offset agrees with 2e-5 m. The omitted tangential amplitude is recovered from the vector trajectory as approximately 0.25 N; 100 Hz and cosine phase agree with the author excitation-2 code and plotted period."},
+  "figure5": {"duration": 0.05, "drive": "resonance", "amplitude": 0.1, "hann": true, "controls": {"kappa": 1000000000, "restitution": 0.5, "friction": 0.15}, "provenance": "Hann envelope evaluated as (1-cos(2*pi*t/duration))/2 on the same continuous time interval at every sample rate."},
+  "oversampling": 1024,
+  "audio_seconds": 2
+}

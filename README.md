@@ -4,6 +4,7 @@ C++23 contact-sound synthesis for Apple Silicon and Metal 4.
 
 | Method | Implementation and caveats |
 |---|---|
+| van Walstijn et al. 2024 | [Explicit and implicit mass–barrier collisions, damping, dry friction and stick-slip audio](docs/VanWalstijn.md) |
 | Ren–Yeh–Lin 2010 | [Three-level textured contact, mesh-derived modal responses, scraping, impacts and rolling](docs/Ren.md) |
 | Agarwal 2021 | [Constrained scraping/rolling forces and position-dependent surface/object responses](docs/Agarwal.md) |
 | SDT | [Coupled modal bodies, impact, elasto-plastic friction, rolling and scraping](docs/Sdt.md) |
@@ -64,7 +65,7 @@ Papers open collapsed; each expanded paper has a sticky collapse control.
 Rebuild the page without synthesis with `python3 tools/BuildListeningReport.py`.
 Each comparison identifies its reference: executed author code, published audio or figure traces, or a reconstruction with inferred inputs.
 Per-method documentation records the comparison scope and remaining differences.
-Willemsen's `--author-oracle` comparison requires Octave and pinned MATLAB sources.
+Willemsen's `--author-oracle` comparison and the van Walstijn reproduction require Octave and pinned MATLAB sources.
 Ponthus and Zouabi figure extraction requires Ghostscript (`brew install ghostscript`).
 
 Replay the fitted Agarwal inputs for four rolling reconstructions and twenty object responses:

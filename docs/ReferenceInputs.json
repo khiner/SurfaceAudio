@@ -1137,6 +1137,42 @@
       "path": "references/zouabi/source.tar",
       "sha256": "5fe76ce80a7aeff48ab5fd169308fc9d2c59d10efc19291dfd5f2e7c18913bde",
       "url": "https://arxiv.org/src/1609.07313v2"
+    },
+    {
+      "path": "references/vanwalstijn/main.m",
+      "sha256": "00f858b53ed19c4169c001755025489ea960e59bf3134c8d6d0881d3b34c8018",
+      "url": "https://raw.githubusercontent.com/mvanwalstijn/Mass-Barrier/ad1b11d4ff6a9149c93f0dd74ec94cdb6e3d3fb2/main.m",
+      "method": "vanwalstijn"
+    },
+    {
+      "path": "references/vanwalstijn/geninp.m",
+      "sha256": "4c4da4cdfb3dcea3f5a0741a97b0b8ee27ba1fd05ab5ce47ac2675f5a0bcb2f5",
+      "url": "https://raw.githubusercontent.com/mvanwalstijn/Mass-Barrier/ad1b11d4ff6a9149c93f0dd74ec94cdb6e3d3fb2/geninp.m",
+      "method": "vanwalstijn"
+    },
+    {
+      "path": "references/vanwalstijn/simEXPfunc.m",
+      "sha256": "6786a8db77da31409b27efeb960bbd27086f397df30c81d772e0a828a3f76950",
+      "url": "https://raw.githubusercontent.com/mvanwalstijn/Mass-Barrier/ad1b11d4ff6a9149c93f0dd74ec94cdb6e3d3fb2/simEXPfunc.m",
+      "method": "vanwalstijn"
+    },
+    {
+      "path": "references/vanwalstijn/simIMPfunc.m",
+      "sha256": "0c7bcc46e21acc0bccf99f603f36579107f4737d21bafb655d7be0c6a207a13b",
+      "url": "https://raw.githubusercontent.com/mvanwalstijn/Mass-Barrier/ad1b11d4ff6a9149c93f0dd74ec94cdb6e3d3fb2/simIMPfunc.m",
+      "method": "vanwalstijn"
+    },
+    {
+      "path": "references/vanwalstijn/test_cr.m",
+      "sha256": "aabdd5bce98548a2506b5a6c4294171f6a74e2eb71a149dc3ec8dfe040f65e03",
+      "url": "https://raw.githubusercontent.com/mvanwalstijn/Mass-Barrier/ad1b11d4ff6a9149c93f0dd74ec94cdb6e3d3fb2/test_cr.m",
+      "method": "vanwalstijn"
+    },
+    {
+      "path": "references/vanwalstijn/paper.pdf",
+      "sha256": "4a4c18c1e9b4c22240a2dc57a18ffc8c6dc301a6e5556ae430f3a911ccb98c3d",
+      "url": "https://pureadmin.qub.ac.uk/ws/portalfiles/portal/613541822/1-s2.0-S2405896324010255-main.pdf",
+      "method": "vanwalstijn"
     }
   ]
 }
