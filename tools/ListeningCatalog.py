@@ -9,6 +9,9 @@ OUTPUTS = ROOT / 'outputs/reproduction'
 
 # Each entry names the reference, the local result, and the limit of the comparison.
 PAPERS = [
+    ('ducceschi', 'Collisions and deformation', 'Ducceschi, Bilbao, Willemsen & Serafin · 2021', 'Energy-quadratised hammer, fretboard, snare and rattling-bridge collisions', 'Ducceschi',
+     'Hear a hammer striking a string, two fretboard contacts, a wire against a drum membrane and a bowed tromba marina. '
+     'The string comparisons execute the author MATLAB scripts. The snare and tromba pairs compare our C++ and Metal implementations.'),
     ('vanwalstijn', 'Collisions and deformation', 'van Walstijn, Chatziioannou & Athanasopoulos · 2024', 'Energy-stable collisions, contact damping and dry friction', 'VanWalstijn',
      'Hear repeated collisions and stick-slip motion from the explicit and implicit mass–barrier schemes. '
      'Each pair compares executed author MATLAB with our Metal implementation, using identical forces and playback gain. '
@@ -100,8 +103,9 @@ def curate(case, paper, variant=''):
     title = case['title']
     labels = [case.get('reference_label', 'Published author example'), case.get('synthesis_label', 'Our synthesis')]
     group, notes = 'Comparisons', ''
-    if paper in {'dang', 'gregoire', 'assemien', 'ponthus', 'zouabi', 'andersson', 'ren', 'vanwalstijn'}:
+    if paper in {'dang', 'gregoire', 'assemien', 'ponthus', 'zouabi', 'andersson', 'ren', 'vanwalstijn', 'ducceschi'}:
         notes = case.get('notes', '')
+        if paper == 'ducceschi': group = case.get('group', group)
     elif paper == 'agarwal':
         group = 'Rolling reconstructions' if 'retained' in title else 'Response and excitation comparisons'
         title = title.removeprefix('Agarwal ').replace('author-profile/material baseline', 'TDW-profile material baseline')

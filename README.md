@@ -4,6 +4,7 @@ C++23 contact-sound synthesis for Apple Silicon and Metal 4.
 
 | Method | Implementation and caveats |
 |---|---|
+| Ducceschi et al. 2021 | [Energy-quadratised hammer, fretboard, wire–membrane and tromba-marina collisions](docs/Ducceschi.md) |
 | van Walstijn et al. 2024 | [Explicit and implicit mass–barrier collisions, damping, dry friction and stick-slip audio](docs/VanWalstijn.md) |
 | Ren–Yeh–Lin 2010 | [Three-level textured contact, mesh-derived modal responses, scraping, impacts and rolling](docs/Ren.md) |
 | Agarwal 2021 | [Constrained scraping/rolling forces and position-dependent surface/object responses](docs/Agarwal.md) |

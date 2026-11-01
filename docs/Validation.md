@@ -91,6 +91,8 @@ A fitted contact-interface example differs from ideal FP64 by 0.00523%.
 The [method documentation](../README.md) records source comparisons, numerical errors and per-method CPU/Metal timings.
 Reproduction manifests retain complete measurements and texture metrics.
 
+The [Ducceschi 2021 port](Ducceschi.md) checks eleven mass, hammer and fretboard runs against executed author MATLAB, reconstructs the mass-collision and convergence experiments, and compares wire–membrane and tromba trajectories with a separate mechanical-matrix solver. Tests also cover coupled contacts, energy, free-flight precision, implicit bow work, block continuity and independent Metal voices. Retained metrics distinguish displacement accuracy from contact-force sensitivity and FP32 trajectory differences.
+
 ## Scope
 
 Physical-input identification and perceptual equivalence require separate validation.

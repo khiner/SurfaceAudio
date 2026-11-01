@@ -1173,6 +1173,75 @@
       "sha256": "4a4c18c1e9b4c22240a2dc57a18ffc8c6dc301a6e5556ae430f3a911ccb98c3d",
       "url": "https://pureadmin.qub.ac.uk/ws/portalfiles/portal/613541822/1-s2.0-S2405896324010255-main.pdf",
       "method": "vanwalstijn"
+    },
+    {
+      "path": "references/ducceschi/paper.pdf",
+      "sha256": "200a078c2c412c10f0c5aa00c4763fc13b31198078da40f407533f0d188f89dd",
+      "url": "https://mdphys.org/PDF/jasa_2021.pdf",
+      "method": "ducceschi"
+    },
+    {
+      "path": "references/ducceschi/massBarr.m",
+      "sha256": "08db597641b5c419de55293f3af0fb2d5e660dbbe0c3ff176cadee2aa61a6506",
+      "url": "https://mdphys.org/codeSnippets/massBarr.m",
+      "method": "ducceschi",
+      "retrieval": "Complete web-cached source text, line-number prefixes removed, LF line endings"
+    },
+    {
+      "path": "references/ducceschi/stringHammer.m",
+      "sha256": "fa46065607927747e26bf14dbca6175490141c386394f8d4de62223be9451c9d",
+      "url": "https://mdphys.org/codeSnippets/stringHammer.m",
+      "method": "ducceschi",
+      "retrieval": "Complete web-cached source text, line-number prefixes removed, LF line endings"
+    },
+    {
+      "path": "references/ducceschi/stringFret.m",
+      "sha256": "1213082fc1f016938d843379b55ddef51d9b84ae1af373419ae7ce948a3bd061",
+      "url": "https://mdphys.org/codeSnippets/stringFret.m",
+      "method": "ducceschi",
+      "retrieval": "Complete web-cached source text, line-number prefixes removed, LF line endings"
+    },
+    {
+      "path": "references/ducceschi/tromba2020.pdf",
+      "sha256": "5a75b2f41c7bf271cea6e6b6c9cd336980f670ebd837fce249afebaf7e1ecea4",
+      "url": "https://zenodo.org/api/records/3898741/files/SMCCIM_2020_paper_97.pdf/content",
+      "method": "ducceschi"
+    },
+    {
+      "path": "references/ducceschi/TrombaMarina/Source/Body.cpp",
+      "sha256": "74980297aa7273ad01b14e29d75dd9339923af4bf81b609a5bcfdcb22f59b179",
+      "url": "https://raw.githubusercontent.com/SilvinWillemsen/TrombaMarina/3e839ba187a89bb59da314aa0c0f901107db6e04/Source/Body.cpp",
+      "method": "ducceschi"
+    },
+    {
+      "path": "references/ducceschi/TrombaMarina/Source/Bridge.cpp",
+      "sha256": "81108f2f191db7c0234e49ed7b9f919219e6b82b2c95b12d403fb9bd6d1f39eb",
+      "url": "https://raw.githubusercontent.com/SilvinWillemsen/TrombaMarina/3e839ba187a89bb59da314aa0c0f901107db6e04/Source/Bridge.cpp",
+      "method": "ducceschi"
+    },
+    {
+      "path": "references/ducceschi/TrombaMarina/Source/Global.h",
+      "sha256": "a01f1814923e127ded0ce784a2a4d4b228535e9a4457aff198c48632735f76ee",
+      "url": "https://raw.githubusercontent.com/SilvinWillemsen/TrombaMarina/3e839ba187a89bb59da314aa0c0f901107db6e04/Source/Global.h",
+      "method": "ducceschi"
+    },
+    {
+      "path": "references/ducceschi/TrombaMarina/Source/Tromba.cpp",
+      "sha256": "c6751e80a24003b9558d914298af5061c83686a970e9be3a7a9570c8b511c84b",
+      "url": "https://raw.githubusercontent.com/SilvinWillemsen/TrombaMarina/3e839ba187a89bb59da314aa0c0f901107db6e04/Source/Tromba.cpp",
+      "method": "ducceschi"
+    },
+    {
+      "path": "references/ducceschi/TrombaMarina/Source/TrombaString.cpp",
+      "sha256": "7a4f915b2b7a3a67e81627ded894a073df31de618c950755c5bccd50b23af2bd",
+      "url": "https://raw.githubusercontent.com/SilvinWillemsen/TrombaMarina/3e839ba187a89bb59da314aa0c0f901107db6e04/Source/TrombaString.cpp",
+      "method": "ducceschi"
+    },
+    {
+      "path": "references/ducceschi/TrombaMarina/Source/TrombaString.h",
+      "sha256": "cddc68e95e9f072b98013741f0e69e2e4db28cde5208735a5be3974ea2bb7032",
+      "url": "https://raw.githubusercontent.com/SilvinWillemsen/TrombaMarina/3e839ba187a89bb59da314aa0c0f901107db6e04/Source/TrombaString.h",
+      "method": "ducceschi"
     }
   ]
 }

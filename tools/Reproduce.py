@@ -30,7 +30,7 @@ def verify_inputs(methods):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    available = ["agarwal", "sdt", "conan", "matusiak", "poirot", "continuous", "matusiak2024", "falaize", "traer", "willemsen", "lagrange", "lee", "agarwal2026", "agarwal2025", "hatt", "nakatsuka", "rough", "ponthus", "zouabi", "andersson", "ren", "vanwalstijn"]
+    available = ["agarwal", "sdt", "conan", "matusiak", "poirot", "continuous", "matusiak2024", "falaize", "traer", "willemsen", "lagrange", "lee", "agarwal2026", "agarwal2025", "hatt", "nakatsuka", "rough", "ponthus", "zouabi", "andersson", "ren", "vanwalstijn", "ducceschi"]
     parser.add_argument("--method", nargs="+", choices=["all", *available], default=["all"])
     parser.add_argument("--build", type=Path, default=ROOT / "build")
     parser.add_argument("--offline", action="store_true", help="Require cached reference inputs")
@@ -59,10 +59,10 @@ def main():
     (output / "environment.json").write_text(json.dumps(environment, indent=2) + "\n")
     diagnostics = ["--keep-diagnostics"] if args.keep_diagnostics else []
     for method in methods:
-        if method == "vanwalstijn":
-            run(build / 'BarrierTest')
-            run(sys.executable, ROOT / 'tools/vanwalstijn_reproduce.py', '--binary', build / 'vanwalstijnReproduce',
-                *(['--offline'] if args.offline else []))
+        if method in ('ducceschi', 'vanwalstijn'):
+            run(build / ('CollisionTest' if method == 'ducceschi' else 'BarrierTest'))
+            run(sys.executable, ROOT / f'tools/{method}_reproduce.py', '--binary', build / f'{method}Reproduce',
+                *(['--offline'] if args.offline else []), *(diagnostics if method == 'ducceschi' else []))
             verify_inputs([method])
         elif method == "ren":
             run(build / 'RenTest')
@@ -113,6 +113,7 @@ def main():
             run(sys.executable, ROOT / "tools/agarwal_reproduce.py", "--binary", build / "agarwalReproduce", "--retained")
     build_report()
     for method in ([] if args.keep_diagnostics else methods):
+        if method == 'ducceschi': continue
         for extension in ("*.f32", "*.f64"):
             for path in (output / method).rglob(extension):
                 path.unlink()
